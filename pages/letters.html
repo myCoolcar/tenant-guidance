@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Tenant Advocate - Letter Generator</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f5f5f5;
+margin:0;
+}
+
+header{
+background:#1f2a36;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+background:white;
+padding:30px;
+margin-top:30px;
+}
+
+input, select{
+width:100%;
+padding:10px;
+margin-top:10px;
+margin-bottom:20px;
+}
+
+button{
+background:#1f2a36;
+color:white;
+padding:12px 18px;
+border:none;
+cursor:pointer;
+margin-right:10px;
+}
+
+button:hover{
+background:#101820;
+}
+
+textarea{
+width:100%;
+height:250px;
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Tenant Advocate</h1>
+<p>Generate a formal letter to your landlord or letting agent</p>
+
+</header>
+
+<div class="container">
+
+<h2>Letter Generator</h2>
+
+<label>Your Name</label>
+<input id="tenantName" placeholder="Enter your name">
+
+<label>Landlord or Letting Agent</label>
+<input id="landlordName" placeholder="Enter landlord or agency name">
+
+<label>Select Issue</label>
+
+<select id="issueType">
+
+<option value="repairs">Repair Request</option>
+
+<option value="electrical">Electrical Safety Certificate Request</option>
+
+<option value="deposit">Deposit Protection Query</option>
+
+<option value="fees">Illegal Fees Complaint</option>
+
+<option value="access">Improper Property Access</option>
+
+</select>
+
+<button onclick="generateLetter()">Generate Letter</button>
+
+<button onclick="downloadDoc()">Download .DOC</button>
+
+<button onclick="sendEmail()">Create Email</button>
+
+<h3>Preview</h3>
+
+<textarea id="letterPreview"></textarea>
+
+</div>
+
+<script>
+
+function generateLetter(){
+
+let tenant = document.getElementById("tenantName").value
+let landlord = document.getElementById("landlordName").value
+let issue = document.getElementById("issueType").value
+
+let letter = ""
+
+let today = new Date().toLocaleDateString()
+
+if(issue === "repairs"){
+
+letter =
+today + "\n\n" +
+
+"Dear " + landlord + ",\n\n" +
+
+"I am writing to formally request repairs at my rented property.\n\n" +
+
+"Under Section 11 of the Landlord and Tenant Act 1985, landlords are responsible for maintaining installations for electricity, water, gas, heating and sanitation.\n\n" +
+
+"Please confirm when these repairs will be completed.\n\n" +
+
+"Kind regards,\n\n" +
+tenant
+
+}
+
+if(issue === "electrical"){
+
+letter =
+today + "\n\n" +
+
+"Dear " + landlord + ",\n\n" +
+
+"I am writing to request confirmation of the Electrical Safety Certificate for the property.\n\n" +
+
+"The Electrical Safety Standards in the Private Rented Sector Regulations 2020 require electrical installations to be inspected at least every five years.\n\n" +
+
+"Please provide a copy of the current certificate.\n\n" +
+
+"Kind regards,\n\n" +
+tenant
+
+}
+
+if(issue === "deposit"){
+
+letter =
+today + "\n\n" +
+
+"Dear " + landlord + ",\n\n" +
+
+"I am writing to request confirmation that my tenancy deposit has been protected in a government approved scheme.\n\n" +
+
+"Under the Housing Act 2004, landlords must protect deposits within 30 days of receiving them.\n\n" +
+
+"Please confirm the scheme used and provide the relevant details.\n\n" +
+
+"Kind regards,\n\n" +
+tenant
+
+}
+
+if(issue === "fees"){
+
+letter =
+today + "\n\n" +
+
+"Dear " + landlord + ",\n\n" +
+
+"I am writing regarding fees that have been requested.\n\n" +
+
+"Under the Tenant Fees Act 2019 most letting agent fees are prohibited.\n\n" +
+
+"Please confirm the legal basis for these charges.\n\n" +
+
+"Kind regards,\n\n" +
+tenant
+
+}
+
+if(issue === "access"){
+
+letter =
+today + "\n\n" +
+
+"Dear " + landlord + ",\n\n" +
+
+"I am writing regarding access to the property.\n\n" +
+
+"Tenants are entitled to quiet enjoyment of their home. Landlords must provide reasonable notice before entering except in emergencies.\n\n" +
+
+"Please ensure future access requests follow appropriate notice procedures.\n\n" +
+
+"Kind regards,\n\n" +
+tenant
+
+}
+
+document.getElementById("letterPreview").value = letter
+
+}
+
+function downloadDoc(){
+
+let text = document.getElementById("letterPreview").value
+
+let blob = new Blob([text], {type: "application/msword"})
+
+let link = document.createElement("a")
+
+link.href = URL.createObjectURL(blob)
+
+link.download = "tenant_letter.doc"
+
+link.click()
+
+}
+
+function sendEmail(){
+
+let text = encodeURIComponent(document.getElementById("letterPreview").value)
+
+let subject = encodeURIComponent("Tenant Request")
+
+window.location.href = "mailto:?subject=" + subject + "&body=" + text
+
+}
+
+</script>
+
+</body>
+
+</html>
