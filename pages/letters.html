@@ -1,273 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
-<title>Tenant Letter Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Letter Generator - Tenant Advocate</title>
+
+<link rel="stylesheet" href="../styles.css">
 
 <style>
-body{
-font-family: Arial, sans-serif;
-background:#f5f7fa;
-margin:0;
-padding:40px;
-}
 
-.container{
+.generator-box{
 max-width:900px;
 margin:auto;
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 0 15px rgba(0,0,0,0.1);
+padding:20px;
 }
 
-h1{
-color:#2c3e50;
+.question-block{
+margin-top:20px;
 }
 
-label{
-font-weight:bold;
-display:block;
+.explanation{
+background:#eef5ff;
+border-left:5px solid #2c7be5;
+padding:15px;
 margin-top:15px;
 }
 
-input, select{
+textarea{
 width:100%;
+height:260px;
+margin-top:20px;
 padding:10px;
-margin-top:5px;
-border-radius:6px;
-border:1px solid #ccc;
 }
 
 button{
-margin-top:20px;
-padding:12px 20px;
-border:none;
-border-radius:6px;
-background:#2c7be5;
-color:white;
-cursor:pointer;
-font-size:16px;
-}
-
-button:hover{
-background:#1a5fcc;
-}
-
-#explanation{
 margin-top:15px;
-padding:12px;
-background:#eef4ff;
-border-left:5px solid #2c7be5;
-display:none;
-}
-
-#preview{
-margin-top:25px;
-padding:20px;
-background:#fafafa;
-border:1px solid #ddd;
-white-space:pre-wrap;
-}
-
-.download-buttons{
-margin-top:20px;
-}
-
-footer{
-margin-top:40px;
-font-size:14px;
-color:#666;
+padding:10px 16px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
+<header>
+<h1>Tenant Advocate</h1>
+<p>Helping tenants understand their rights and document housing disputes</p>
+</header>
 
-<h1>Tenant Letter Generator</h1>
+<nav>
+<a href="../index.html">Home</a>
+<a href="../sitemap.html">Sitemap</a>
+<a href="know-your-rights.html">Know Your Rights</a>
+<a href="repairs.html">Repairs</a>
+<a href="deposits.html">Deposits</a>
+<a href="fees.html">Fees</a>
+<a href="evictions.html">Evictions</a>
+<a href="timeline-tool.html">Timeline Tool</a>
+<a href="letters.html">Letters</a>
+<a href="resources.html">Resources</a>
+</nav>
 
-<p>This tool helps tenants create formal letters to landlords or letting agents regarding common housing issues.</p>
+<div class="generator-box">
+
+<h2>Letter Generator</h2>
+
+<p>This tool helps tenants generate formal letters based on common housing issues. The guidance is grounded in UK housing legislation.</p>
 
 <label>Your Name</label>
-<input id="tenantName" placeholder="Your name">
+<input id="tenantName">
 
 <label>Landlord / Letting Agent Name</label>
-<input id="landlordName" placeholder="Landlord or Agency">
+<input id="landlordName">
 
 <label>Select Issue</label>
-<select id="issueSelect" onchange="showExplanation()">
+
+<select id="issueSelect" onchange="showFollowUp()">
+
 <option value="">Select an issue</option>
-<option value="repairs">Failure to carry out repairs</option>
-<option value="improperAccess">Improper property access</option>
-<option value="deposit">Deposit not returned</option>
-<option value="harassment">Harassment or intimidation</option>
-<option value="eviction">Unlawful eviction concerns</option>
+
+<option value="repairs">Repairs not carried out</option>
+
+<option value="access">Improper access to property</option>
+
+<option value="deposit">Deposit not protected or returned</option>
+
 </select>
 
-<div id="explanation"></div>
+<div id="explanation" class="explanation"></div>
+
+<div id="followUp" class="question-block"></div>
 
 <button onclick="generateLetter()">Generate Letter</button>
 
-<div id="preview"></div>
+<textarea id="preview"></textarea>
 
-<div class="download-buttons" id="downloads" style="display:none;">
 <button onclick="downloadDoc()">Download .DOC</button>
-<button onclick="downloadEmail()">Download Email Draft</button>
-</div>
 
-<footer>
-This tool provides general information only and should not be considered legal advice.
-</footer>
+<button onclick="generateEmail()">Create Email</button>
 
 </div>
 
 <script>
 
-const explanations = {
+function showFollowUp(){
 
-repairs: "Use this letter when your landlord has failed to carry out necessary repairs after being notified. Landlords have a legal duty under housing law to maintain the structure, exterior, and essential services of a property.",
+let issue = document.getElementById("issueSelect").value
+let followUp = document.getElementById("followUp")
+let explanation = document.getElementById("explanation")
 
-improperAccess: "Use this letter when a landlord or agent enters your home without proper notice or permission. Tenants have the legal right to 'quiet enjoyment', meaning landlords must usually give at least 24 hours notice before entry.",
-
-deposit: "Use this letter if your tenancy deposit has not been returned or properly accounted for. Deposits must normally be protected in a government approved scheme and returned promptly after the tenancy ends.",
-
-harassment: "Use this letter if you are experiencing harassment, intimidation, or pressure from your landlord. It is unlawful for landlords to harass tenants or attempt to force them to leave without following legal eviction procedures.",
-
-eviction: "Use this letter if you believe a landlord may be attempting an unlawful eviction. Tenants can usually only be evicted through a legal court process."
-
-}
-
-function showExplanation(){
-
-const issue = document.getElementById("issueSelect").value
-const box = document.getElementById("explanation")
-
-if(issue){
-box.style.display = "block"
-box.innerText = explanations[issue]
-}else{
-box.style.display = "none"
-}
-
-}
-
-let generatedLetter = ""
-
-function generateLetter(){
-
-const tenant = document.getElementById("tenantName").value
-const landlord = document.getElementById("landlordName").value
-const issue = document.getElementById("issueSelect").value
-
-if(!tenant || !landlord || !issue){
-alert("Please complete all fields.")
-return
-}
-
-const date = new Date().toLocaleDateString()
-
-let body = ""
+followUp.innerHTML=""
 
 if(issue === "repairs"){
 
-body = `I am writing to formally notify you that repairs at my rented property remain outstanding.
+explanation.innerHTML =
+"<strong>Relevant law:</strong> Section 11 of the Landlord and Tenant Act 1985.<br><br>Landlords must keep the structure and exterior of the property in repair and maintain installations for heating, water, gas and electricity. Tenants should normally report issues and allow a reasonable time for repairs."
 
-Under landlord obligations relating to property maintenance, essential repairs must be addressed within a reasonable timeframe. Despite previous communication, the issue has not yet been resolved.
+followUp.innerHTML =
 
-Please confirm when these repairs will be completed.
+`<label>Have you already reported the repair?</label>
 
-I hope we can resolve this matter promptly.`
+<select id="repairReported">
+<option value="no">No</option>
+<option value="yes">Yes</option>
+</select>
+
+<label>If yes, how long has it been since you reported it?</label>
+
+<select id="repairTime">
+<option value="recent">Less than 7 days</option>
+<option value="delay">More than 7 days</option>
+<option value="serious">More than 14 days</option>
+</select>`
 
 }
 
-if(issue === "improperAccess"){
+if(issue === "access"){
 
-body = `I am writing regarding entry to my home without proper notice.
+explanation.innerHTML =
+"<strong>Relevant principle:</strong> Right to 'quiet enjoyment' under common law and tenancy law. Landlords must normally provide at least 24 hours notice before entering a property unless there is an emergency."
 
-Tenants are entitled to quiet enjoyment of their home, and landlords must normally provide at least 24 hours notice before entering except in genuine emergencies.
+followUp.innerHTML =
 
-Please ensure that future access requests follow the appropriate notice procedures.`
+`<label>Did the landlord give notice before entering?</label>
+
+<select id="noticeGiven">
+<option value="no">No notice</option>
+<option value="short">Less than 24 hours notice</option>
+<option value="yes">24 hours notice given</option>
+</select>`
 
 }
 
 if(issue === "deposit"){
 
-body = `I am writing regarding the return of my tenancy deposit.
+explanation.innerHTML =
+"<strong>Relevant law:</strong> Housing Act 2004.<br><br>Tenancy deposits must be protected in a government approved scheme within 30 days and tenants must receive prescribed information."
 
-Deposits should be returned promptly at the end of a tenancy unless legitimate deductions are clearly explained. Please confirm the status of my deposit and provide details of any deductions.`
+followUp.innerHTML =
 
-}
+`<label>Do you know if your deposit was protected?</label>
 
-if(issue === "harassment"){
-
-body = `I am writing to formally raise concerns about behaviour that I believe constitutes harassment.
-
-Tenants have legal protection against harassment or pressure to leave a property outside the proper legal process. I ask that all communication and actions regarding my tenancy remain lawful and respectful.`
-
-}
-
-if(issue === "eviction"){
-
-body = `I am writing to clarify the legal process regarding my tenancy.
-
-Eviction must follow the correct legal procedures and normally requires appropriate notice and court involvement. I ask that any further actions comply with the legal requirements for tenancy termination.`
+<select id="depositStatus">
+<option value="unknown">Unsure</option>
+<option value="notProtected">No</option>
+<option value="notReturned">Protected but not returned</option>
+</select>`
 
 }
 
-generatedLetter =
+}
 
-`${tenant}
-[Your Address]
+function generateLetter(){
 
-${date}
+let tenant = document.getElementById("tenantName").value
+let landlord = document.getElementById("landlordName").value
+let issue = document.getElementById("issueSelect").value
 
-To: ${landlord}
+let today = new Date().toLocaleDateString()
+
+let body=""
+
+if(issue === "repairs"){
+
+let reported = document.getElementById("repairReported").value
+let time = document.getElementById("repairTime").value
+
+if(reported==="no"){
+
+body = `I am writing to notify you of a repair issue at the property. Under Section 11 of the Landlord and Tenant Act 1985, landlords are responsible for maintaining the structure of the property and essential installations including heating and water.`
+
+}
+
+if(reported==="yes" && time==="delay"){
+
+body = `I previously reported a repair issue at the property but it has not yet been addressed. Under Section 11 of the Landlord and Tenant Act 1985 landlords must maintain essential installations and carry out repairs within a reasonable timeframe.`
+
+}
+
+if(reported==="yes" && time==="serious"){
+
+body = `I previously reported a repair issue and it remains unresolved after a significant period. Under Section 11 of the Landlord and Tenant Act 1985 landlords are legally responsible for maintaining the property and essential services.`
+
+}
+
+}
+
+if(issue==="access"){
+
+let notice = document.getElementById("noticeGiven").value
+
+if(notice==="no"){
+
+body = `I am writing regarding entry to the property without notice. Tenants are entitled to quiet enjoyment of their home and landlords should normally provide at least 24 hours notice before entering.`
+
+}
+
+if(notice==="short"){
+
+body = `I am writing regarding property access. Notice of entry was less than 24 hours, which may not meet the usual expectations for reasonable notice.`
+
+}
+
+}
+
+if(issue==="deposit"){
+
+let deposit = document.getElementById("depositStatus").value
+
+if(deposit==="notProtected"){
+
+body = `I am writing regarding my tenancy deposit. Under the Housing Act 2004 deposits must be protected in an approved scheme within 30 days.`
+
+}
+
+if(deposit==="notReturned"){
+
+body = `I am writing to request the return of my tenancy deposit or a clear explanation of any deductions.`
+
+}
+
+if(deposit==="unknown"){
+
+body = `I am writing to request confirmation that my deposit has been protected in a government approved tenancy deposit scheme.`
+
+}
+
+}
+
+let letter =
+
+`${today}
 
 Dear ${landlord},
 
 ${body}
 
-Sincerely,
+Please respond in writing.
+
+Kind regards,
 
 ${tenant}`
 
-document.getElementById("preview").innerText = generatedLetter
-document.getElementById("downloads").style.display = "block"
+document.getElementById("preview").value = letter
 
 }
 
 function downloadDoc(){
 
-const blob = new Blob([generatedLetter], {type: "application/msword"})
-const link = document.createElement("a")
+let text = document.getElementById("preview").value
+
+let blob = new Blob([text], {type:"application/msword"})
+
+let link = document.createElement("a")
+
 link.href = URL.createObjectURL(blob)
-link.download = "tenant_letter.doc"
+
+link.download="tenant_letter.doc"
+
 link.click()
 
 }
 
-function downloadEmail(){
+function generateEmail(){
 
-const subject = encodeURIComponent("Tenant Letter Regarding Housing Issue")
-const body = encodeURIComponent(generatedLetter)
+let text = encodeURIComponent(document.getElementById("preview").value)
 
-const emailContent =
-`Subject: Tenant Letter Regarding Housing Issue
-
-${generatedLetter}`
-
-const blob = new Blob([emailContent], {type:"message/rfc822"})
-const link = document.createElement("a")
-link.href = URL.createObjectURL(blob)
-link.download = "tenant_letter.eml"
-link.click()
+window.location.href="mailto:?subject=Tenant Request&body="+text
 
 }
 
 </script>
 
 </body>
+
 </html>
