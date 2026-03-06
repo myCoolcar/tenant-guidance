@@ -1,196 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Issue Timeline Builder - Tenant Advocate</title>
-    <link rel="stylesheet" type="text/css" href="../styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Issue Timeline Builder - Tenant Advocate</title>
+<link rel="stylesheet" type="text/css" href="../styles.css">
+
+<style>
+
+.timeline-entry{
+padding:10px;
+border-bottom:1px solid #ddd;
+margin-bottom:5px;
+}
+
+.toolbox input,
+.toolbox select{
+margin:5px 0;
+width:100%;
+padding:8px;
+}
+
+.saved-indicator{
+color:green;
+font-size:0.9em;
+margin-top:5px;
+}
+
+</style>
+
 </head>
+
 <body>
-    <header>
-        <h1>Issue Timeline Builder</h1>
-        <p>Document key events in your housing dispute</p>
-    </header>
 
-    <nav>
-        <a href="../index.html">Home</a>
-        <a href="../sitemap.html">Sitemap</a>
-        <a href="know-your-rights.html">Know Your Rights</a>
-        <a href="repairs.html">Repairs</a>
-        <a href="deposits.html">Deposits</a>
-        <a href="fees.html">Fees</a>
-        <a href="evictions.html">Evictions</a>
-        <a href="timeline-tool.html">Timeline Tool</a>
-        <a href="letters.html">Letters</a>
-        <a href="resources.html">Resources</a>
-    </nav>
+<header>
+<h1>Issue Timeline Builder</h1>
+<p>Document key events in your housing dispute</p>
+</header>
 
-    <div class="container">
-        <section>
-            <h2>Record Your Timeline</h2>
+<nav>
+<a href="../index.html">Home</a>
+<a href="../sitemap.html">Sitemap</a>
+<a href="know-your-rights.html">Know Your Rights</a>
+<a href="repairs.html">Repairs</a>
+<a href="deposits.html">Deposits</a>
+<a href="fees.html">Fees</a>
+<a href="evictions.html">Evictions</a>
+<a href="timeline-tool.html">Timeline Tool</a>
+<a href="letters.html">Letters</a>
+<a href="resources.html">Resources</a>
+</nav>
 
-            <div class="toolbox">
-                <p><strong>Document each event in your housing dispute.</strong> This timeline can be used as evidence.</p>
+<div class="container">
 
-                <input type="date" id="date" placeholder="Select date">
+<section>
 
-                <input type="text" id="event" placeholder="Describe the event (be specific and factual)">
+<h2>Record Your Timeline</h2>
 
-                <button onclick="addEvent()">Add Event</button>
+<div class="toolbox">
 
-                <div id="timelineList"></div>
+<p><strong>Record each event as evidence in your housing dispute.</strong></p>
 
-                <div style="margin-top: 20px; border-top: 1px solid #ccc; padding-top: 15px;">
-                    <button onclick="exportTimeline()" style="background:#0099ff;">Export Timeline as Text</button>
-                    <button onclick="clearTimeline()" style="background:#d9534f;">Clear All Events</button>
-                </div>
-            </div>
-        </section>
+<input type="date" id="date">
 
-        <section>
-            <h2>How to Use This Tool</h2>
-            <ul>
-                <li>Record events in chronological order as they happen</li>
-                <li>Be specific and factual in your descriptions</li>
-                <li>Include exact dates and times when possible</li>
-                <li>Document all communications (emails, calls, letters)</li>
-                <li>Note responses or lack of response from your landlord</li>
-                <li>Export your timeline and keep copies</li>
-                <li>Your timeline is saved locally - it won't be lost if you close the page</li>
-            </ul>
-        </section>
+<select id="type">
+<option value="">Evidence Type</option>
+<option>Email</option>
+<option>Phone Call</option>
+<option>Letter</option>
+<option>Photo</option>
+<option>Visit</option>
+<option>Repair Request</option>
+<option>Other</option>
+</select>
 
-        <section>
-            <h2>Timeline Tips for Disputes</h2>
+<input type="text" id="event" placeholder="Describe the event clearly and factually">
 
-            <h3>What to Record:</h3>
-            <ul>
-                <li>Date of repair request and method (email, phone, letter)</li>
-                <li>Date of follow-up communications</li>
-                <li>Date repairs were finally completed (or not)</li>
-                <li>Any verbal conversations (with date and what was said)</li>
-                <li>Dates photographs were taken of issues</li>
-                <li>Any agreements made or promises broken</li>
-                <li>Visits by landlord or contractors and what happened</li>
-                <li>Impact on you (e.g., "no heating from X to Y date")</li>
-            </ul>
+<input type="text" id="impact" placeholder="Impact on you (optional but helpful)">
 
-            <h3>Example Entry:</h3>
-            <ul>
-                <li>❌ "Landlord ignored repair request" (too vague)</li>
-                <li>✓ "15 Jan 2024 - Sent email to landlord reporting broken heating system, no response received"</li>
-            </ul>
-        </section>
+<input type="text" id="reference" placeholder="Evidence reference (e.g. Photo1.jpg, Email_15Jan.pdf)">
 
-        <section>
-            <h2>Using Your Timeline as Evidence</h2>
-            <ul>
-                <li>Print and keep a copy for your records</li>
-                <li>Use it to support complaints to local council</li>
-                <li>Share it with Citizens Advice or Shelter advisors</li>
-                <li>Present it as evidence if pursuing legal action</li>
-                <li>Use it to back up claims about impact on you</li>
-            </ul>
-        </section>
+<button onclick="addEvent()">Add Event</button>
 
-        <section>
-            <h2>Privacy & Data</h2>
-            <p>
-                Your timeline is saved only on your device using browser storage. 
-                It is not sent to our servers or stored anywhere else. 
-                Only you can access it.
-            </p>
-        </section>
-    </div>
+<div class="saved-indicator">✓ Timeline saved locally on your device</div>
 
-    <script>
-        // Load timeline from localStorage on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            loadTimeline();
-        });
+<div id="timelineList"></div>
 
-        function addEvent() {
-            let date = document.getElementById("date").value;
-            let event = document.getElementById("event").value;
+<div style="margin-top:20px;border-top:1px solid #ccc;padding-top:15px">
 
-            if (!date || !event) {
-                alert("Please enter both a date and event description");
-                return;
-            }
+<button onclick="exportTimeline()" style="background:#0099ff;">Export Evidence Timeline</button>
 
-            let entry = document.createElement("div");
-            entry.className = "timeline-entry";
-            entry.innerHTML = "<strong>" + date + "</strong>: " + event;
+<button onclick="clearTimeline()" style="background:#d9534f;">Clear All Events</button>
 
-            document.getElementById("timelineList").appendChild(entry);
+</div>
 
-            // Save to localStorage
-            saveTimeline();
+</div>
 
-            // Clear inputs
-            document.getElementById("date").value = "";
-            document.getElementById("event").value = "";
-        }
+</section>
 
-        function saveTimeline() {
-            let timelineEntries = [];
-            let entries = document.querySelectorAll(".timeline-entry");
-            
-            entries.forEach(function(entry) {
-                timelineEntries.push(entry.innerHTML);
-            });
+<section>
 
-            localStorage.setItem("timeline", JSON.stringify(timelineEntries));
-        }
+<h2>Using Your Timeline</h2>
 
-        function loadTimeline() {
-            let saved = localStorage.getItem("timeline");
-            if (saved) {
-                let timelineEntries = JSON.parse(saved);
-                timelineEntries.forEach(function(entryHTML) {
-                    let entry = document.createElement("div");
-                    entry.className = "timeline-entry";
-                    entry.innerHTML = entryHTML;
-                    document.getElementById("timelineList").appendChild(entry);
-                });
-            }
-        }
+<ul>
 
-        function exportTimeline() {
-            let entries = document.querySelectorAll(".timeline-entry");
-            if (entries.length === 0) {
-                alert("No events to export");
-                return;
-            }
+<li>Record events as soon as they happen</li>
 
-            let text = "TENANT ADVOCATE - ISSUE TIMELINE\n";
-            text += "Generated: " + new Date().toLocaleDateString() + "\n";
-            text += "=========================================
-\n";
+<li>Keep entries factual and objective</li>
 
-            entries.forEach(function(entry, index) {
-                text += (index + 1) + ". " + entry.innerText + "\n";
-            });
+<li>Link events to real evidence (emails, photos)</li>
 
-            let element = document.createElement("a");
-            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
-            element.setAttribute("download", "timeline_" + new Date().toISOString().split('T')[0] + ".txt");
-            element.style.display = "none";
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        }
+<li>Include the impact of issues on your living conditions</li>
 
-        function clearTimeline() {
-            if (confirm("Are you sure you want to delete all events? This cannot be undone.")) {
-                document.getElementById("timelineList").innerHTML = "";
-                localStorage.removeItem("timeline");
-            }
-        }
-    </script>
+<li>Export and keep copies of your timeline</li>
 
-    <div class="footer">
-        <p>Tenant Advocate | Legal information only | Not legal advice</p>
-    </div>
+<li>This timeline can support complaints to councils or legal advice</li>
+
+</ul>
+
+</section>
+
+<section>
+
+<h2>Privacy & Data</h2>
+
+<p>
+
+Your timeline is stored only on your device using browser storage.
+
+No information is sent to our servers.
+
+Only you can access your timeline unless you export or share it.
+
+</p>
+
+</section>
+
+</div>
+
+<script>
+
+window.addEventListener('DOMContentLoaded', loadTimeline)
+
+function addEvent(){
+
+let date = document.getElementById("date").value
+let type = document.getElementById("type").value
+let event = document.getElementById("event").value
+let impact = document.getElementById("impact").value
+let reference = document.getElementById("reference").value
+
+if(!date || !event){
+
+alert("Please enter a date and description")
+
+return
+
+}
+
+let timeline = JSON.parse(localStorage.getItem("timeline") || "[]")
+
+timeline.push({date,type,event,impact,reference})
+
+timeline.sort((a,b)=> new Date(a.date) - new Date(b.date))
+
+localStorage.setItem("timeline",JSON.stringify(timeline))
+
+renderTimeline()
+
+document.getElementById("event").value=""
+document.getElementById("impact").value=""
+document.getElementById("reference").value=""
+
+}
+
+function loadTimeline(){
+
+renderTimeline()
+
+}
+
+function renderTimeline(){
+
+let timeline = JSON.parse(localStorage.getItem("timeline") || "[]")
+
+let container = document.getElementById("timelineList")
+
+container.innerHTML=""
+
+timeline.forEach(entry=>{
+
+let div = document.createElement("div")
+
+div.className="timeline-entry"
+
+div.innerHTML = `<strong>${entry.date}</strong> | ${entry.type}<br>
+${entry.event}<br>
+<em>Impact:</em> ${entry.impact || "Not specified"}<br>
+<em>Evidence:</em> ${entry.reference || "None"}`
+
+container.appendChild(div)
+
+})
+
+}
+
+function exportTimeline(){
+
+let timeline = JSON.parse(localStorage.getItem("timeline") || "[]")
+
+if(timeline.length === 0){
+
+alert("No events to export")
+
+return
+
+}
+
+let text = "TENANT ADVOCATE – EVIDENCE TIMELINE\n\n"
+
+text += "Generated: " + new Date().toLocaleDateString() + "\n\n"
+
+timeline.forEach((e,i)=>{
+
+text += `${i+1}. ${e.date} | ${e.type}\n`
+text += `Event: ${e.event}\n`
+text += `Impact: ${e.impact}\n`
+text += `Evidence: ${e.reference}\n\n`
+
+})
+
+let element = document.createElement("a")
+
+element.href="data:text/plain;charset=utf-8," + encodeURIComponent(text)
+
+element.download="tenant_timeline.txt"
+
+document.body.appendChild(element)
+
+element.click()
+
+document.body.removeChild(element)
+
+}
+
+function clearTimeline(){
+
+if(confirm("Delete all timeline events?")){
+
+localStorage.removeItem("timeline")
+
+renderTimeline()
+
+}
+
+}
+
+</script>
+
+<div class="footer">
+<p>Tenant Advocate | Legal information only | Not legal advice</p>
+</div>
+
 </body>
 </html>
