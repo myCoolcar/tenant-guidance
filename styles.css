@@ -1,0 +1,320 @@
+/* Tenant Advocate - Global Styles */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #1f2a36 0%, #2f3e50 100%);
+    color: white;
+    padding: 40px 25px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+header p {
+    margin: 15px 0 0 0;
+    font-size: 1.1em;
+    opacity: 0.95;
+    font-weight: 300;
+}
+
+nav {
+    background: #2f3e50;
+    padding: 0;
+    text-align: center;
+    overflow-x: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    padding: 15px 18px;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+nav a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom-color: #0099ff;
+    color: #e8f4f8;
+}
+
+nav a:active {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.container {
+    max-width: 1050px;
+    margin: 30px auto;
+    background: white;
+    padding: 40px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+}
+
+section {
+    margin-bottom: 50px;
+}
+
+section:last-child {
+    margin-bottom: 0;
+}
+
+h2 {
+    color: #1f2a36;
+    border-bottom: 3px solid #0099ff;
+    padding-bottom: 12px;
+    margin-top: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+h3 {
+    color: #2f3e50;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+}
+
+p {
+    margin: 12px 0;
+    font-size: 1em;
+    line-height: 1.7;
+}
+
+ul, ol {
+    line-height: 1.9;
+    margin: 20px 0;
+    padding-left: 30px;
+}
+
+li {
+    margin: 10px 0;
+    color: #444;
+}
+
+a {
+    color: #0066cc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #0052a3;
+    text-decoration: underline;
+}
+
+a:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+.toolbox {
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8f1f7 100%);
+    padding: 25px;
+    border-radius: 8px;
+    border-left: 5px solid #0099ff;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 153, 255, 0.1);
+}
+
+.toolbox p {
+    margin-top: 0;
+}
+
+.timeline-entry {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 15px;
+    background: #fafafa;
+    border-radius: 5px;
+    border-left: 4px solid #0099ff;
+    transition: all 0.3s ease;
+}
+
+.timeline-entry:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+
+.timeline-entry strong {
+    color: #1f2a36;
+    font-weight: 700;
+}
+
+input[type="date"],
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+input[type="date"]:focus,
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0099ff;
+    box-shadow: 0 0 8px rgba(0, 153, 255, 0.3);
+    background: #fafbfc;
+}
+
+textarea {
+    resize: vertical;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+button {
+    background: linear-gradient(135deg, #1f2a36 0%, #2f3e50 100%);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #151d26 0%, #1f2a36 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.ai-placeholder {
+    border: 3px dashed #ccc;
+    padding: 45px 30px;
+    text-align: center;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.ai-placeholder h2 {
+    color: #1f2a36;
+    border: none;
+    padding: 0;
+    margin-top: 0;
+}
+
+.ai-placeholder ul {
+    text-align: left;
+    display: inline-block;
+}
+
+.footer {
+    background: linear-gradient(135deg, #1f2a36 0%, #2f3e50 100%);
+    color: white;
+    padding: 25px;
+    text-align: center;
+    margin-top: 60px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.95em;
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        padding: 25px 15px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    header p {
+        font-size: 1em;
+    }
+
+    .container {
+        padding: 20px;
+        margin: 15px;
+    }
+
+    nav a {
+        padding: 12px 12px;
+        font-size: 0.9em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    input[type="date"],
+    input[type="text"],
+    textarea {
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .toolbox {
+        padding: 15px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    nav, .footer {
+        display: none;
+    }
+
+    .container {
+        box-shadow: none;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    button {
+        display: none;
+    }
+}
