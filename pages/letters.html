@@ -2,10 +2,11 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Letter Generator - Tenant Advocate</title>
+<title>Tenant Letter Generator</title>
 
 <link rel="stylesheet" href="../styles.css">
 
@@ -26,7 +27,7 @@ margin-top:15px;
 
 .warning{
 background:#fff3cd;
-border-left:5px solid #ffc107;
+border-left:5px solid #ffcc00;
 padding:15px;
 margin-top:15px;
 }
@@ -35,6 +36,11 @@ textarea{
 width:100%;
 height:260px;
 margin-top:20px;
+}
+
+button{
+margin-top:10px;
+padding:10px 16px;
 }
 
 </style>
@@ -49,6 +55,7 @@ margin-top:20px;
 </header>
 
 <nav>
+
 <a href="../index.html">Home</a>
 <a href="../sitemap.html">Sitemap</a>
 <a href="know-your-rights.html">Know Your Rights</a>
@@ -59,11 +66,16 @@ margin-top:20px;
 <a href="timeline-tool.html">Timeline Tool</a>
 <a href="letters.html">Letters</a>
 <a href="resources.html">Resources</a>
+
 </nav>
 
 <div class="generator">
 
 <h2>Tenant Letter Generator</h2>
+
+<p>
+Answer a few questions to generate a letter grounded in housing legislation.
+</p>
 
 <label>Your Name</label>
 <input id="tenantName">
@@ -77,13 +89,12 @@ margin-top:20px;
 
 <option value="">Select issue</option>
 
-<option value="repairs">Repairs not completed</option>
-
-<option value="access">Improper property access</option>
-
-<option value="deposit">Deposit not protected</option>
-
+<option value="repairs">Repairs not carried out</option>
+<option value="deposit">Deposit issue</option>
 <option value="fees">Illegal tenant fees</option>
+<option value="access">Improper access</option>
+<option value="harassment">Harassment by landlord</option>
+<option value="eviction">Unlawful eviction concerns</option>
 
 </select>
 
@@ -109,100 +120,103 @@ margin-top:20px;
 
 function showQuestions(){
 
-let issue = document.getElementById("issueSelect").value
-let questions = document.getElementById("questions")
-let explanation = document.getElementById("explanation")
+let issue=document.getElementById("issueSelect").value
+let q=document.getElementById("questions")
+let exp=document.getElementById("explanation")
 
-questions.innerHTML=""
+q.innerHTML=""
 
 if(issue==="repairs"){
 
-explanation.innerHTML =
-"<strong>Legal basis:</strong> Section 11 of the Landlord and Tenant Act 1985. Landlords must maintain the structure of the property and key installations such as heating, water and electricity."
+exp.innerHTML="<strong>Legal basis:</strong> Section 11 of the Landlord and Tenant Act 1985 requires landlords to maintain structure and key installations."
 
-questions.innerHTML = `
+q.innerHTML=`
 
-<label>Have you already reported the repair to the landlord?</label>
-
+<label>Have you reported the repair?</label>
 <select id="repairReported">
-
 <option value="no">No</option>
-
 <option value="yes">Yes</option>
-
 </select>
 
-<label>How long ago did you report it?</label>
-
+<label>How long since reporting?</label>
 <select id="repairDelay">
-
-<option value="fewDays">Less than 7 days</option>
-
-<option value="week">7-14 days</option>
-
+<option value="recent">Less than 7 days</option>
+<option value="medium">7–14 days</option>
 <option value="long">More than 14 days</option>
-
-</select>
-`
-}
-
-if(issue==="access"){
-
-explanation.innerHTML =
-"<strong>Legal principle:</strong> Tenants have the right to 'quiet enjoyment'. Landlords must normally give at least 24 hours notice before entering the property except in emergencies."
-
-questions.innerHTML = `
-
-<label>Did the landlord give at least 24 hours notice?</label>
-
-<select id="notice">
-
-<option value="yes">Yes</option>
-
-<option value="no">No</option>
-
 </select>
 `
 }
 
 if(issue==="deposit"){
 
-explanation.innerHTML =
-"<strong>Legal basis:</strong> Housing Act 2004. Deposits must be protected in an approved tenancy deposit scheme within 30 days."
+exp.innerHTML="<strong>Legal basis:</strong> Housing Act 2004 requires deposits to be protected within 30 days."
 
-questions.innerHTML = `
+q.innerHTML=`
 
-<label>Was your deposit protected within 30 days?</label>
-
-<select id="depositProtected">
-
-<option value="no">No</option>
-
+<label>Was your deposit protected?</label>
+<select id="depositStatus">
 <option value="unknown">Unsure</option>
-
-<option value="yes">Yes</option>
-
+<option value="notProtected">No</option>
+<option value="notReturned">Protected but not returned</option>
 </select>
 `
 }
 
 if(issue==="fees"){
 
-explanation.innerHTML =
-"<strong>Legal basis:</strong> Tenant Fees Act 2019. Most fees charged to tenants are prohibited."
+exp.innerHTML="<strong>Legal basis:</strong> Tenant Fees Act 2019 bans most fees charged to tenants."
 
-questions.innerHTML = `
+q.innerHTML=`
 
 <label>What type of fee were you charged?</label>
-
 <select id="feeType">
-
 <option value="admin">Admin or application fee</option>
-
-<option value="reference">Referencing fee</option>
-
+<option value="reference">Reference fee</option>
 <option value="other">Other fee</option>
+</select>
+`
+}
 
+if(issue==="access"){
+
+exp.innerHTML="<strong>Legal principle:</strong> Tenants have the right to quiet enjoyment. Landlords normally must give 24 hours notice before entry."
+
+q.innerHTML=`
+
+<label>Did the landlord give 24 hours notice?</label>
+<select id="notice">
+<option value="yes">Yes</option>
+<option value="no">No</option>
+</select>
+`
+}
+
+if(issue==="harassment"){
+
+exp.innerHTML="<strong>Legal basis:</strong> Protection from Eviction Act 1977 prohibits landlord harassment."
+
+q.innerHTML=`
+
+<label>What behaviour occurred?</label>
+<select id="harassmentType">
+<option value="threats">Threats or intimidation</option>
+<option value="repeatedVisits">Repeated unwanted visits</option>
+<option value="pressure">Pressure to leave property</option>
+</select>
+`
+}
+
+if(issue==="eviction"){
+
+exp.innerHTML="<strong>Legal basis:</strong> Evictions normally require legal notice and court process."
+
+q.innerHTML=`
+
+<label>Has the landlord tried to remove you without a court order?</label>
+<select id="evictionAttempt">
+<option value="yes">Yes</option>
+<option value="threat">Threatened eviction</option>
+<option value="no">No</option>
 </select>
 `
 }
@@ -214,10 +228,9 @@ function generateLetter(){
 let tenant=document.getElementById("tenantName").value
 let landlord=document.getElementById("landlordName").value
 let issue=document.getElementById("issueSelect").value
+let warning=document.getElementById("warningBox")
 
-let warningBox=document.getElementById("warningBox")
-
-warningBox.style.display="none"
+warning.style.display="none"
 
 let today=new Date().toLocaleDateString()
 
@@ -229,20 +242,15 @@ let notice=document.getElementById("notice").value
 
 if(notice==="yes"){
 
-warningBox.style.display="block"
+warning.style.display="block"
 
-warningBox.innerHTML =
-"The landlord appears to have provided the usual 24 hours notice before entry. This generally complies with tenancy law, so a complaint letter may not be appropriate."
-
-document.getElementById("preview").value=""
+warning.innerHTML="The landlord appears to have provided proper notice."
 
 return
 
 }
 
-body=`I am writing regarding entry to the property without sufficient notice.
-
-Tenants are entitled to quiet enjoyment of their home and landlords should normally provide at least 24 hours notice before entering unless there is an emergency.`
+body="I am writing regarding entry to the property without the usual 24 hours notice required for tenant privacy."
 
 }
 
@@ -253,28 +261,22 @@ let delay=document.getElementById("repairDelay").value
 
 if(reported==="no"){
 
-body=`I am writing to notify you of a repair issue at the property.
-
-Under Section 11 of the Landlord and Tenant Act 1985 landlords are responsible for maintaining the structure of the property and essential services.`
+body="I am writing to formally notify you of a repair issue at the property."
 
 }
 
-if(reported==="yes" && delay==="fewDays"){
+if(reported==="yes" && delay==="recent"){
 
-warningBox.style.display="block"
-
-warningBox.innerHTML =
-"The repair was reported recently. Landlords must be given a reasonable amount of time to arrange repairs."
+warning.style.display="block"
+warning.innerHTML="The repair was reported recently and landlords should be given reasonable time."
 
 return
 
 }
 
-if(reported==="yes" && delay!=="fewDays"){
+if(reported==="yes" && delay!=="recent"){
 
-body=`I previously reported a repair issue which remains unresolved.
-
-Under Section 11 of the Landlord and Tenant Act 1985 landlords are responsible for maintaining the property and carrying out necessary repairs within a reasonable time.`
+body="I previously reported a repair issue which remains unresolved."
 
 }
 
@@ -282,30 +284,25 @@ Under Section 11 of the Landlord and Tenant Act 1985 landlords are responsible f
 
 if(issue==="deposit"){
 
-let deposit=document.getElementById("depositProtected").value
-
-if(deposit==="yes"){
-
-warningBox.style.display="block"
-
-warningBox.innerHTML =
-"If your deposit was protected correctly, a complaint letter may not be necessary."
-
-return
-
-}
-
-body=`I am writing regarding my tenancy deposit.
-
-Under the Housing Act 2004 landlords must protect deposits within 30 days in an approved scheme.`
+body="I am writing regarding my tenancy deposit and request confirmation of protection or its return."
 
 }
 
 if(issue==="fees"){
 
-body=`I am writing regarding a fee that I believe may not be permitted.
+body="I am writing regarding a fee I believe may not be permitted under tenant fee regulations."
 
-Under the Tenant Fees Act 2019 most fees charged to tenants are prohibited.`
+}
+
+if(issue==="harassment"){
+
+body="I am writing regarding behaviour which may constitute harassment under housing law."
+
+}
+
+if(issue==="eviction"){
+
+body="I am writing to clarify the legal process regarding eviction and to ensure all procedures comply with housing law."
 
 }
 
@@ -345,11 +342,12 @@ function generateEmail(){
 
 let text=encodeURIComponent(document.getElementById("preview").value)
 
-window.location.href="mailto:?subject=Tenant Request&body="+text
+window.location.href="mailto:?subject=Tenant Letter&body="+text
 
 }
 
 </script>
 
 </body>
+
 </html>
