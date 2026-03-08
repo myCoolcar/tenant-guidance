@@ -4,160 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Know Your Rights – Tenant Advocate</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../accessibility.css">
 <style>
-:root {
-  --navy: #0d1b2a;
-  --teal: #1a7a6e;
-  --teal-light: #24a898;
-  --gold: #e8b84b;
-  --muted: #8a9ab0;
-  --card-bg: #162333;
-  --border: rgba(255,255,255,0.08);
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--navy);
-  color: #e8edf3;
-  min-height: 100vh;
-}
-
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 10% -10%, rgba(26,122,110,0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(232,184,75,0.07) 0%, transparent 55%);
-  pointer-events: none; z-index: 0;
-}
-
-/* ─── HEADER ─── */
-header {
-  position: relative; z-index: 10;
-  padding: 24px 40px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.logo-icon {
-  width: 40px; height: 40px;
-  background: linear-gradient(135deg, var(--teal), var(--teal-light));
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-}
-.logo h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
-.logo p  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-
-nav { display: flex; gap: 6px; flex-wrap: wrap; }
-nav a {
-  color: var(--muted); text-decoration: none; font-size: 0.82rem;
-  padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
-  border: 1px solid transparent;
-}
-nav a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
-nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); background: rgba(26,122,110,0.12); }
-
-/* ─── HERO ─── */
-.hero {
-  position: relative; z-index: 1;
-  max-width: 860px; margin: 60px auto 0; padding: 0 40px;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.4);
-  color: var(--teal-light); font-size: 0.78rem;
-  padding: 6px 16px; border-radius: 20px; margin-bottom: 24px;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.hero h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 4.5vw, 3rem);
-  line-height: 1.15; letter-spacing: -0.02em;
-  color: #fff; margin-bottom: 14px;
-}
-.hero h2 em { font-style: normal; color: var(--gold); }
-.hero p { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 580px; }
-
-/* ─── MAIN CONTENT ─── */
-.content {
-  position: relative; z-index: 1;
-  max-width: 900px; margin: 50px auto 80px; padding: 0 40px;
-  display: flex; flex-direction: column; gap: 40px;
-}
-
-/* ─── SECTION CARDS ─── */
-.section-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 20px; overflow: hidden;
-}
-
-.section-card-header {
-  padding: 22px 28px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 14px;
-}
-.section-icon {
-  width: 40px; height: 40px; flex-shrink: 0;
-  background: rgba(26,122,110,0.15);
-  border: 1px solid rgba(26,122,110,0.25);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-}
-.section-card-header h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; color: #fff; letter-spacing: -0.01em;
-}
-
-.section-card-body { padding: 24px 28px; }
-.section-card-body p {
-  color: #b0bfcc; font-size: 0.9rem; line-height: 1.75; margin-bottom: 18px;
-}
-.section-card-body p:last-child { margin-bottom: 0; }
-
-/* ─── LEGISLATION LIST ─── */
+/* Legislation list */
 .legislation-list { display: flex; flex-direction: column; gap: 12px; }
-
 .leg-item {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px 18px;
   display: flex; align-items: flex-start; gap: 14px;
-  transition: border-color 0.2s;
-  text-decoration: none;
+  transition: border-color 0.2s; text-decoration: none;
 }
 .leg-item:hover { border-color: rgba(26,122,110,0.35); }
-
 .leg-item-year {
-  font-size: 0.68rem; font-weight: 600;
-  color: var(--teal-light); background: rgba(26,122,110,0.15);
-  border: 1px solid rgba(26,122,110,0.3);
-  border-radius: 6px; padding: 3px 8px;
-  white-space: nowrap; margin-top: 2px; flex-shrink: 0;
-  letter-spacing: 0.03em;
+  font-size: 0.68rem; font-weight: 600; color: var(--teal-light);
+  background: rgba(26,122,110,0.15); border: 1px solid rgba(26,122,110,0.3);
+  border-radius: 6px; padding: 3px 8px; white-space: nowrap;
+  margin-top: 2px; flex-shrink: 0; letter-spacing: 0.03em;
 }
 .leg-item-text { flex: 1; }
 .leg-item-text strong { color: #fff; font-size: 0.88rem; font-weight: 500; display: block; margin-bottom: 4px; }
 .leg-item-text span  { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
 .leg-item-link {
-  color: var(--teal-light); font-size: 0.75rem;
-  text-decoration: none; white-space: nowrap; margin-top: 2px;
-  flex-shrink: 0; display: flex; align-items: center; gap: 4px;
+  color: var(--teal-light); font-size: 0.75rem; text-decoration: none;
+  white-space: nowrap; margin-top: 2px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 4px;
 }
 .leg-item-link:hover { text-decoration: underline; }
 
-/* ─── RIGHTS GRID ─── */
+/* Rights grid */
 .rights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
 .right-item {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
   border-radius: 12px; padding: 14px 16px;
   display: flex; align-items: flex-start; gap: 10px;
 }
@@ -165,74 +43,33 @@ nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); bac
 .right-text strong { display: block; color: #e8edf3; font-size: 0.83rem; font-weight: 500; margin-bottom: 3px; }
 .right-text span   { color: var(--muted); font-size: 0.77rem; line-height: 1.5; }
 
-/* ─── TENANCY TYPE CARDS ─── */
+/* Tenancy type cards */
 .tenancy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-
 .tenancy-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px;
-  transition: border-color 0.2s;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; transition: border-color 0.2s;
 }
 .tenancy-card:hover { border-color: rgba(26,122,110,0.3); }
 .tenancy-card h4 { color: var(--gold); font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.02em; }
 .tenancy-card p  { color: var(--muted); font-size: 0.78rem; line-height: 1.6; }
 
-/* ─── TIPS LIST ─── */
+/* Practical tips list */
 .tips-list { display: flex; flex-direction: column; gap: 8px; }
 .tip-item {
   display: flex; align-items: flex-start; gap: 10px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
   border-radius: 10px; padding: 12px 16px;
 }
 .tip-num {
   width: 22px; height: 22px; flex-shrink: 0;
-  background: rgba(232,184,75,0.15);
-  border: 1px solid rgba(232,184,75,0.3);
-  border-radius: 50%; font-size: 0.68rem;
-  color: var(--gold); font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
-  margin-top: 1px;
+  background: rgba(232,184,75,0.15); border: 1px solid rgba(232,184,75,0.3);
+  border-radius: 50%; font-size: 0.68rem; color: var(--gold); font-weight: 600;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
 }
 .tip-item p { color: #b0bfcc; font-size: 0.83rem; line-height: 1.6; }
 
-/* ─── CTA BANNER ─── */
-.cta-banner {
-  background: linear-gradient(135deg, rgba(26,122,110,0.2), rgba(26,122,110,0.08));
-  border: 1px solid rgba(26,122,110,0.3);
-  border-radius: 16px; padding: 28px 32px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
-}
-.cta-banner p { color: #b0bfcc; font-size: 0.9rem; line-height: 1.65; }
-.cta-banner p strong { color: #fff; display: block; font-size: 1rem; margin-bottom: 6px; }
-.cta-btn {
-  flex-shrink: 0; padding: 12px 24px;
-  background: linear-gradient(135deg, var(--teal), var(--teal-light));
-  border: none; border-radius: 10px;
-  color: #fff; font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem; font-weight: 500;
-  text-decoration: none; white-space: nowrap;
-  transition: opacity 0.2s;
-}
-.cta-btn:hover { opacity: 0.88; }
-
-/* ─── FOOTER ─── */
-footer {
-  position: relative; z-index: 1;
-  border-top: 1px solid var(--border);
-  padding: 24px 40px; text-align: center;
-  color: var(--muted); font-size: 0.78rem;
-}
-
 @media (max-width: 768px) {
-  header { padding: 16px 20px; flex-direction: column; gap: 12px; }
-  .hero, .content { padding: 0 20px; }
-  .hero { margin-top: 40px; }
-  .rights-grid  { grid-template-columns: 1fr; }
-  .tenancy-grid { grid-template-columns: 1fr; }
-  .cta-banner   { flex-direction: column; }
-  .section-card-body, .section-card-header { padding: 18px 20px; }
+  .rights-grid, .tenancy-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -468,4 +305,5 @@ footer {
 </footer>
 
 </body>
+<script src="../accessibility.js"></script>
 </html>
