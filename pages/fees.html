@@ -1,133 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Letting Agent Fees - Tenant Advocate</title>
-    <link rel="stylesheet" type="text/css" href="../styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letting Fees – Tenant Advocate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a; --teal: #1a7a6e; --teal-light: #24a898;
+  --gold: #e8b84b; --muted: #8a9ab0; --card-bg: #162333; --border: rgba(255,255,255,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: #e8edf3; min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -10%, rgba(26,122,110,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(232,184,75,0.07) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+}
+header {
+  position: relative; z-index: 10; padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon {
+  width: 40px; height: 40px; background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.logo h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
+.logo p  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a {
+  color: var(--muted); text-decoration: none; font-size: 0.82rem;
+  padding: 6px 14px; border-radius: 20px; transition: all 0.2s; border: 1px solid transparent;
+}
+nav a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
+nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); background: rgba(26,122,110,0.12); }
+
+.hero { position: relative; z-index: 1; max-width: 860px; margin: 60px auto 0; padding: 0 40px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.4);
+  color: var(--teal-light); font-size: 0.78rem; padding: 6px 16px; border-radius: 20px;
+  margin-bottom: 24px; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.hero h2 {
+  font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.15; letter-spacing: -0.02em; color: #fff; margin-bottom: 14px;
+}
+.hero h2 em { font-style: normal; color: var(--gold); }
+.hero p { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 580px; }
+
+.content {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 50px auto 80px; padding: 0 40px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+.section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.section-card-header {
+  padding: 20px 28px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.section-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(26,122,110,0.15); border: 1px solid rgba(26,122,110,0.25);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.section-card-header h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #fff; }
+.section-card-header p  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.section-card-body { padding: 24px 28px; }
+.section-card-body > p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.75; margin-bottom: 16px; }
+.section-card-body > p:last-child { margin-bottom: 0; }
+
+/* Permitted payments */
+.permitted-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.permitted-card {
+  background: rgba(26,122,110,0.1); border: 1px solid rgba(26,122,110,0.25);
+  border-radius: 12px; padding: 16px; text-align: center;
+}
+.permitted-card .pc-icon  { font-size: 1.3rem; margin-bottom: 8px; }
+.permitted-card h4 { color: #fff; font-size: 0.85rem; font-weight: 500; margin-bottom: 5px; }
+.permitted-card p  { color: var(--muted); font-size: 0.76rem; line-height: 1.5; }
+
+/* Banned fees */
+.banned-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.banned-item {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(231,76,60,0.06); border: 1px solid rgba(231,76,60,0.15);
+  border-radius: 10px; padding: 11px 14px;
+}
+.banned-item .x { color: #f1857a; font-size: 0.85rem; flex-shrink: 0; font-weight: 700; }
+.banned-item p { color: #c9a0a0; font-size: 0.82rem; line-height: 1.4; }
+
+/* Penalties */
+.penalty-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.penalty-card {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; text-align: center;
+}
+.penalty-card .pen-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--gold); margin-bottom: 6px; }
+.penalty-card .pen-label { color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
+
+/* Steps */
+.steps-list { display: flex; flex-direction: column; gap: 8px; }
+.step-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.step-num {
+  width: 26px; height: 26px; flex-shrink: 0;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.35);
+  border-radius: 50%; font-size: 0.72rem; color: var(--teal-light); font-weight: 600;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.step-item p { color: #b0bfcc; font-size: 0.85rem; line-height: 1.65; }
+.step-item p strong { color: #e8edf3; }
+
+/* Red flags */
+.redflag-list { display: flex; flex-direction: column; gap: 8px; }
+.redflag-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+}
+.redflag-dot { width: 8px; height: 8px; border-radius: 50%; background: #f1857a; flex-shrink: 0; margin-top: 5px; }
+.redflag-item p { color: #b0bfcc; font-size: 0.83rem; line-height: 1.55; }
+
+/* Alert */
+.alert-box { border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 0.83rem; line-height: 1.7; }
+.alert-warning { background: rgba(232,184,75,0.1); border: 1px solid rgba(232,184,75,0.25); color: #f5c843; }
+.alert-box strong { color: #fff; }
+
+/* Legal ref */
+.legal-ref {
+  background: rgba(26,122,110,0.08); border-left: 3px solid var(--teal-light);
+  border-radius: 0 8px 8px 0; padding: 12px 14px;
+  font-size: 0.78rem; color: rgba(168,220,215,0.85); line-height: 1.65; margin-top: 18px;
+}
+.legal-ref strong { color: var(--teal-light); }
+.legal-ref a { color: var(--teal-light); }
+
+/* CTA */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(26,122,110,0.2), rgba(26,122,110,0.08));
+  border: 1px solid rgba(26,122,110,0.3); border-radius: 16px;
+  padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.cta-banner p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.65; }
+.cta-banner p strong { color: #fff; display: block; font-size: 0.95rem; margin-bottom: 4px; }
+.cta-btn {
+  flex-shrink: 0; padding: 11px 22px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border: none; border-radius: 10px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500;
+  text-decoration: none; white-space: nowrap; transition: opacity 0.2s;
+}
+.cta-btn:hover { opacity: 0.88; }
+
+footer {
+  position: relative; z-index: 1; border-top: 1px solid var(--border);
+  padding: 24px 40px; text-align: center; color: var(--muted); font-size: 0.78rem;
+}
+@media (max-width: 768px) {
+  header { padding: 16px 20px; flex-direction: column; gap: 12px; }
+  .hero, .content { padding: 0 20px; }
+  .hero { margin-top: 40px; }
+  .permitted-grid, .banned-grid, .penalty-row { grid-template-columns: 1fr; }
+  .section-card-body, .section-card-header { padding: 18px 20px; }
+  .cta-banner { flex-direction: column; }
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Letting Agent Fees</h1>
-        <p>Understanding what fees are legal and what you should refuse to pay</p>
-    </header>
 
-    <nav>
-        <a href="../index.html">Home</a>
-        <a href="../sitemap.html">Sitemap</a>
-        <a href="know-your-rights.html">Know Your Rights</a>
-        <a href="repairs.html">Repairs</a>
-        <a href="deposits.html">Deposits</a>
-        <a href="fees.html">Fees</a>
-        <a href="evictions.html">Evictions</a>
-        <a href="timeline-tool.html">Timeline Tool</a>
-        <a href="letters.html">Letters</a>
-        <a href="resources.html">Resources</a>
-    </nav>
+<header>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon">⚖️</div>
+    <div><h1>Tenant Advocate</h1><p>Housing Rights Platform</p></div>
+  </a>
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="know-your-rights.html">Rights</a>
+    <a href="repairs.html">Repairs</a>
+    <a href="deposits.html">Deposits</a>
+    <a href="fees.html" class="active">Fees</a>
+    <a href="evictions.html">Evictions</a>
+    <a href="timeline-tool.html">Timeline</a>
+    <a href="letters.html">Letters</a>
+    <a href="resources.html">Resources</a>
+  </nav>
+</header>
 
-    <div class="container">
-        <section>
-            <h2>Tenant Fees Act 2019</h2>
-            <p>
-                Most letting agent fees are now banned under the
-                <a href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank">
-                    Tenant Fees Act 2019
-                </a>.
-                This important legislation protects tenants from excessive and hidden charges
-                that were previously charged by letting agents.
-            </p>
-        </section>
+<div class="hero">
+  <div class="hero-badge">💷 Tenant Fees Act 2019</div>
+  <h2>Letting <em>fees.</em></h2>
+  <p>Most fees charged by landlords and letting agents are illegal. Here is exactly what you can be charged — and everything you can refuse.</p>
+</div>
 
-        <section>
-            <h2>The ONLY Permitted Payments</h2>
-            <p>Letting agents can only legally charge tenants for:</p>
-            <ul>
-                <li><strong>Rent</strong> - Your monthly or periodic rent payments</li>
-                <li><strong>Refundable Deposit</strong> - Protected in an approved scheme (typically 5 weeks' rent maximum)</li>
-                <li><strong>Holding Deposit</strong> - Small refundable deposit to reserve a property (maximum 5% of first month's rent)</li>
-            </ul>
-            <p><strong>That's it. Nothing else.</strong></p>
-        </section>
+<div class="content">
 
-        <section>
-            <h2>Commonly BANNED Fees</h2>
-            <p>You should NEVER pay these charges - they are illegal:</p>
-            <ul>
-                <li>❌ Application fees</li>
-                <li>❌ Administration fees</li>
-                <li>❌ Referencing fees (credit checks)</li>
-                <li>❌ Guarantor fees</li>
-                <li>❌ Early termination fees</li>
-                <li>❌ Renewal fees</li>
-                <li>❌ Inventory fees</li>
-                <li>❌ Check-in/check-out inspection fees</li>
-                <li>❌ Pet fees (though landlord can refuse pets)</li>
-                <li>❌ Cleaning fees (cannot be charged upfront)</li>
-                <li>❌ Tenancy agreement fees</li>
-                <li>❌ Key replacement fees (except actual cost if you lost them)</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>What If You're Asked to Pay Illegal Fees?</h2>
-            <ol>
-                <li><strong>Refuse to pay</strong> - You have no legal obligation</li>
-                <li><strong>Request refund in writing</strong> - If you already paid</li>
-                <li><strong>Report to local council</strong> - Contact your local council enforcement team</li>
-                <li><strong>Report to Citizens Advice</strong> - They can guide you further</li>
-                <li><strong>Contact Shelter</strong> - Free advice on your rights</li>
-                <li><strong>Claim through court</strong> - You can recover illegal fees through the County Court</li>
-            </ol>
-        </section>
-
-        <section>
-            <h2>Red Flags When Viewing Properties</h2>
-            <p>Be cautious of letting agents who:</p>
-            <ul>
-                <li>Ask for upfront "application fees" or "administration fees"</li>
-                <li>Charge for credit checks or referencing</li>
-                <li>Require payment before you've signed the tenancy agreement</li>
-                <li>Won't provide itemized fees in writing</li>
-                <li>Pressure you to pay quickly</li>
-                <li>Ask for cash payments (no paper trail)</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Key Case Law</h2>
-            <p>
-                The Tenant Fees Act 2019 came into force on 1 June 2019. 
-                If you paid illegal fees before this date, you may still be able to claim them back 
-                within six years. Seek legal advice if you believe this applies to you.
-            </p>
-        </section>
-
-        <section>
-            <h2>Holding Deposits Explained</h2>
-            <p>
-                A holding deposit is the only fee (other than rent and deposit) that is legally allowed. 
-                However, it must follow strict rules:
-            </p>
-            <ul>
-                <li>Maximum: 5% of the first month's rent</li>
-                <li>It should be refundable</li>
-                <li>It becomes part of your deposit if you go ahead</li>
-                <li>It should be returned if you withdraw your application or the landlord rejects you</li>
-                <li>It should be refunded if the landlord changes their mind</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Template Letter for Illegal Fees</h2>
-            <p>
-                Visit our <a href="letters.html">Legal Letter Generator</a> for a template you can use 
-                to dispute illegal fees charged to you.
-            </p>
-        </section>
+  <!-- PERMITTED PAYMENTS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">✅</div>
+      <div>
+        <h3>The Only Permitted Payments</h3>
+        <p>Everything else is banned by the Tenant Fees Act 2019</p>
+      </div>
     </div>
-
-    <div class="footer">
-        <p>Tenant Advocate | Legal information only | Not legal advice</p>
+    <div class="section-card-body">
+      <p>Since 1 June 2019, landlords and letting agents in England can only require tenants to make the following payments. That is the complete list — nothing has been left out.</p>
+      <div class="permitted-grid">
+        <div class="permitted-card">
+          <div class="pc-icon">🏠</div>
+          <h4>Rent</h4>
+          <p>Your periodic rent as set out in the tenancy agreement.</p>
+        </div>
+        <div class="permitted-card">
+          <div class="pc-icon">🔒</div>
+          <h4>Security Deposit</h4>
+          <p>Capped at 5 weeks' rent where annual rent is under £50,000, or 6 weeks where it is £50,000 or above. Must be protected.</p>
+        </div>
+        <div class="permitted-card">
+          <div class="pc-icon">📋</div>
+          <h4>Holding Deposit</h4>
+          <p>To reserve a property only. Capped at one week's rent. Must be repaid or credited against rent when you move in.</p>
+        </div>
+      </div>
+      <p>There are also two narrow default payments a landlord may charge: <strong>late payment interest</strong> on rent more than 14 days overdue (capped at 3% above the Bank of England base rate), and <strong>replacement of a lost key or security device</strong> at the actual cost incurred, supported by evidence.</p>
+      <div class="legal-ref">
+        <strong>Legal basis:</strong> <a href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank">Tenant Fees Act 2019, Schedule 1</a>. This Act applies to all assured shorthold tenancies in England from 1 June 2019.
+      </div>
     </div>
+  </div>
+
+  <!-- BANNED FEES -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🚫</div>
+      <h3>Fees You Should Never Pay</h3>
+    </div>
+    <div class="section-card-body">
+      <p>The following charges are unlawful under the Tenant Fees Act 2019. If you have already paid any of them, you are entitled to a refund.</p>
+      <div class="banned-grid">
+        <div class="banned-item"><span class="x">✗</span><p>Application or administration fees</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Referencing or credit check fees</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Guarantor arrangement fees</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Inventory fees (check-in or check-out)</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Tenancy renewal or extension fees</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Tenancy agreement drafting fees</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Early termination fees (beyond actual losses)</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Upfront cleaning fees</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Pet fees or pet deposits</p></div>
+        <div class="banned-item"><span class="x">✗</span><p>Viewings fees</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PENALTIES -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">⚠️</div>
+      <h3>Penalties for Landlords Who Break the Rules</h3>
+    </div>
+    <div class="section-card-body">
+      <p>Trading Standards enforces the Tenant Fees Act 2019. The penalties are significant.</p>
+      <div class="penalty-row">
+        <div class="penalty-card">
+          <div class="pen-val">£5,000</div>
+          <div class="pen-label">Maximum civil penalty for a first breach of the Tenant Fees Act 2019</div>
+        </div>
+        <div class="penalty-card">
+          <div class="pen-val">£30,000</div>
+          <div class="pen-label">Maximum penalty for a further breach within five years — or a criminal prosecution and banning order</div>
+        </div>
+      </div>
+      <p style="margin-top:16px;">Additionally, a landlord or agent who has taken a prohibited payment cannot lawfully serve a valid Section 21 notice until the money has been repaid.</p>
+    </div>
+  </div>
+
+  <!-- WHAT TO DO -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📝</div>
+      <h3>What to Do if You Are Asked for an Illegal Fee</h3>
+    </div>
+    <div class="section-card-body">
+      <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><p><strong>Refuse to pay.</strong> You have no legal obligation to pay a prohibited fee. Do not feel pressured.</p></div>
+        <div class="step-item"><div class="step-num">2</div><p><strong>Request a refund in writing</strong> if you have already paid. Email is best. State that the charge is prohibited under the Tenant Fees Act 2019 and request repayment within 14 days.</p></div>
+        <div class="step-item"><div class="step-num">3</div><p><strong>Report to your local council.</strong> Trading Standards is responsible for enforcing the Act. Contact your local council to make a formal complaint. You can do this even if you ultimately paid the fee.</p></div>
+        <div class="step-item"><div class="step-num">4</div><p><strong>Seek advice or pursue a court claim.</strong> If the fee is not refunded, you can seek a County Court judgment to recover it. Contact Citizens Advice or Shelter for guidance before starting a claim.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOLDING DEPOSITS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📌</div>
+      <h3>Holding Deposits Explained</h3>
+    </div>
+    <div class="section-card-body">
+      <p>A holding deposit is the only pre-tenancy payment (other than rent) that is permitted, and it comes with strict rules.</p>
+      <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><p>It must not exceed one week's rent.</p></div>
+        <div class="step-item"><div class="step-num">2</div><p>The landlord or agent must refund it — or put it towards your first rent or deposit — within 15 calendar days of the tenancy starting.</p></div>
+        <div class="step-item"><div class="step-num">3</div><p>The landlord may keep it only in specific circumstances: if you withdraw from the tenancy, fail a right to rent check, provide false or misleading information, or fail to enter the tenancy agreement within the 15-day deadline through your own fault.</p></div>
+        <div class="step-item"><div class="step-num">4</div><p>If the landlord withdraws from the tenancy or fails to progress it without a permitted reason, the holding deposit must be returned to you in full.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RED FLAGS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🔍</div>
+      <h3>Red Flags When Viewing a Property</h3>
+    </div>
+    <div class="section-card-body">
+      <p>Be cautious of letting agents or landlords who do any of the following — each one may indicate they are not complying with the law.</p>
+      <div class="redflag-list">
+        <div class="redflag-item"><div class="redflag-dot"></div><p>Ask for any upfront payment before you have signed a tenancy agreement, beyond a holding deposit</p></div>
+        <div class="redflag-item"><div class="redflag-dot"></div><p>Refer to "admin fees", "referencing fees", or "application fees" as though they are routine</p></div>
+        <div class="redflag-item"><div class="redflag-dot"></div><p>Refuse to provide a written breakdown of all charges before you commit</p></div>
+        <div class="redflag-item"><div class="redflag-dot"></div><p>Request cash payment with no receipt</p></div>
+        <div class="redflag-item"><div class="redflag-dot"></div><p>Pressure you to pay quickly to "secure the property" beyond a lawful holding deposit</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <p>
+      <strong>Charged an illegal fee?</strong>
+      Generate a formal letter requesting a refund, citing the Tenant Fees Act 2019.
+    </p>
+    <a class="cta-btn" href="letters.html">Open Letter Generator →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
+</footer>
 </body>
 </html>
