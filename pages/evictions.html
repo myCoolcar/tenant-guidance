@@ -1,175 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evictions - Tenant Advocate</title>
-    <link rel="stylesheet" type="text/css" href="../styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evictions – Tenant Advocate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a; --teal: #1a7a6e; --teal-light: #24a898;
+  --gold: #e8b84b; --muted: #8a9ab0; --card-bg: #162333; --border: rgba(255,255,255,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: #e8edf3; min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -10%, rgba(26,122,110,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(232,184,75,0.07) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+}
+header {
+  position: relative; z-index: 10; padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon {
+  width: 40px; height: 40px; background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.logo h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
+.logo p  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a {
+  color: var(--muted); text-decoration: none; font-size: 0.82rem;
+  padding: 6px 14px; border-radius: 20px; transition: all 0.2s; border: 1px solid transparent;
+}
+nav a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
+nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); background: rgba(26,122,110,0.12); }
+
+.hero { position: relative; z-index: 1; max-width: 860px; margin: 60px auto 0; padding: 0 40px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.4);
+  color: var(--teal-light); font-size: 0.78rem; padding: 6px 16px; border-radius: 20px;
+  margin-bottom: 24px; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.hero h2 {
+  font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.15; letter-spacing: -0.02em; color: #fff; margin-bottom: 14px;
+}
+.hero h2 em { font-style: normal; color: var(--gold); }
+.hero p { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 580px; }
+
+.content {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 50px auto 80px; padding: 0 40px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+.section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.section-card-header {
+  padding: 20px 28px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.section-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(26,122,110,0.15); border: 1px solid rgba(26,122,110,0.25);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.section-card-header h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #fff; }
+.section-card-header p  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.section-card-body { padding: 24px 28px; }
+.section-card-body > p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.75; margin-bottom: 16px; }
+.section-card-body > p:last-child { margin-bottom: 0; }
+
+/* Notice type cards */
+.notice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.notice-card {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px;
+}
+.notice-card .notice-tag {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 6px; margin-bottom: 10px;
+}
+.notice-card.s21 .notice-tag { background: rgba(232,184,75,0.15); border: 1px solid rgba(232,184,75,0.3); color: var(--gold); }
+.notice-card.s8  .notice-tag { background: rgba(26,122,110,0.15); border: 1px solid rgba(26,122,110,0.3); color: var(--teal-light); }
+.notice-card h4 { color: #fff; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; }
+.notice-card ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.notice-card ul li { color: var(--muted); font-size: 0.8rem; line-height: 1.55; padding-left: 14px; position: relative; }
+.notice-card ul li::before { content: '–'; position: absolute; left: 0; color: var(--border); }
+
+/* Steps */
+.steps-list { display: flex; flex-direction: column; gap: 8px; }
+.step-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.step-num {
+  width: 26px; height: 26px; flex-shrink: 0;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.35);
+  border-radius: 50%; font-size: 0.72rem; color: var(--teal-light); font-weight: 600;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.step-item p { color: #b0bfcc; font-size: 0.85rem; line-height: 1.65; }
+.step-item p strong { color: #e8edf3; }
+
+/* Illegal eviction list */
+.illegal-list { display: flex; flex-direction: column; gap: 8px; }
+.illegal-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(231,76,60,0.06); border: 1px solid rgba(231,76,60,0.15);
+  border-radius: 10px; padding: 12px 14px;
+}
+.illegal-item .x-mark { color: #f1857a; font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+.illegal-item p { color: #c9a0a0; font-size: 0.83rem; line-height: 1.55; }
+
+/* Alert */
+.alert-box { border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 0.83rem; line-height: 1.7; }
+.alert-danger  { background: rgba(231,76,60,0.1);  border: 1px solid rgba(231,76,60,0.25);  color: #f1857a; }
+.alert-warning { background: rgba(232,184,75,0.1); border: 1px solid rgba(232,184,75,0.25); color: #f5c843; }
+.alert-box strong { color: #fff; }
+
+/* Legal ref */
+.legal-ref {
+  background: rgba(26,122,110,0.08); border-left: 3px solid var(--teal-light);
+  border-radius: 0 8px 8px 0; padding: 12px 14px;
+  font-size: 0.78rem; color: rgba(168,220,215,0.85); line-height: 1.65; margin-top: 18px;
+}
+.legal-ref strong { color: var(--teal-light); }
+.legal-ref a { color: var(--teal-light); }
+
+/* Help cards */
+.help-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.help-card {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; text-align: center; transition: border-color 0.2s;
+}
+.help-card:hover { border-color: rgba(26,122,110,0.3); }
+.help-card .help-icon { font-size: 1.4rem; margin-bottom: 8px; }
+.help-card h4 { color: #fff; font-size: 0.84rem; font-weight: 500; margin-bottom: 6px; }
+.help-card p  { color: var(--muted); font-size: 0.75rem; line-height: 1.55; margin-bottom: 10px; }
+.help-card a  { font-size: 0.76rem; color: var(--teal-light); text-decoration: none; }
+.help-card a:hover { text-decoration: underline; }
+
+/* CTA */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(26,122,110,0.2), rgba(26,122,110,0.08));
+  border: 1px solid rgba(26,122,110,0.3); border-radius: 16px;
+  padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.cta-banner p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.65; }
+.cta-banner p strong { color: #fff; display: block; font-size: 0.95rem; margin-bottom: 4px; }
+.cta-btn {
+  flex-shrink: 0; padding: 11px 22px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border: none; border-radius: 10px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500;
+  text-decoration: none; white-space: nowrap; transition: opacity 0.2s;
+}
+.cta-btn:hover { opacity: 0.88; }
+
+footer {
+  position: relative; z-index: 1; border-top: 1px solid var(--border);
+  padding: 24px 40px; text-align: center; color: var(--muted); font-size: 0.78rem;
+}
+@media (max-width: 768px) {
+  header { padding: 16px 20px; flex-direction: column; gap: 12px; }
+  .hero, .content { padding: 0 20px; }
+  .hero { margin-top: 40px; }
+  .notice-grid, .help-grid { grid-template-columns: 1fr; }
+  .section-card-body, .section-card-header { padding: 18px 20px; }
+  .cta-banner { flex-direction: column; }
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Evictions</h1>
-        <p>Understanding legal eviction procedures and your protections</p>
-    </header>
 
-    <nav>
-        <a href="../index.html">Home</a>
-        <a href="../sitemap.html">Sitemap</a>
-        <a href="know-your-rights.html">Know Your Rights</a>
-        <a href="repairs.html">Repairs</a>
-        <a href="deposits.html">Deposits</a>
-        <a href="fees.html">Fees</a>
-        <a href="evictions.html">Evictions</a>
-        <a href="timeline-tool.html">Timeline Tool</a>
-        <a href="letters.html">Letters</a>
-        <a href="resources.html">Resources</a>
-    </nav>
+<header>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon">⚖️</div>
+    <div><h1>Tenant Advocate</h1><p>Housing Rights Platform</p></div>
+  </a>
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="know-your-rights.html">Rights</a>
+    <a href="repairs.html">Repairs</a>
+    <a href="deposits.html">Deposits</a>
+    <a href="fees.html">Fees</a>
+    <a href="evictions.html" class="active">Evictions</a>
+    <a href="timeline-tool.html">Timeline</a>
+    <a href="letters.html">Letters</a>
+    <a href="resources.html">Resources</a>
+  </nav>
+</header>
 
-    <div class="container">
-        <section>
-            <h2>Legal Eviction Procedures</h2>
-            <p>
-                Evictions must follow strict legal procedures outlined in the
-                <a href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank">
-                    Housing Act 1988
-                </a>.
-                Landlords cannot simply lock you out or remove your belongings without a court order.
-            </p>
-            <p>
-                <strong>Important:</strong> If you receive an eviction notice, 
-                seek legal advice immediately from Citizens Advice, Shelter, or a solicitor.
-            </p>
-        </section>
+<div class="hero">
+  <div class="hero-badge">📜 Housing Act 1988</div>
+  <h2>Eviction <em>rights.</em></h2>
+  <p>Your landlord cannot simply ask you to leave. The law sets out a strict process they must follow — and you have real protections at every stage.</p>
+</div>
 
-        <section>
-            <h2>Types of Eviction Notices</h2>
+<div class="content">
 
-            <h3>Section 21 Notice (No-Fault Eviction)</h3>
-            <ul>
-                <li>Landlord does not need to give a reason</li>
-                <li>Minimum 2 months' notice required (as of June 2022)</li>
-                <li>Must be served correctly according to legal requirements</li>
-                <li>Can only be used for Assured Shorthold Tenancies (ASTs)</li>
-                <li>Cannot be used if there are rent arrears or breaches by landlord</li>
-            </ul>
-
-            <h3>Section 8 Notice (For-Cause Eviction)</h3>
-            <ul>
-                <li>Landlord must have a legal reason (e.g., rent arrears, breach of tenancy)</li>
-                <li>Minimum notice periods vary depending on the reason (usually 2-8 weeks)</li>
-                <li>Landlord must apply to court for a possession order</li>
-                <li>You have the right to defend yourself in court</li>
-                <li>Court may refuse eviction if circumstances are reasonable</li>
-            </ul>
-
-            <h3>Grounds for Section 8 Eviction</h3>
-            <ul>
-                <li>Rent arrears (usually 8 weeks or more)</li>
-                <li>Breach of tenancy terms (e.g., unauthorized occupants, damaging property)</li>
-                <li>Nuisance or annoyance to neighbors</li>
-                <li>Waste of the property</li>
-                <li>Conviction for criminality</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Your Protections</h2>
-            <ul>
-                <li>✓ You have the right to proper notice in writing</li>
-                <li>✓ Evictions must go through the courts (except in exceptional circumstances)</li>
-                <li>✓ You can challenge an eviction notice if it's not served correctly</li>
-                <li>✓ You can defend yourself at court proceedings</li>
-                <li>✓ Illegal eviction is a criminal offence</li>
-                <li>✓ You cannot be evicted in certain circumstances (e.g., winter evictions in some cases)</li>
-                <li>✓ Your landlord cannot evict for revenge or discrimination</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>If You Receive an Eviction Notice</h2>
-            <p><strong>Act immediately:</strong></p>
-            <ol>
-                <li>Check the notice was served correctly</li>
-                <li>Verify the notice period is correct</li>
-                <li>Check for any breaches in the notice wording</li>
-                <li>Seek legal advice immediately (within days)</li>
-                <li>Contact Shelter or Citizens Advice urgently</li>
-                <li>Gather evidence to defend yourself</li>
-                <li>Attend court if a hearing is scheduled</li>
-            </ol>
-        </section>
-
-        <section>
-            <h2>Illegal Eviction</h2>
-            <p>
-                It is a criminal offence for a landlord to evict you without following proper legal procedures. 
-                Illegal eviction includes:
-            </p>
-            <ul>
-                <li>Locking you out without a court order</li>
-                <li>Removing your belongings</li>
-                <li>Cutting off utilities (water, gas, electricity)</li>
-                <li>Changing the locks</li>
-                <li>Harassing you to force you to leave</li>
-                <li>Threatening you with eviction</li>
-            </ul>
-            <p>
-                <strong>If this happens:</strong> Contact the police and seek immediate legal advice. 
-                You may be able to claim damages.
-            </p>
-        </section>
-
-        <section>
-            <h2>Winter Evictions</h2>
-            <p>
-                While not a complete ban, there are restrictions on evicting during winter months 
-                (typically December to March). Judges must consider:
-            </p>
-            <ul>
-                <li>Whether vulnerable people live in the property</li>
-                <li>The availability of accommodation</li>
-                <li>Reasonableness in the circumstances</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Urgent Help</h2>
-            <ul>
-                <li>
-                    <a href="https://www.shelter.org.uk" target="_blank">
-                        Shelter Emergency Helpline
-                    </a>
-                    - Free advice and support
-                </li>
-                <li>
-                    <a href="https://www.citizensadvice.org.uk" target="_blank">
-                        Citizens Advice
-                    </a>
-                    - Free local advice services
-                </li>
-                <li>
-                    <a href="https://www.lawsociety.org.uk" target="_blank">
-                        Law Society
-                    </a>
-                    - Find a solicitor
-                </li>
-                <li>
-                    Visit our <a href="resources.html">resources page</a> for more organizations
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Document Everything</h2>
-            <p>
-                Keep a record of all communications and use our 
-                <a href="timeline-tool.html">timeline tool</a> to document your situation.
-            </p>
-        </section>
+  <!-- URGENT WARNING -->
+  <div style="background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);border-radius:16px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start;position:relative;z-index:1;">
+    <span style="font-size:1.4rem;flex-shrink:0;">🚨</span>
+    <div>
+      <p style="color:#f1857a;font-weight:600;font-size:0.92rem;margin-bottom:6px;">Facing eviction right now?</p>
+      <p style="color:#b0bfcc;font-size:0.84rem;line-height:1.7;">Do not leave your home until you have taken advice. Contact <strong style="color:#fff;">Shelter on 0808 800 4444</strong> (free) or Citizens Advice immediately. An invalid notice means you do not have to go.</p>
     </div>
+  </div>
 
-    <div class="footer">
-        <p>Tenant Advocate | Legal information only | Not legal advice</p>
+  <!-- LEGAL PROCESS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">⚖️</div>
+      <div>
+        <h3>The Legal Eviction Process</h3>
+        <p>What must happen before you can lawfully be required to leave</p>
+      </div>
     </div>
+    <div class="section-card-body">
+      <p>For the vast majority of private tenants, your landlord must follow all of these steps in order. There are no shortcuts.</p>
+      <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><p><strong>Serve a valid written notice.</strong> Either a Section 21 (no-fault) or Section 8 (grounds-based) notice under the Housing Act 1988. The notice must be on the correct form and contain all required information.</p></div>
+        <div class="step-item"><div class="step-num">2</div><p><strong>Wait for the notice period to expire.</strong> The minimum period depends on the type of notice. You are under no obligation to leave before it does.</p></div>
+        <div class="step-item"><div class="step-num">3</div><p><strong>Apply to court for a possession order.</strong> If you have not left, the landlord must apply to the County Court. You will be notified and have the right to attend the hearing and challenge the claim.</p></div>
+        <div class="step-item"><div class="step-num">4</div><p><strong>Obtain and enforce a warrant.</strong> Only after a court grants a possession order and, if necessary, a warrant of eviction can a court-appointed bailiff lawfully require you to leave.</p></div>
+      </div>
+      <div class="legal-ref">
+        <strong>Legal basis:</strong> <a href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank">Housing Act 1988</a> and the <a href="https://www.legislation.gov.uk/ukpga/1977/43" target="_blank">Protection from Eviction Act 1977</a>.
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTICE TYPES -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📄</div>
+      <h3>Types of Eviction Notice</h3>
+    </div>
+    <div class="section-card-body">
+      <p>There are two types of notice a landlord of an assured shorthold tenancy can use.</p>
+      <div class="notice-grid">
+
+        <div class="notice-card s21">
+          <span class="notice-tag">Section 21</span>
+          <h4>No-fault notice</h4>
+          <ul>
+            <li>The landlord does not need to give a reason</li>
+            <li>Minimum two months' notice must be given</li>
+            <li>Must use the prescribed Form 6A</li>
+            <li>Cannot be used if the landlord has not provided a valid gas safety certificate, EPC, and the How to Rent guide</li>
+            <li>Cannot be served within the first four months of the original tenancy</li>
+            <li>May be invalid if served after the landlord failed to address a formal repair complaint (Deregulation Act 2015)</li>
+          </ul>
+        </div>
+
+        <div class="notice-card s8">
+          <span class="notice-tag">Section 8</span>
+          <h4>Grounds-based notice</h4>
+          <ul>
+            <li>The landlord must state specific legal grounds from Schedule 2 of the Housing Act 1988</li>
+            <li>Common grounds include at least two months' rent arrears, damage to the property, or breach of tenancy terms</li>
+            <li>Notice periods vary by ground — typically 2 weeks to 2 months</li>
+            <li>You can defend yourself at the court hearing</li>
+            <li>The court has discretion to refuse possession on some grounds if it considers it reasonable to do so</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- IF YOU RECEIVE NOTICE -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📬</div>
+      <h3>If You Receive an Eviction Notice</h3>
+    </div>
+    <div class="section-card-body">
+      <div class="alert-box alert-warning">
+        <strong>Do not ignore a notice and do not leave before taking advice.</strong> Many notices contain errors that make them invalid. You may not be required to leave at all.
+      </div>
+      <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><p><strong>Check the type of notice.</strong> Is it a Section 21 or Section 8? Is it on the correct prescribed form? Does it include the required information?</p></div>
+        <div class="step-item"><div class="step-num">2</div><p><strong>Check the dates.</strong> Has the correct notice period been given? A Section 21 notice requires a minimum of two months.</p></div>
+        <div class="step-item"><div class="step-num">3</div><p><strong>Check the landlord's compliance.</strong> For Section 21, did your landlord provide a gas safety certificate, EPC, and How to Rent guide at the start of the tenancy? Failure to do so can make the notice invalid.</p></div>
+        <div class="step-item"><div class="step-num">4</div><p><strong>Get advice immediately.</strong> Contact Shelter or Citizens Advice within days — not weeks. The sooner you act, the more options you have.</p></div>
+        <div class="step-item"><div class="step-num">5</div><p><strong>Attend any court hearing.</strong> If the matter proceeds to court, attend. You have the right to present your case, and a judge cannot grant possession without hearing you.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ILLEGAL EVICTION -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🚫</div>
+      <div>
+        <h3>Illegal Eviction</h3>
+        <p>A criminal offence under the Protection from Eviction Act 1977</p>
+      </div>
+    </div>
+    <div class="section-card-body">
+      <p>The following actions are criminal offences, regardless of any rent arrears or dispute. If any of these happen to you, call the police and seek legal advice immediately.</p>
+      <div class="illegal-list">
+        <div class="illegal-item"><span class="x-mark">✗</span><p>Changing the locks while you are a lawful occupier</p></div>
+        <div class="illegal-item"><span class="x-mark">✗</span><p>Removing or disposing of your belongings</p></div>
+        <div class="illegal-item"><span class="x-mark">✗</span><p>Cutting off gas, electricity, or water to force you out</p></div>
+        <div class="illegal-item"><span class="x-mark">✗</span><p>Threatening or intimidating you to make you leave</p></div>
+        <div class="illegal-item"><span class="x-mark">✗</span><p>Entering the property repeatedly without notice to harass you</p></div>
+      </div>
+      <p style="margin-top:16px;color:#b0bfcc;font-size:0.85rem;line-height:1.7;">If you have been illegally evicted, you may be entitled to re-enter the property and claim damages. Courts have awarded substantial sums in illegal eviction cases. Contact Shelter immediately.</p>
+    </div>
+  </div>
+
+  <!-- URGENT HELP -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🤝</div>
+      <h3>Urgent Help</h3>
+    </div>
+    <div class="section-card-body">
+      <div class="help-grid">
+        <div class="help-card">
+          <div class="help-icon">🏠</div>
+          <h4>Shelter</h4>
+          <p>Free specialist housing advice. Helpline available evenings and weekends.</p>
+          <a href="https://england.shelter.org.uk/" target="_blank">0808 800 4444 — shelter.org.uk ↗</a>
+        </div>
+        <div class="help-card">
+          <div class="help-icon">💬</div>
+          <h4>Citizens Advice</h4>
+          <p>Free impartial advice in person, by phone, and online across England and Wales.</p>
+          <a href="https://www.citizensadvice.org.uk/" target="_blank">citizensadvice.org.uk ↗</a>
+        </div>
+        <div class="help-card">
+          <div class="help-icon">⚖️</div>
+          <h4>Law Society</h4>
+          <p>Find a solicitor specialising in housing law in your area.</p>
+          <a href="https://solicitors.lawsociety.org.uk/" target="_blank">lawsociety.org.uk ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <p>
+      <strong>Need to write to your landlord?</strong>
+      Generate a formal eviction response letter citing the Housing Act 1988 and Protection from Eviction Act 1977.
+    </p>
+    <a class="cta-btn" href="letters.html">Open Letter Generator →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
+</footer>
 </body>
 </html>
