@@ -1,122 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Know Your Rights - Tenant Advocate</title>
-    <link rel="stylesheet" type="text/css" href="../styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Know Your Rights – Tenant Advocate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --teal: #1a7a6e;
+  --teal-light: #24a898;
+  --gold: #e8b84b;
+  --muted: #8a9ab0;
+  --card-bg: #162333;
+  --border: rgba(255,255,255,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: #e8edf3;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -10%, rgba(26,122,110,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(232,184,75,0.07) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: relative; z-index: 10;
+  padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.logo h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
+.logo p  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a {
+  color: var(--muted); text-decoration: none; font-size: 0.82rem;
+  padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+nav a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
+nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); background: rgba(26,122,110,0.12); }
+
+/* ─── HERO ─── */
+.hero {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 60px auto 0; padding: 0 40px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.4);
+  color: var(--teal-light); font-size: 0.78rem;
+  padding: 6px 16px; border-radius: 20px; margin-bottom: 24px;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.hero h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.15; letter-spacing: -0.02em;
+  color: #fff; margin-bottom: 14px;
+}
+.hero h2 em { font-style: normal; color: var(--gold); }
+.hero p { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 580px; }
+
+/* ─── MAIN CONTENT ─── */
+.content {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 50px auto 80px; padding: 0 40px;
+  display: flex; flex-direction: column; gap: 40px;
+}
+
+/* ─── SECTION CARDS ─── */
+.section-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+
+.section-card-header {
+  padding: 22px 28px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.section-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(26,122,110,0.15);
+  border: 1px solid rgba(26,122,110,0.25);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.section-card-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; color: #fff; letter-spacing: -0.01em;
+}
+
+.section-card-body { padding: 24px 28px; }
+.section-card-body p {
+  color: #b0bfcc; font-size: 0.9rem; line-height: 1.75; margin-bottom: 18px;
+}
+.section-card-body p:last-child { margin-bottom: 0; }
+
+/* ─── LEGISLATION LIST ─── */
+.legislation-list { display: flex; flex-direction: column; gap: 12px; }
+
+.leg-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  transition: border-color 0.2s;
+  text-decoration: none;
+}
+.leg-item:hover { border-color: rgba(26,122,110,0.35); }
+
+.leg-item-year {
+  font-size: 0.68rem; font-weight: 600;
+  color: var(--teal-light); background: rgba(26,122,110,0.15);
+  border: 1px solid rgba(26,122,110,0.3);
+  border-radius: 6px; padding: 3px 8px;
+  white-space: nowrap; margin-top: 2px; flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+.leg-item-text { flex: 1; }
+.leg-item-text strong { color: #fff; font-size: 0.88rem; font-weight: 500; display: block; margin-bottom: 4px; }
+.leg-item-text span  { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+.leg-item-link {
+  color: var(--teal-light); font-size: 0.75rem;
+  text-decoration: none; white-space: nowrap; margin-top: 2px;
+  flex-shrink: 0; display: flex; align-items: center; gap: 4px;
+}
+.leg-item-link:hover { text-decoration: underline; }
+
+/* ─── RIGHTS GRID ─── */
+.rights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.right-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.right-check { color: var(--teal-light); font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+.right-text strong { display: block; color: #e8edf3; font-size: 0.83rem; font-weight: 500; margin-bottom: 3px; }
+.right-text span   { color: var(--muted); font-size: 0.77rem; line-height: 1.5; }
+
+/* ─── TENANCY TYPE CARDS ─── */
+.tenancy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.tenancy-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+  transition: border-color 0.2s;
+}
+.tenancy-card:hover { border-color: rgba(26,122,110,0.3); }
+.tenancy-card h4 { color: var(--gold); font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.02em; }
+.tenancy-card p  { color: var(--muted); font-size: 0.78rem; line-height: 1.6; }
+
+/* ─── TIPS LIST ─── */
+.tips-list { display: flex; flex-direction: column; gap: 8px; }
+.tip-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 16px;
+}
+.tip-num {
+  width: 22px; height: 22px; flex-shrink: 0;
+  background: rgba(232,184,75,0.15);
+  border: 1px solid rgba(232,184,75,0.3);
+  border-radius: 50%; font-size: 0.68rem;
+  color: var(--gold); font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.tip-item p { color: #b0bfcc; font-size: 0.83rem; line-height: 1.6; }
+
+/* ─── CTA BANNER ─── */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(26,122,110,0.2), rgba(26,122,110,0.08));
+  border: 1px solid rgba(26,122,110,0.3);
+  border-radius: 16px; padding: 28px 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.cta-banner p { color: #b0bfcc; font-size: 0.9rem; line-height: 1.65; }
+.cta-banner p strong { color: #fff; display: block; font-size: 1rem; margin-bottom: 6px; }
+.cta-btn {
+  flex-shrink: 0; padding: 12px 24px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border: none; border-radius: 10px;
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 500;
+  text-decoration: none; white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.cta-btn:hover { opacity: 0.88; }
+
+/* ─── FOOTER ─── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 24px 40px; text-align: center;
+  color: var(--muted); font-size: 0.78rem;
+}
+
+@media (max-width: 768px) {
+  header { padding: 16px 20px; flex-direction: column; gap: 12px; }
+  .hero, .content { padding: 0 20px; }
+  .hero { margin-top: 40px; }
+  .rights-grid  { grid-template-columns: 1fr; }
+  .tenancy-grid { grid-template-columns: 1fr; }
+  .cta-banner   { flex-direction: column; }
+  .section-card-body, .section-card-header { padding: 18px 20px; }
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Know Your Rights</h1>
-        <p>Understanding key housing legislation and tenant rights</p>
-    </header>
 
-    <nav>
-        <a href="../index.html">Home</a>
-        <a href="../sitemap.html">Sitemap</a>
-        <a href="know-your-rights.html">Know Your Rights</a>
-        <a href="repairs.html">Repairs</a>
-        <a href="deposits.html">Deposits</a>
-        <a href="fees.html">Fees</a>
-        <a href="evictions.html">Evictions</a>
-        <a href="timeline-tool.html">Timeline Tool</a>
-        <a href="letters.html">Letters</a>
-        <a href="resources.html">Resources</a>
-    </nav>
-
-    <div class="container">
-        <section>
-            <h2>Key Housing Legislation</h2>
-            <p>These are the main pieces of legislation that protect tenant rights in the United Kingdom:</p>
-
-            <ul>
-                <li>
-                    <a href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank">
-                        Housing Act 1988
-                    </a>
-                    - Governs assured and assured shorthold tenancies, setting out landlord and tenant rights and responsibilities
-                </li>
-                <li>
-                    <a href="https://www.legislation.gov.uk/ukpga/1985/70/contents" target="_blank">
-                        Landlord and Tenant Act 1985
-                    </a>
-                    - Sets out landlord repairing obligations and tenant rights, including Section 11 repairing covenants
-                </li>
-                <li>
-                    <a href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank">
-                        Tenant Fees Act 2019
-                    </a>
-                    - Bans most letting agent fees to tenants, protecting renters from excessive charges
-                </li>
-                <li>
-                    <a href="https://www.legislation.gov.uk/uksi/2020/312/contents" target="_blank">
-                        Electrical Safety Regulations 2020
-                    </a>
-                    - Requires landlords to conduct regular electrical safety inspections
-                </li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Your Fundamental Rights as a Tenant</h2>
-            <p>As a tenant in the UK, you have essential legal protections:</p>
-            <ul>
-                <li><strong>The right to a safe and habitable home</strong> - Your property must be fit for living with proper heating, plumbing, and electrical systems</li>
-                <li><strong>Protection from unfair eviction</strong> - Your landlord must follow strict legal procedures and cannot lock you out</li>
-                <li><strong>The right to have your deposit protected</strong> - Deposits must be held in an approved scheme with prescribed information provided</li>
-                <li><strong>The right to quiet enjoyment</strong> - You can use the property peacefully without unreasonable interference</li>
-                <li><strong>Protection from discrimination</strong> - You cannot be refused housing based on protected characteristics</li>
-                <li><strong>The right to reasonable notice before eviction</strong> - Eviction procedures must be followed correctly</li>
-                <li><strong>Protection from harassment</strong> - Your landlord cannot harass you to force you to leave</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Types of Tenancies</h2>
-
-            <h3>Assured Shorthold Tenancy (AST)</h3>
-            <p>
-                The most common type of private rental agreement. Typically fixed for 6 or 12 months, 
-                with protections for both landlord and tenant.
-            </p>
-
-            <h3>Assured Tenancy</h3>
-            <p>
-                Less common, usually used for regulated tenancies. Provides stronger protections for tenants, 
-                including grounds for eviction requirements.
-            </p>
-
-            <h3>Regulated Tenancy</h3>
-            <p>
-                Older tenancies started before January 1989. Often have stronger tenant protections and 
-                potentially more favorable rent terms.
-            </p>
-        </section>
-
-        <section>
-            <h2>What You Should Know</h2>
-            <ul>
-                <li>Your tenancy agreement must comply with the law - landlords cannot override tenant rights</li>
-                <li>Unfair terms in tenancy agreements are not enforceable</li>
-                <li>You have the right to challenge unfair charges or deductions</li>
-                <li>Keep copies of all correspondence with your landlord</li>
-                <li>Document any problems with the property in writing</li>
-                <li>Know your notice periods and rights before the tenancy ends</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Next Steps</h2>
-            <p>
-                Explore other sections of Tenant Advocate to learn about specific topics like repairs, deposits, fees, and evictions. 
-                If you need immediate help, visit our <a href="resources.html">resources page</a> for links to organizations that can support you.
-            </p>
-        </section>
+<header>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon">⚖️</div>
+    <div>
+      <h1>Tenant Advocate</h1>
+      <p>Housing Rights Platform</p>
     </div>
+  </a>
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="know-your-rights.html" class="active">Rights</a>
+    <a href="repairs.html">Repairs</a>
+    <a href="deposits.html">Deposits</a>
+    <a href="fees.html">Fees</a>
+    <a href="evictions.html">Evictions</a>
+    <a href="timeline-tool.html">Timeline</a>
+    <a href="letters.html">Letters</a>
+    <a href="resources.html">Resources</a>
+  </nav>
+</header>
 
-    <div class="footer">
-        <p>Tenant Advocate | Legal information only | Not legal advice</p>
+<div class="hero">
+  <div class="hero-badge">📋 England &amp; Wales</div>
+  <h2>Know your <em>rights.</em></h2>
+  <p>A plain-English guide to the key legislation protecting tenants — what the law says, and what it means for you.</p>
+</div>
+
+<div class="content">
+
+  <!-- KEY LEGISLATION -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📜</div>
+      <h3>Key Housing Legislation</h3>
     </div>
+    <div class="section-card-body">
+      <p>These are the principal Acts of Parliament that protect tenants in England and Wales.</p>
+      <div class="legislation-list">
+
+        <div class="leg-item">
+          <span class="leg-item-year">1985</span>
+          <div class="leg-item-text">
+            <strong>Landlord and Tenant Act 1985</strong>
+            <span>Section 11 obliges landlords to keep in repair the structure, exterior, and key installations (heating, water, gas, electricity, sanitation) of any residential property let for less than seven years.</span>
+          </div>
+          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/1985/70/contents" target="_blank">View ↗</a>
+        </div>
+
+        <div class="leg-item">
+          <span class="leg-item-year">1988</span>
+          <div class="leg-item-text">
+            <strong>Housing Act 1988</strong>
+            <span>Established the modern private rental framework in England, creating assured and assured shorthold tenancies (ASTs) and setting out the legal basis for possession, rent, and tenancy agreements.</span>
+          </div>
+          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank">View ↗</a>
+        </div>
+
+        <div class="leg-item">
+          <span class="leg-item-year">2004</span>
+          <div class="leg-item-text">
+            <strong>Housing Act 2004</strong>
+            <span>Introduced mandatory tenancy deposit protection in government-approved schemes and the Housing Health and Safety Rating System (HHSRS), giving councils powers to enforce improvements to hazardous properties.</span>
+          </div>
+          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/2004/34/contents" target="_blank">View ↗</a>
+        </div>
+
+        <div class="leg-item">
+          <span class="leg-item-year">2019</span>
+          <div class="leg-item-text">
+            <strong>Tenant Fees Act 2019</strong>
+            <span>Bans landlords and letting agents from charging fees not explicitly permitted by the Act (such as admin, referencing, or renewal fees). Unlawful fees are recoverable and enforceable by Trading Standards.</span>
+          </div>
+          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank">View ↗</a>
+        </div>
+
+        <div class="leg-item">
+          <span class="leg-item-year">2020</span>
+          <div class="leg-item-text">
+            <strong>Electrical Safety Standards in the Private Rented Sector (England) Regulations 2020</strong>
+            <span>Requires landlords to have electrical installations inspected and tested by a qualified person at least every five years, and to provide tenants with a copy of the report.</span>
+          </div>
+          <a class="leg-item-link" href="https://www.legislation.gov.uk/uksi/2020/312/contents" target="_blank">View ↗</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNDAMENTAL RIGHTS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🛡️</div>
+      <h3>Your Fundamental Rights as a Tenant</h3>
+    </div>
+    <div class="section-card-body">
+      <p>As a private tenant in England and Wales, the law provides you with these core protections.</p>
+      <div class="rights-grid">
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Right to a safe, habitable home</strong>
+            <span>Your property must be fit for human habitation — with working heating, plumbing, and electrical systems. The Homes (Fitness for Human Habitation) Act 2018 reinforces this.</span>
+          </div>
+        </div>
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Protection from unfair eviction</strong>
+            <span>Your landlord must follow strict legal procedures. Changing locks, removing belongings, or cutting off utilities without a court order is a criminal offence under the Protection from Eviction Act 1977.</span>
+          </div>
+        </div>
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Deposit protection</strong>
+            <span>Your deposit must be held in a government-approved scheme within 30 days of payment, and you must be given prescribed information about it. Failure attracts a penalty of 1–3× the deposit amount.</span>
+          </div>
+        </div>
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Right to quiet enjoyment</strong>
+            <span>You have the right to use the property peacefully without unreasonable interference from your landlord. Entry normally requires at least 24 hours' written notice.</span>
+          </div>
+        </div>
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Protection from discrimination</strong>
+            <span>Under the Equality Act 2010, you cannot be refused housing or treated less favourably because of a protected characteristic such as race, sex, disability, or religion.</span>
+          </div>
+        </div>
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Protection from harassment</strong>
+            <span>Under Section 1 of the Protection from Eviction Act 1977, it is a criminal offence for a landlord to harass a tenant with the intent of causing them to leave.</span>
+          </div>
+        </div>
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Right to challenge unlawful fees</strong>
+            <span>Any fee charged outside the Tenant Fees Act 2019's permitted payments is unlawful and can be reclaimed. You can also report the landlord or agent to Trading Standards.</span>
+          </div>
+        </div>
+
+        <div class="right-item">
+          <span class="right-check">✦</span>
+          <div class="right-text">
+            <strong>Unfair terms are unenforceable</strong>
+            <span>Terms in your tenancy agreement that seek to remove statutory rights or impose unfair burdens on you are unenforceable under the Consumer Rights Act 2015.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPES OF TENANCY -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📄</div>
+      <h3>Types of Tenancy</h3>
+    </div>
+    <div class="section-card-body">
+      <p>The type of tenancy you hold affects your rights and the procedures your landlord must follow.</p>
+      <div class="tenancy-grid">
+
+        <div class="tenancy-card">
+          <h4>Assured Shorthold Tenancy (AST)</h4>
+          <p>The most common form of private rental agreement, typically fixed for 6 or 12 months and then becoming periodic. Subject to the Housing Act 1988. Landlords may end it via Section 21 (no-fault) or Section 8 (grounds-based) notice.</p>
+        </div>
+
+        <div class="tenancy-card">
+          <h4>Assured Tenancy</h4>
+          <p>Less common in the private sector today. Provides stronger protections — landlords can only end an assured tenancy by proving one of the grounds listed in Schedule 2 of the Housing Act 1988. No Section 21 route is available.</p>
+        </div>
+
+        <div class="tenancy-card">
+          <h4>Regulated (Protected) Tenancy</h4>
+          <p>Applies to tenancies created before 15 January 1989. Governed by the Rent Act 1977. Provides the strongest tenant protections, including fair rent registration and security of tenure that can pass to a spouse or family member.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICAL TIPS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">💡</div>
+      <h3>What You Should Do</h3>
+    </div>
+    <div class="section-card-body">
+      <p>Practical steps that protect your position if a dispute arises.</p>
+      <div class="tips-list">
+        <div class="tip-item"><div class="tip-num">1</div><p>Always get your tenancy agreement in writing and keep a copy in a safe place.</p></div>
+        <div class="tip-item"><div class="tip-num">2</div><p>Take dated photographs of the property at the start of the tenancy to record its condition.</p></div>
+        <div class="tip-item"><div class="tip-num">3</div><p>Report all repairs in writing — by email where possible — so you have a timestamped record.</p></div>
+        <div class="tip-item"><div class="tip-num">4</div><p>Keep copies of all correspondence with your landlord or letting agent, including text messages.</p></div>
+        <div class="tip-item"><div class="tip-num">5</div><p>Check that your deposit has been protected and that you have received the prescribed information within 30 days of payment.</p></div>
+        <div class="tip-item"><div class="tip-num">6</div><p>If you receive any notice from your landlord, do not vacate until you have checked its validity — invalid notices do not require you to leave.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-banner">
+    <p>
+      <strong>Need immediate help?</strong>
+      If you are facing an urgent housing dispute, eviction threat, or are unsure of your rights, free specialist support is available.
+    </p>
+    <a class="cta-btn" href="resources.html">View Resources →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
+</footer>
+
 </body>
 </html>
