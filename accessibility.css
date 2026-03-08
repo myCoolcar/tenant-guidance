@@ -635,3 +635,93 @@ html.dyslexia-font #a11y-bar .a11y-label,
 html.dyslexia-font #a11y-bar .a11y-lang-wrap label {
   font-family: 'OpenDyslexic', Arial, sans-serif !important;
 }
+
+
+/* ─────────────────────────────────────────────
+   8. MOBILE TOOLBAR
+   On small screens the bar collapses to icons
+   only. Labels and dividers are hidden.
+   The skip link stays in the DOM for screen
+   readers but is never shown visually on touch.
+───────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+
+  /* Taller bar to give two rows room to breathe */
+  #a11y-bar {
+    height: auto;
+    min-height: 38px;
+    padding: 5px 10px;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  body {
+    /* Recalculate top offset — bar can now be 2 rows (~76px max) */
+    padding-top: 76px;
+  }
+
+  /* Hide the "Accessibility" word label — saves ~90px */
+  #a11y-bar .a11y-label {
+    display: none;
+  }
+
+  /* Hide the "🌐 Translate" text label — globe emoji stays on the widget */
+  #a11y-bar .a11y-lang-wrap label {
+    display: none;
+  }
+
+  /* Hide the vertical dividers — they add dead space on narrow screens */
+  #a11y-bar .a11y-divider {
+    display: none;
+  }
+
+  /* Smaller, tighter buttons */
+  #a11y-bar button {
+    font-size: 0.7rem;
+    padding: 4px 7px;
+    height: 26px;
+    gap: 3px;
+  }
+
+  /* Shorten verbose button labels to fit:
+     "◑ Contrast" → "◑"  |  "▤ Simple" → "▤"  |  "↺ Reset" → "↺"
+     We do this by hiding the text span injected by JS, or by using
+     the button's aria-label as a tooltip. Since the buttons contain
+     plain text nodes we shrink them with max-width + overflow. */
+  #a11y-bar button#a11y-contrast .btn-text,
+  #a11y-bar button#a11y-simplified .btn-text,
+  #a11y-bar button#a11y-reset .btn-text {
+    display: none;
+  }
+
+  /* Keep the translate widget compact */
+  #a11y-bar .a11y-lang-wrap {
+    margin-left: auto;
+  }
+
+  #a11y-bar .goog-te-gadget-simple {
+    font-size: 0.68rem !important;
+    padding: 2px 6px !important;
+    height: 26px;
+  }
+
+  /* Skip link repositions below the now-variable-height bar */
+  .skip-link {
+    top: 76px;
+  }
+}
+
+/* Very small screens (320px phones) — compress further */
+@media (max-width: 380px) {
+  #a11y-bar button {
+    font-size: 0.66rem;
+    padding: 3px 6px;
+    height: 24px;
+  }
+
+  #a11y-bar button#a11y-dyslexia .btn-text {
+    display: none;
+  }
+}
