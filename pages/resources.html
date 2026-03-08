@@ -3,225 +3,511 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tenant Advocate - Legal Resources</title>
-<link rel="stylesheet" type="text/css" href="../styles.css">
-</head>
+<title>Resources – Tenant Advocate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --teal: #1a7a6e;
+  --teal-light: #24a898;
+  --gold: #e8b84b;
+  --muted: #8a9ab0;
+  --card-bg: #162333;
+  --border: rgba(255,255,255,0.08);
+}
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: #e8edf3;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -10%, rgba(26,122,110,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(232,184,75,0.07) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: relative; z-index: 10;
+  padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.logo h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
+.logo p  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a {
+  color: var(--muted); text-decoration: none; font-size: 0.82rem;
+  padding: 6px 14px; border-radius: 20px; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+nav a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
+nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); background: rgba(26,122,110,0.12); }
+
+/* ─── HERO ─── */
+.hero {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 60px auto 0; padding: 0 40px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.4);
+  color: var(--teal-light); font-size: 0.78rem;
+  padding: 6px 16px; border-radius: 20px; margin-bottom: 24px;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.hero h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.15; letter-spacing: -0.02em;
+  color: #fff; margin-bottom: 14px;
+}
+.hero h2 em { font-style: normal; color: var(--gold); }
+.hero p { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+/* ─── CONTENT ─── */
+.content {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 50px auto 80px; padding: 0 40px;
+  display: flex; flex-direction: column; gap: 40px;
+}
+
+/* ─── SECTION CARDS ─── */
+.section-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+.section-card-header {
+  padding: 20px 28px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.section-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(26,122,110,0.15);
+  border: 1px solid rgba(26,122,110,0.25);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.section-card-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; color: #fff; letter-spacing: -0.01em;
+}
+.section-card-header p { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.section-card-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 12px; }
+
+/* ─── RESOURCE ROW ─── */
+.resource-row {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 20px;
+  transition: border-color 0.2s;
+}
+.resource-row:hover { border-color: rgba(26,122,110,0.3); }
+
+.resource-row-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 14px;
+  margin-bottom: 10px;
+}
+.resource-tag {
+  font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 6px;
+  white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.tag-act       { background: rgba(26,122,110,0.18); border: 1px solid rgba(26,122,110,0.35); color: var(--teal-light); }
+.tag-case      { background: rgba(232,184,75,0.12); border: 1px solid rgba(232,184,75,0.3);  color: var(--gold); }
+.tag-scheme    { background: rgba(100,149,237,0.12); border: 1px solid rgba(100,149,237,0.3); color: #8ab4f8; }
+.tag-guidance  { background: rgba(180,120,220,0.12); border: 1px solid rgba(180,120,220,0.3); color: #c9a0e8; }
+.tag-org       { background: rgba(255,160,80,0.12);  border: 1px solid rgba(255,160,80,0.3);  color: #ffb86c; }
+
+.resource-title {
+  flex: 1;
+  color: #fff; font-size: 0.9rem; font-weight: 500; line-height: 1.4;
+}
+.resource-link {
+  color: var(--teal-light); font-size: 0.78rem; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 12px;
+  background: rgba(26,122,110,0.12);
+  border: 1px solid rgba(26,122,110,0.3);
+  border-radius: 8px; white-space: nowrap; flex-shrink: 0;
+  transition: background 0.2s;
+}
+.resource-link:hover { background: rgba(26,122,110,0.22); }
+
+.resource-body {
+  color: #9aabbf; font-size: 0.82rem; line-height: 1.7;
+}
+
+/* ─── DEPOSIT SCHEME GRID ─── */
+.scheme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.scheme-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+  transition: border-color 0.2s;
+}
+.scheme-card:hover { border-color: rgba(100,149,237,0.3); }
+.scheme-card h4 { font-size: 0.85rem; color: #fff; font-weight: 500; margin-bottom: 6px; }
+.scheme-card p  { font-size: 0.77rem; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+.scheme-card a  {
+  font-size: 0.76rem; color: #8ab4f8; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.scheme-card a:hover { text-decoration: underline; }
+
+/* ─── URGENT BANNER ─── */
+.urgent-banner {
+  background: linear-gradient(135deg, rgba(231,76,60,0.15), rgba(231,76,60,0.06));
+  border: 1px solid rgba(231,76,60,0.3);
+  border-radius: 16px; padding: 24px 28px;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.urgent-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+.urgent-body h4 { color: #f1857a; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; }
+.urgent-body p  { color: #b0bfcc; font-size: 0.84rem; line-height: 1.7; }
+.urgent-body strong { color: #fff; }
+
+/* ─── FOOTER ─── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 24px 40px; text-align: center;
+  color: var(--muted); font-size: 0.78rem;
+}
+
+@media (max-width: 768px) {
+  header { padding: 16px 20px; flex-direction: column; gap: 12px; }
+  .hero, .content { padding: 0 20px; }
+  .hero { margin-top: 40px; }
+  .scheme-grid { grid-template-columns: 1fr; }
+  .section-card-body, .section-card-header { padding: 18px 20px; }
+  .resource-row-top { flex-wrap: wrap; }
+}
+</style>
+</head>
 <body>
 
 <header>
-<h1>Tenant Advocate</h1>
-<p>Helping tenants understand their rights and document housing disputes</p>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon">⚖️</div>
+    <div>
+      <h1>Tenant Advocate</h1>
+      <p>Housing Rights Platform</p>
+    </div>
+  </a>
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="know-your-rights.html">Rights</a>
+    <a href="repairs.html">Repairs</a>
+    <a href="deposits.html">Deposits</a>
+    <a href="fees.html">Fees</a>
+    <a href="evictions.html">Evictions</a>
+    <a href="timeline-tool.html">Timeline</a>
+    <a href="letters.html">Letters</a>
+    <a href="resources.html" class="active">Resources</a>
+  </nav>
 </header>
 
-<nav>
-<a href="../index.html">Home</a>
-<a href="know-your-rights.html">Know Your Rights</a>
-<a href="repairs.html">Repairs</a>
-<a href="deposits.html">Deposits</a>
-<a href="fees.html">Fees</a>
-<a href="evictions.html">Evictions</a>
-<a href="timeline-tool.html">Timeline Tool</a>
-<a href="letters.html">Letters</a>
-<a href="resources.html">Resources</a>
-</nav>
+<div class="hero">
+  <div class="hero-badge">📚 Official Sources</div>
+  <h2>Legal <em>resources.</em></h2>
+  <p>Direct links to legislation, case law, deposit schemes, and guidance — every source verified and cited accurately.</p>
+</div>
 
-<div class="container">
+<div class="content">
 
-<h2>Legal Resources for Tenants</h2>
+  <!-- URGENT BANNER -->
+  <div class="urgent-banner">
+    <div class="urgent-icon">🚨</div>
+    <div class="urgent-body">
+      <h4>Need urgent help right now?</h4>
+      <p>
+        <strong>Shelter England</strong> — Free housing advice line: <strong>0808 800 4444</strong> (weekdays 8am–8pm, weekends 9am–5pm) — <a href="https://england.shelter.org.uk/" target="_blank" style="color:#f1857a;">england.shelter.org.uk</a><br>
+        <strong>Citizens Advice</strong> — Free advice on housing, benefits, and legal issues: <a href="https://www.citizensadvice.org.uk/" target="_blank" style="color:#f1857a;">citizensadvice.org.uk</a>
+      </p>
+    </div>
+  </div>
 
-<p>
-Below are key pieces of UK legislation, regulations, and important case law
-that define tenant rights and landlord responsibilities. Each resource links
-directly to the official legislation page.
-</p>
+  <!-- PRIMARY LEGISLATION -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📜</div>
+      <div>
+        <h3>Primary Legislation</h3>
+        <p>Acts of Parliament that define tenant rights in England and Wales</p>
+      </div>
+    </div>
+    <div class="section-card-body">
 
-<hr>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Housing Act 1988</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-act">Act</span>
+            <a class="resource-link" href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank">legislation.gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Established the modern private rental framework in England, introducing assured and assured shorthold tenancies (ASTs). Sets out the legal procedures for possession — including Section 8 (grounds-based) and Section 21 (no-fault) notices — as well as rules on rent increases and tenancy terms. Most private tenants in England today hold an AST under this Act.</p>
+      </div>
 
-<h3>Housing Act 1988</h3>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Landlord and Tenant Act 1985</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-act">Act</span>
+            <a class="resource-link" href="https://www.legislation.gov.uk/ukpga/1985/70/contents" target="_blank">legislation.gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Section 11 places a statutory obligation on landlords to keep in repair the structure and exterior of a dwelling and its installations for the supply of water, gas, electricity, and sanitation, and for space and water heating. Applies to most residential lettings granted for a term of less than seven years and cannot be contracted out of.</p>
+      </div>
 
-<p>
-<a href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank">
-View the Housing Act 1988
-</a>
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Tenant Fees Act 2019</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-act">Act</span>
+            <a class="resource-link" href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank">legislation.gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Prohibits landlords and letting agents from requiring tenants to make payments not permitted by Schedule 1 of the Act. Banned charges include admin fees, referencing fees, check-in and check-out fees, and contract renewal fees. A first breach attracts a civil penalty of up to £5,000; a further breach within five years may result in a fine of up to £30,000 or a banning order.</p>
+      </div>
 
-<p>
-The Housing Act 1988 established the modern private rental system in England,
-including the creation of assured and assured shorthold tenancies. It sets out
-many of the legal rules around possession, rent, and tenancy agreements. Most
-private tenants in England today hold an Assured Shorthold Tenancy created
-under this Act.
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Housing Act 2004</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-act">Act</span>
+            <a class="resource-link" href="https://www.legislation.gov.uk/ukpga/2004/34/contents" target="_blank">legislation.gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Introduced mandatory tenancy deposit protection (ss.212–215), requiring deposits to be held in a government-approved scheme within 30 days of receipt and for prescribed information to be served on the tenant. Failure attracts a penalty of 1–3× the deposit amount. Also introduced the Housing Health and Safety Rating System (HHSRS), enabling local authorities to take enforcement action against hazardous properties.</p>
+      </div>
 
-<hr>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Protection from Eviction Act 1977</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-act">Act</span>
+            <a class="resource-link" href="https://www.legislation.gov.uk/ukpga/1977/43" target="_blank">legislation.gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Section 1 makes it a criminal offence for any person to unlawfully deprive a residential occupier of their occupation of premises, or to harass a residential occupier with intent to cause them to give up occupation or to refrain from exercising their rights. Covers acts such as changing locks, removing belongings, or cutting off utilities without a court order.</p>
+      </div>
 
-<h3>Landlord and Tenant Act 1985</h3>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Deregulation Act 2015</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-act">Act</span>
+            <a class="resource-link" href="https://www.legislation.gov.uk/ukpga/2015/20/contents" target="_blank">legislation.gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Introduced protections against retaliatory (revenge) eviction. Where a tenant makes a written complaint about the condition of a property and the landlord fails to respond adequately or serves a Section 21 notice within six months of the complaint, the notice may be invalid. Also introduced requirements for landlords to provide tenants with a gas safety certificate, EPC, and the How to Rent guide before serving a valid Section 21 notice.</p>
+      </div>
 
-<p>
-<a href="https://www.legislation.gov.uk/ukpga/1985/70" target="_blank">
-View the Landlord and Tenant Act 1985
-</a>
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Electrical Safety Standards in the Private Rented Sector (England) Regulations 2020</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-act">Regulations</span>
+            <a class="resource-link" href="https://www.legislation.gov.uk/uksi/2020/312/contents" target="_blank">legislation.gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Requires landlords of privately rented residential accommodation in England to have electrical installations inspected and tested by a qualified and competent person at least every five years. Landlords must provide a copy of the most recent Electrical Installation Condition Report (EICR) to existing tenants within 28 days of the inspection, and to new tenants before they occupy the premises.</p>
+      </div>
 
-<p>
-This Act establishes key landlord obligations, particularly regarding repairs
-and maintenance. Section 11 requires landlords to maintain the structure of the
-property and ensure that heating, water, gas, and sanitation systems are kept
-in working order. Many repair disputes rely on this legislation.
-</p>
+    </div>
+  </div>
 
-<hr>
+  <!-- KEY CASE LAW -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">⚖️</div>
+      <div>
+        <h3>Key Case Law</h3>
+        <p>Landmark judgments that shaped tenant rights in England and Wales</p>
+      </div>
+    </div>
+    <div class="section-card-body">
 
-<h3>Tenant Fees Act 2019</h3>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Street v Mountford [1985] AC 809 — House of Lords</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-case">Case Law</span>
+            <a class="resource-link" href="https://www.bailii.org/uk/cases/UKHL/1985/4.html" target="_blank">BAILII ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Established the legal definition of a tenancy as distinct from a licence. The House of Lords held that where a person has exclusive possession of residential premises for a term at a rent, the arrangement constitutes a tenancy regardless of how the parties or the written agreement describe it. Landlords cannot use licence agreements to deprive occupiers of tenant protections.</p>
+      </div>
 
-<p>
-<a href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank">
-View the Tenant Fees Act 2019
-</a>
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Spencer v Taylor [2013] EWCA Civ 1600 — Court of Appeal</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-case">Case Law</span>
+            <a class="resource-link" href="https://www.bailii.org/ew/cases/EWCA/Civ/2013/1600.html" target="_blank">BAILII ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Clarified that a Section 21 notice served during a fixed term of an assured shorthold tenancy can be used to recover possession once the tenancy becomes periodic at the end of that fixed term, provided the notice period has not expired before the tenancy becomes periodic. Significantly affected how landlords serve possession notices under the Housing Act 1988.</p>
+      </div>
 
-<p>
-The Tenant Fees Act 2019 banned most letting agent and landlord fees charged
-to tenants in England. Only a small number of payments are allowed, such as
-rent, deposits, and certain default fees. Any prohibited fees can normally be
-challenged and reclaimed.
-</p>
+    </div>
+  </div>
 
-<hr>
+  <!-- DEPOSIT SCHEMES -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🔒</div>
+      <div>
+        <h3>Government-Approved Deposit Protection Schemes</h3>
+        <p>Your landlord must use one of these three schemes</p>
+      </div>
+    </div>
+    <div class="section-card-body">
+      <p style="color:#9aabbf;font-size:0.84rem;line-height:1.7;">Under the Housing Act 2004, all deposits taken for assured shorthold tenancies in England must be protected in one of the following three government-authorised schemes within 30 days. Each scheme also provides a free dispute resolution service if deductions are contested.</p>
+      <div class="scheme-grid">
+        <div class="scheme-card">
+          <h4>Deposit Protection Service (DPS)</h4>
+          <p>A custodial scheme — the DPS holds the deposit for the duration of the tenancy. Free to use. Provides adjudication for disputed deductions.</p>
+          <a href="https://www.depositprotection.com/" target="_blank">depositprotection.com ↗</a>
+        </div>
+        <div class="scheme-card">
+          <h4>MyDeposits</h4>
+          <p>An insurance-based scheme — the landlord or agent holds the deposit and pays a fee to insure it. Dispute resolution service available to tenants at no cost.</p>
+          <a href="https://www.mydeposits.co.uk/" target="_blank">mydeposits.co.uk ↗</a>
+        </div>
+        <div class="scheme-card">
+          <h4>Tenancy Deposit Scheme (TDS)</h4>
+          <p>Offers both custodial and insurance-backed protection. TDS adjudication is available for tenants disputing deductions at the end of a tenancy.</p>
+          <a href="https://www.tenancydepositscheme.com/" target="_blank">tenancydepositscheme.com ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<h3>Housing Act 2004</h3>
+  <!-- HOUSING STANDARDS & GUIDANCE -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🏠</div>
+      <div>
+        <h3>Housing Standards &amp; Official Guidance</h3>
+        <p>Government guidance and enforcement frameworks</p>
+      </div>
+    </div>
+    <div class="section-card-body">
 
-<p>
-<a href="https://www.legislation.gov.uk/ukpga/2004/34/contents" target="_blank">
-View the Housing Act 2004
-</a>
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Housing Health and Safety Rating System (HHSRS) — Guidance for Landlords</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-guidance">Guidance</span>
+            <a class="resource-link" href="https://www.gov.uk/government/publications/housing-health-and-safety-rating-system-guidance-for-landlords-and-property-related-professionals" target="_blank">gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">The HHSRS is the system used by local authority environmental health officers to assess hazards in residential properties. It covers 29 categories of hazard including damp and mould, excess cold, fire, falls, and electrical hazards. Councils can issue improvement notices, prohibition orders, or carry out works in default where serious hazards are identified. Tenants can request an inspection from their local council.</p>
+      </div>
 
-<p>
-The Housing Act 2004 introduced deposit protection schemes and the Housing
-Health and Safety Rating System (HHSRS). This law allows local councils to
-inspect housing conditions and enforce improvements where properties present
-health risks.
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">How to Rent: The Checklist for Renting in England — MHCLG</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-guidance">Guidance</span>
+            <a class="resource-link" href="https://www.gov.uk/government/publications/how-to-rent" target="_blank">gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">The official government guide that landlords are legally required to provide to tenants at the start of an assured shorthold tenancy. Covers tenant and landlord rights and responsibilities, what to check before renting, and what to do if things go wrong. Failure to provide the current version can prevent a landlord from serving a valid Section 21 notice.</p>
+      </div>
 
-<hr>
+    </div>
+  </div>
 
-<h3>Protection from Eviction Act 1977</h3>
+  <!-- ORGANISATIONS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🤝</div>
+      <div>
+        <h3>Organisations That Can Help</h3>
+        <p>Free and specialist support for tenants</p>
+      </div>
+    </div>
+    <div class="section-card-body">
 
-<p>
-<a href="https://www.legislation.gov.uk/ukpga/1977/43" target="_blank">
-View the Protection from Eviction Act 1977
-</a>
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Shelter England</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-org">Organisation</span>
+            <a class="resource-link" href="https://england.shelter.org.uk/" target="_blank">shelter.org.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Shelter is the leading housing and homelessness charity in England. It provides free housing advice — online, over the phone (0808 800 4444), and via local advice centres — on all aspects of renting, including repairs, deposits, eviction, and homelessness. Shelter's website also contains detailed legal guidance written by housing law specialists.</p>
+      </div>
 
-<p>
-This Act makes it a criminal offence for landlords to unlawfully evict tenants
-or harass them into leaving a property. In most cases, landlords must follow
-formal legal processes through the courts before removing tenants.
-</p>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Citizens Advice</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-org">Organisation</span>
+            <a class="resource-link" href="https://www.citizensadvice.org.uk/" target="_blank">citizensadvice.org.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">Citizens Advice provides free, confidential, and impartial advice on housing, benefits, debt, and legal issues. Advice is available online, by phone, and in person at local branches across England and Wales. Their housing pages cover tenancy rights, dealing with landlord disputes, and how to challenge unlawful eviction.</p>
+      </div>
 
-<hr>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">Housing Ombudsman Service</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-org">Organisation</span>
+            <a class="resource-link" href="https://www.housing-ombudsman.org.uk/" target="_blank">housing-ombudsman.org.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">The Housing Ombudsman resolves disputes between residents and their landlords, primarily in the social housing sector. It can investigate complaints about repairs, communications, and service failures and can order landlords to pay compensation or take specific action. Private tenants should generally use Shelter or Citizens Advice in the first instance.</p>
+      </div>
 
-<h3>Deregulation Act 2015</h3>
+      <div class="resource-row">
+        <div class="resource-row-top">
+          <span class="resource-title">First-tier Tribunal (Property Chamber)</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span class="resource-tag tag-org">Tribunal</span>
+            <a class="resource-link" href="https://www.gov.uk/courts-tribunals/first-tier-tribunal-property-chamber" target="_blank">gov.uk ↗</a>
+          </div>
+        </div>
+        <p class="resource-body">The Property Chamber of the First-tier Tribunal hears applications relating to leasehold disputes, rent levels, licensing of houses in multiple occupation (HMOs), and appeals against local authority improvement notices. Tenants can apply to the Tribunal to challenge certain landlord decisions or to enforce housing standards in some circumstances.</p>
+      </div>
 
-<p>
-<a href="https://www.legislation.gov.uk/ukpga/2015/20/contents" target="_blank">
-View the Deregulation Act 2015
-</a>
-</p>
-
-<p>
-The Deregulation Act introduced new protections against retaliatory eviction.
-If tenants report serious repair problems, landlords may be restricted from
-using Section 21 eviction notices shortly afterwards.
-</p>
-
-<hr>
-
-<h3>Spencer v Taylor (2013) – Court of Appeal</h3>
-
-<p>
-<a href="https://www.bailii.org/ew/cases/EWCA/Civ/2013/1600.html" target="_blank">
-View the case on BAILII
-</a>
-</p>
-
-<p>
-This case clarified how Section 21 eviction notices should be interpreted when
-tenancies become periodic after a fixed term. It significantly affected how
-landlords serve possession notices under the Housing Act 1988.
-</p>
-
-<hr>
-
-<h3>Street v Mountford (1985) – House of Lords</h3>
-
-<p>
-<a href="https://www.bailii.org/uk/cases/UKHL/1985/4.html" target="_blank">
-View the case on BAILII
-</a>
-</p>
-
-<p>
-This landmark case established the legal definition of a tenancy versus a
-licence. It confirmed that if a tenant has exclusive possession of a property
-for a term and pays rent, the arrangement is usually a tenancy regardless of
-what the contract is called.
-</p>
-
-<hr>
-
-<h3>Deposit Protection Schemes</h3>
-
-<ul>
-
-<li>
-<a href="https://www.depositprotection.com/" target="_blank">
-Deposit Protection Service (DPS)
-</a>
-<p>The DPS is one of the government-approved tenancy deposit protection schemes. 
-Landlords must protect tenant deposits in an authorised scheme and provide the 
-tenant with prescribed information.</p>
-</li>
-
-<li>
-<a href="https://www.mydeposits.co.uk/" target="_blank">
-MyDeposits Scheme
-</a>
-<p>MyDeposits is another authorised scheme for protecting tenancy deposits. 
-Tenants can raise disputes through the scheme if they disagree with deductions 
-made at the end of a tenancy.</p>
-</li>
-
-<li>
-<a href="https://www.tenancydepositscheme.com/" target="_blank">
-Tenancy Deposit Scheme (TDS)
-</a>
-<p>The TDS provides deposit protection and dispute resolution services. 
-Tenants can challenge unfair deductions through the scheme’s adjudication 
-process.</p>
-</li>
-
-</ul>
-
-<hr>
-
-<h3>Housing Standards and Safety</h3>
-
-<p>
-<a href="https://www.gov.uk/government/publications/housing-health-and-safety-rating-system-guidance-for-landlords-and-property-related-professionals" target="_blank">
-Housing Health and Safety Rating System (HHSRS)
-</a>
-</p>
-
-<p>
-The HHSRS is the system used by local authorities to assess housing conditions
-and hazards. Councils can order landlords to make improvements if serious
-health risks such as damp, mould, or fire hazards are identified.
-</p>
+    </div>
+  </div>
 
 </div>
+
+<footer>
+  <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
+</footer>
 
 </body>
 </html>
