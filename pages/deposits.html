@@ -1,137 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deposits - Tenant Advocate</title>
-    <link rel="stylesheet" type="text/css" href="../styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposits – Tenant Advocate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a; --teal: #1a7a6e; --teal-light: #24a898;
+  --gold: #e8b84b; --muted: #8a9ab0; --card-bg: #162333; --border: rgba(255,255,255,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: #e8edf3; min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -10%, rgba(26,122,110,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(232,184,75,0.07) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+}
+header {
+  position: relative; z-index: 10; padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon {
+  width: 40px; height: 40px; background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.logo h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
+.logo p  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
+nav a {
+  color: var(--muted); text-decoration: none; font-size: 0.82rem;
+  padding: 6px 14px; border-radius: 20px; transition: all 0.2s; border: 1px solid transparent;
+}
+nav a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
+nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); background: rgba(26,122,110,0.12); }
+
+.hero { position: relative; z-index: 1; max-width: 860px; margin: 60px auto 0; padding: 0 40px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.4);
+  color: var(--teal-light); font-size: 0.78rem; padding: 6px 16px; border-radius: 20px;
+  margin-bottom: 24px; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.hero h2 {
+  font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.15; letter-spacing: -0.02em; color: #fff; margin-bottom: 14px;
+}
+.hero h2 em { font-style: normal; color: var(--gold); }
+.hero p { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 580px; }
+
+.content {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 50px auto 80px; padding: 0 40px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+.section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.section-card-header {
+  padding: 20px 28px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.section-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(26,122,110,0.15); border: 1px solid rgba(26,122,110,0.25);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.section-card-header h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #fff; }
+.section-card-header p  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.section-card-body { padding: 24px 28px; }
+.section-card-body > p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.75; margin-bottom: 16px; }
+.section-card-body > p:last-child { margin-bottom: 0; }
+
+/* Key facts row */
+.key-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.key-fact {
+  background: rgba(26,122,110,0.1); border: 1px solid rgba(26,122,110,0.25);
+  border-radius: 12px; padding: 16px; text-align: center;
+}
+.key-fact .kf-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 4px; }
+.key-fact .kf-label { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+/* Scheme cards */
+.scheme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.scheme-card {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px; transition: border-color 0.2s;
+}
+.scheme-card:hover { border-color: rgba(26,122,110,0.3); }
+.scheme-card h4 { color: #fff; font-size: 0.84rem; font-weight: 500; margin-bottom: 6px; }
+.scheme-card p  { color: var(--muted); font-size: 0.77rem; line-height: 1.6; margin-bottom: 10px; }
+.scheme-card a  { font-size: 0.76rem; color: var(--teal-light); text-decoration: none; }
+.scheme-card a:hover { text-decoration: underline; }
+
+/* Deductions */
+.deduction-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ded-col { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.ded-col h4 { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; }
+.ded-col.allowed h4 { color: var(--teal-light); }
+.ded-col.banned  h4 { color: #f1857a; }
+.ded-col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ded-col ul li { font-size: 0.8rem; color: var(--muted); line-height: 1.5; padding-left: 16px; position: relative; }
+.ded-col.allowed ul li::before { content: '✓'; position: absolute; left: 0; color: var(--teal-light); }
+.ded-col.banned  ul li::before { content: '✗'; position: absolute; left: 0; color: #f1857a; }
+
+/* Steps */
+.steps-list { display: flex; flex-direction: column; gap: 8px; }
+.step-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+}
+.step-num {
+  width: 26px; height: 26px; flex-shrink: 0;
+  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.35);
+  border-radius: 50%; font-size: 0.72rem; color: var(--teal-light); font-weight: 600;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.step-item p { color: #b0bfcc; font-size: 0.85rem; line-height: 1.65; }
+.step-item p strong { color: #e8edf3; }
+
+/* Alert */
+.alert-box { border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 0.83rem; line-height: 1.7; }
+.alert-warning { background: rgba(232,184,75,0.1); border: 1px solid rgba(232,184,75,0.25); color: #f5c843; }
+.alert-danger  { background: rgba(231,76,60,0.1);  border: 1px solid rgba(231,76,60,0.25);  color: #f1857a; }
+.alert-box strong { color: #fff; }
+
+/* Legal ref */
+.legal-ref {
+  background: rgba(26,122,110,0.08); border-left: 3px solid var(--teal-light);
+  border-radius: 0 8px 8px 0; padding: 12px 14px;
+  font-size: 0.78rem; color: rgba(168,220,215,0.85); line-height: 1.65; margin-top: 18px;
+}
+.legal-ref strong { color: var(--teal-light); }
+.legal-ref a { color: var(--teal-light); }
+
+/* CTA */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(26,122,110,0.2), rgba(26,122,110,0.08));
+  border: 1px solid rgba(26,122,110,0.3); border-radius: 16px;
+  padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.cta-banner p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.65; }
+.cta-banner p strong { color: #fff; display: block; font-size: 0.95rem; margin-bottom: 4px; }
+.cta-btn {
+  flex-shrink: 0; padding: 11px 22px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border: none; border-radius: 10px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500;
+  text-decoration: none; white-space: nowrap; transition: opacity 0.2s;
+}
+.cta-btn:hover { opacity: 0.88; }
+
+footer {
+  position: relative; z-index: 1; border-top: 1px solid var(--border);
+  padding: 24px 40px; text-align: center; color: var(--muted); font-size: 0.78rem;
+}
+@media (max-width: 768px) {
+  header { padding: 16px 20px; flex-direction: column; gap: 12px; }
+  .hero, .content { padding: 0 20px; }
+  .hero { margin-top: 40px; }
+  .key-facts, .scheme-grid, .deduction-row { grid-template-columns: 1fr; }
+  .section-card-body, .section-card-header { padding: 18px 20px; }
+  .cta-banner { flex-direction: column; }
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Tenancy Deposits</h1>
-        <p>Your rights regarding deposit protection and disputes</p>
-    </header>
 
-    <nav>
-        <a href="../index.html">Home</a>
-        <a href="../sitemap.html">Sitemap</a>
-        <a href="know-your-rights.html">Know Your Rights</a>
-        <a href="repairs.html">Repairs</a>
-        <a href="deposits.html">Deposits</a>
-        <a href="fees.html">Fees</a>
-        <a href="evictions.html">Evictions</a>
-        <a href="timeline-tool.html">Timeline Tool</a>
-        <a href="letters.html">Letters</a>
-        <a href="resources.html">Resources</a>
-    </nav>
+<header>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon">⚖️</div>
+    <div><h1>Tenant Advocate</h1><p>Housing Rights Platform</p></div>
+  </a>
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="know-your-rights.html">Rights</a>
+    <a href="repairs.html">Repairs</a>
+    <a href="deposits.html" class="active">Deposits</a>
+    <a href="fees.html">Fees</a>
+    <a href="evictions.html">Evictions</a>
+    <a href="timeline-tool.html">Timeline</a>
+    <a href="letters.html">Letters</a>
+    <a href="resources.html">Resources</a>
+  </nav>
+</header>
 
-    <div class="container">
-        <section>
-            <h2>Deposit Protection Requirements</h2>
-            <p>
-                All tenancy deposits must be protected in a government-approved scheme. 
-                Your landlord or letting agent must:
-            </p>
-            <ul>
-                <li>Register your deposit with an approved scheme within 30 days of receiving it</li>
-                <li>Provide you with prescribed information about the scheme in writing</li>
-                <li>Keep your deposit in a designated account separate from their own money</li>
-                <li>Return your full deposit at the end of the tenancy (minus any agreed deductions)</li>
-            </ul>
-        </section>
+<div class="hero">
+  <div class="hero-badge">🔒 Housing Act 2004</div>
+  <h2>Tenancy <em>deposits.</em></h2>
+  <p>Your deposit must be protected by law. Here is what your landlord must do, what they can deduct, and what to do if they don't play by the rules.</p>
+</div>
 
-        <section>
-            <h2>The Three Approved Schemes</h2>
-            <ul>
-                <li>
-                    <a href="https://www.tds.gb.com" target="_blank">
-                        The Deposit Protection Service (TDS)
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.mydeposits.co.uk" target="_blank">
-                        MyDeposits
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.depositprotection.com" target="_blank">
-                        Deposit Protection (DPS)
-                    </a>
-                </li>
-            </ul>
-        </section>
+<div class="content">
 
-        <section>
-            <h2>Permitted Deductions</h2>
-            <p>Your landlord can only deduct from your deposit for:</p>
-            <ul>
-                <li>Rent arrears (unpaid rent)</li>
-                <li>Damage beyond normal wear and tear</li>
-                <li>Cleaning costs (only if this was specified in your tenancy agreement)</li>
-                <li>Replacement of missing items (e.g., keys)</li>
-            </ul>
-            <p>
-                <strong>Important:</strong> Normal wear and tear is NOT deductible. 
-                Your landlord cannot charge for items that have naturally worn out through ordinary use.
-            </p>
-        </section>
-
-        <section>
-            <h2>What Is Normal Wear and Tear?</h2>
-            <ul>
-                <li>Faded paint and wallpaper</li>
-                <li>Worn carpet and flooring</li>
-                <li>Minor marks on walls</li>
-                <li>Worn light fixtures</li>
-                <li>Natural aging of appliances</li>
-            </ul>
-
-            <p>These items CANNOT be charged to you unless they are damaged beyond normal use.</p>
-        </section>
-
-        <section>
-            <h2>Disputing Deductions</h2>
-            <p>
-                If you disagree with deductions made from your deposit, you have the right to dispute them
-                through the deposit protection scheme's free dispute resolution service.
-            </p>
-            <ul>
-                <li>Most schemes offer free, independent dispute resolution</li>
-                <li>You can submit evidence (photos, receipts, witness statements)</li>
-                <li>The scheme will make a binding decision</li>
-                <li>The scheme can order your landlord to return funds</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>If Your Deposit Wasn't Protected</h2>
-            <p>
-                If your landlord failed to protect your deposit properly or didn't provide prescribed information, 
-                you may be able to claim compensation:
-            </p>
-            <ul>
-                <li>Compensation of up to 3 times the deposit amount</li>
-                <li>You can claim through the court (County Court)</li>
-                <li>Seek legal advice immediately if this applies to you</li>
-                <li>Contact Citizens Advice or Shelter for support</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Checklist When You Move Out</h2>
-            <ul>
-                <li>Get an inventory report at the end of your tenancy</li>
-                <li>Take photos/videos of the property condition</li>
-                <li>Get confirmation from your landlord about what will be charged</li>
-                <li>Get the name of the deposit protection scheme</li>
-                <li>Allow reasonable time for deductions to be itemized</li>
-                <li>If you disagree, use the scheme's dispute process</li>
-            </ul>
-        </section>
+  <!-- KEY FACTS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📌</div>
+      <h3>The Key Rules at a Glance</h3>
     </div>
-
-    <div class="footer">
-        <p>Tenant Advocate | Legal information only | Not legal advice</p>
+    <div class="section-card-body">
+      <div class="key-facts">
+        <div class="key-fact">
+          <div class="kf-value">30</div>
+          <div class="kf-label">days your landlord has to protect your deposit after receiving it</div>
+        </div>
+        <div class="key-fact">
+          <div class="kf-value">5 weeks</div>
+          <div class="kf-label">maximum deposit for annual rent under £50,000</div>
+        </div>
+        <div class="key-fact">
+          <div class="kf-value">1–3×</div>
+          <div class="kf-label">penalty your landlord can face if they fail to protect it</div>
+        </div>
+      </div>
+      <p>Under the Housing Act 2004, your landlord or letting agent must register your deposit with one of three government-approved schemes within 30 days of receiving it. They must also give you written information — called "prescribed information" — about which scheme holds it and how to get your money back.</p>
+      <div class="legal-ref">
+        <strong>Legal basis:</strong> <a href="https://www.legislation.gov.uk/ukpga/2004/34/part/6/chapter/4" target="_blank">Housing Act 2004, ss.212–215</a>. Failure to protect the deposit or serve prescribed information entitles the tenant to apply to the County Court for a penalty of between one and three times the deposit amount.
+      </div>
     </div>
+  </div>
+
+  <!-- THREE SCHEMES -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🏛️</div>
+      <div>
+        <h3>The Three Approved Schemes</h3>
+        <p>Your landlord must use one of these — no others are permitted</p>
+      </div>
+    </div>
+    <div class="section-card-body">
+      <p>Each scheme offers a free dispute resolution service. If you and your landlord disagree over deductions, you can refer the matter to the scheme for a binding independent decision — without going to court.</p>
+      <div class="scheme-grid">
+        <div class="scheme-card">
+          <h4>Deposit Protection Service (DPS)</h4>
+          <p>A custodial scheme — the DPS holds the deposit on your behalf throughout the tenancy. Free to use for landlords and tenants.</p>
+          <a href="https://www.depositprotection.com/" target="_blank">depositprotection.com ↗</a>
+        </div>
+        <div class="scheme-card">
+          <h4>MyDeposits</h4>
+          <p>An insurance-backed scheme — the landlord keeps the deposit but pays to insure it. Free dispute resolution available to tenants.</p>
+          <a href="https://www.mydeposits.co.uk/" target="_blank">mydeposits.co.uk ↗</a>
+        </div>
+        <div class="scheme-card">
+          <h4>Tenancy Deposit Scheme (TDS)</h4>
+          <p>Offers both custodial and insurance-backed options. Their adjudication service can resolve disputes over deductions at no cost to you.</p>
+          <a href="https://www.tenancydepositscheme.com/" target="_blank">tenancydepositscheme.com ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEDUCTIONS -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">💷</div>
+      <h3>What Can and Cannot Be Deducted</h3>
+    </div>
+    <div class="section-card-body">
+      <div class="alert-box alert-warning">
+        <strong>Normal wear and tear is never deductible.</strong> Your landlord cannot charge for items that have simply aged or worn through ordinary everyday use — only for damage you caused beyond that.
+      </div>
+      <div class="deduction-row">
+        <div class="ded-col allowed">
+          <h4>Allowed deductions</h4>
+          <ul>
+            <li>Unpaid rent</li>
+            <li>Damage you caused beyond normal wear and tear</li>
+            <li>Replacement of items you lost (e.g. keys)</li>
+            <li>Professional cleaning — only if the property was dirtier than when you moved in</li>
+          </ul>
+        </div>
+        <div class="ded-col banned">
+          <h4>Not allowed</h4>
+          <ul>
+            <li>Worn carpets or flooring from normal use</li>
+            <li>Faded paint or wallpaper</li>
+            <li>Scuffs or minor marks from everyday living</li>
+            <li>Replacement of items that had simply reached the end of their useful life</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISPUTING -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">⚖️</div>
+      <h3>Disputing Deductions</h3>
+    </div>
+    <div class="section-card-body">
+      <p>If your landlord proposes deductions you disagree with, do not simply accept them. Every approved scheme provides a <strong>free, independent dispute resolution service</strong> — you do not need a solicitor or a court to use it.</p>
+      <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><p><strong>Respond in writing.</strong> Tell your landlord which deductions you dispute and why. Keep a copy.</p></div>
+        <div class="step-item"><div class="step-num">2</div><p><strong>Gather your evidence.</strong> Collect your check-in photos, check-out photos, the inventory, and any relevant emails.</p></div>
+        <div class="step-item"><div class="step-num">3</div><p><strong>Raise a dispute with the scheme.</strong> Contact the scheme that holds your deposit and request their dispute resolution service. You normally have a limited window to do this after the tenancy ends, so act quickly.</p></div>
+        <div class="step-item"><div class="step-num">4</div><p><strong>Submit your evidence.</strong> The scheme's adjudicator will review what both sides provide and make a binding decision. The process is free and usually completed within 28 days.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPOSIT NOT PROTECTED -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">🚨</div>
+      <h3>If Your Deposit Was Not Protected</h3>
+    </div>
+    <div class="section-card-body">
+      <div class="alert-box alert-danger">
+        <strong>This is a serious breach of law.</strong> Your landlord had a legal obligation to protect your deposit. You may be entitled to a significant penalty.
+      </div>
+      <p>If your landlord failed to protect the deposit, or protected it but never gave you the prescribed information, you can apply to the County Court for a penalty of between <strong>one and three times the deposit amount</strong>, in addition to the return of the deposit itself.</p>
+      <p>Contact <strong>Shelter (0808 800 4444)</strong> or Citizens Advice for guidance before starting a claim. Use the <a href="letters.html" style="color:var(--teal-light)">Letter Generator</a> to send a formal notice to your landlord first.</p>
+    </div>
+  </div>
+
+  <!-- MOVE-OUT CHECKLIST -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">✅</div>
+      <h3>Move-Out Checklist</h3>
+    </div>
+    <div class="section-card-body">
+      <p>Doing these things when you leave protects your deposit and gives you strong evidence if a dispute arises.</p>
+      <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><p>Take a full set of dated photographs of every room, including walls, floors, appliances, and fittings — even things that look fine.</p></div>
+        <div class="step-item"><div class="step-num">2</div><p>Request a check-out inspection and, if possible, be present for it so you can address any concerns on the spot.</p></div>
+        <div class="step-item"><div class="step-num">3</div><p>Ask for written confirmation of the scheme your deposit is held in, if you don't already have it.</p></div>
+        <div class="step-item"><div class="step-num">4</div><p>If any deductions are proposed, ask for a full written breakdown with evidence for each item before agreeing to anything.</p></div>
+        <div class="step-item"><div class="step-num">5</div><p>If you disagree with deductions, raise a dispute through the scheme's adjudication service promptly — do not delay.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <p>
+      <strong>Deposit not returned or unfair deductions made?</strong>
+      Generate a formal letter to your landlord citing the Housing Act 2004.
+    </p>
+    <a class="cta-btn" href="letters.html">Open Letter Generator →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
+</footer>
 </body>
 </html>
