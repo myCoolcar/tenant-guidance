@@ -89,33 +89,33 @@
 
           <div class="a11y-divider" aria-hidden="true"></div>
 
-          <!-- Toggle modes -->
+          <!-- Toggle modes — label text wrapped in .btn-text so CSS can hide it on mobile -->
           <button id="a11y-contrast"
                   aria-label="Toggle high contrast mode"
                   aria-pressed="false"
                   title="High contrast mode">
-            ◑ Contrast
+            ◑<span class="btn-text"> Contrast</span>
           </button>
 
           <button id="a11y-dyslexia"
                   aria-label="Toggle dyslexia-friendly font"
                   aria-pressed="false"
                   title="Dyslexia-friendly font (OpenDyslexic)">
-            Aa Font
+            Aa<span class="btn-text"> Font</span>
           </button>
 
           <button id="a11y-simplified"
                   aria-label="Toggle simplified layout"
                   aria-pressed="false"
                   title="Simplified layout — larger text and single column">
-            ▤ Simple
+            ▤<span class="btn-text"> Simple</span>
           </button>
 
           <div class="a11y-divider" aria-hidden="true"></div>
 
           <button id="a11y-reset"
                   aria-label="Reset all accessibility settings to default">
-            ↺ Reset
+            ↺<span class="btn-text"> Reset</span>
           </button>
 
         </div>
