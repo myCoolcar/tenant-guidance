@@ -4,89 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Repairs &amp; Maintenance – Tenant Advocate</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../accessibility.css">
 <style>
-:root {
-  --navy: #0d1b2a;
-  --teal: #1a7a6e;
-  --teal-light: #24a898;
-  --gold: #e8b84b;
-  --muted: #8a9ab0;
-  --card-bg: #162333;
-  --border: rgba(255,255,255,0.08);
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: #e8edf3; min-height: 100vh; }
-body::before {
-  content: ''; position: fixed; inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 10% -10%, rgba(26,122,110,0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(232,184,75,0.07) 0%, transparent 55%);
-  pointer-events: none; z-index: 0;
-}
-header {
-  position: relative; z-index: 10; padding: 24px 40px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.logo-icon {
-  width: 40px; height: 40px;
-  background: linear-gradient(135deg, var(--teal), var(--teal-light));
-  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
-}
-.logo h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
-.logo p  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-nav { display: flex; gap: 6px; flex-wrap: wrap; }
-nav a {
-  color: var(--muted); text-decoration: none; font-size: 0.82rem;
-  padding: 6px 14px; border-radius: 20px; transition: all 0.2s; border: 1px solid transparent;
-}
-nav a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
-nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); background: rgba(26,122,110,0.12); }
-
-.hero {
-  position: relative; z-index: 1;
-  max-width: 860px; margin: 60px auto 0; padding: 0 40px;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.4);
-  color: var(--teal-light); font-size: 0.78rem;
-  padding: 6px 16px; border-radius: 20px; margin-bottom: 24px;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.hero h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.15;
-  letter-spacing: -0.02em; color: #fff; margin-bottom: 14px;
-}
-.hero h2 em { font-style: normal; color: var(--gold); }
-.hero p { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 580px; }
-
-.content {
-  position: relative; z-index: 1;
-  max-width: 900px; margin: 50px auto 80px; padding: 0 40px;
-  display: flex; flex-direction: column; gap: 32px;
-}
-
-.section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
-.section-card-header {
-  padding: 20px 28px 18px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 14px;
-}
-.section-icon {
-  width: 40px; height: 40px; flex-shrink: 0;
-  background: rgba(26,122,110,0.15); border: 1px solid rgba(26,122,110,0.25);
-  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
-}
-.section-card-header h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #fff; }
-.section-card-header p { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
-.section-card-body { padding: 24px 28px; }
-.section-card-body > p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.75; margin-bottom: 18px; }
-
-/* Obligation grid */
+/* Page-specific: obligation grid + compare grid responsive */
 .obligation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .obligation-item {
   background: rgba(255,255,255,0.03); border: 1px solid var(--border);
@@ -97,82 +18,8 @@ nav a.active { color: var(--teal-light); border-color: rgba(26,122,110,0.4); bac
 .ob-text strong { display: block; color: #e8edf3; font-size: 0.83rem; font-weight: 500; margin-bottom: 3px; }
 .ob-text span   { color: var(--muted); font-size: 0.77rem; line-height: 1.5; }
 
-/* Steps list */
-.steps-list { display: flex; flex-direction: column; gap: 8px; }
-.step-item {
-  display: flex; align-items: flex-start; gap: 12px;
-  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px;
-}
-.step-num {
-  width: 26px; height: 26px; flex-shrink: 0;
-  background: rgba(26,122,110,0.2); border: 1px solid rgba(26,122,110,0.35);
-  border-radius: 50%; font-size: 0.72rem; color: var(--teal-light); font-weight: 600;
-  display: flex; align-items: center; justify-content: center; margin-top: 1px;
-}
-.step-item p { color: #b0bfcc; font-size: 0.85rem; line-height: 1.65; }
-.step-item p strong { color: #e8edf3; }
-
-/* Two-col compare */
-.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.compare-col {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 16px;
-}
-.compare-col h4 { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 10px; text-transform: uppercase; }
-.compare-col.landlord h4 { color: var(--teal-light); }
-.compare-col.tenant  h4 { color: var(--gold); }
-.compare-col ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.compare-col ul li { color: var(--muted); font-size: 0.8rem; line-height: 1.55; padding-left: 14px; position: relative; }
-.compare-col ul li::before { content: '–'; position: absolute; left: 0; color: var(--border); }
-
-/* Alert */
-.alert-box {
-  border-radius: 12px; padding: 16px 18px; margin-bottom: 18px;
-  font-size: 0.83rem; line-height: 1.7;
-}
-.alert-danger  { background: rgba(231,76,60,0.1);  border: 1px solid rgba(231,76,60,0.25); color: #f1857a; }
-.alert-warning { background: rgba(232,184,75,0.1); border: 1px solid rgba(232,184,75,0.25); color: #f5c843; }
-.alert-info    { background: rgba(26,122,110,0.1); border: 1px solid rgba(26,122,110,0.25); color: var(--teal-light); }
-.alert-box strong { color: #fff; }
-
-/* Legal ref */
-.legal-ref {
-  background: rgba(26,122,110,0.08); border-left: 3px solid var(--teal-light);
-  border-radius: 0 8px 8px 0; padding: 12px 14px;
-  font-size: 0.78rem; color: rgba(168,220,215,0.85); line-height: 1.65; margin-top: 18px;
-}
-.legal-ref strong { color: var(--teal-light); }
-.legal-ref a { color: var(--teal-light); }
-
-/* CTA */
-.cta-banner {
-  background: linear-gradient(135deg, rgba(26,122,110,0.2), rgba(26,122,110,0.08));
-  border: 1px solid rgba(26,122,110,0.3); border-radius: 16px;
-  padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
-}
-.cta-banner p { color: #b0bfcc; font-size: 0.88rem; line-height: 1.65; }
-.cta-banner p strong { color: #fff; display: block; font-size: 0.95rem; margin-bottom: 4px; }
-.cta-btn {
-  flex-shrink: 0; padding: 11px 22px;
-  background: linear-gradient(135deg, var(--teal), var(--teal-light));
-  border: none; border-radius: 10px; color: #fff;
-  font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500;
-  text-decoration: none; white-space: nowrap; transition: opacity 0.2s;
-}
-.cta-btn:hover { opacity: 0.88; }
-
-footer {
-  position: relative; z-index: 1; border-top: 1px solid var(--border);
-  padding: 24px 40px; text-align: center; color: var(--muted); font-size: 0.78rem;
-}
-
 @media (max-width: 768px) {
-  header { padding: 16px 20px; flex-direction: column; gap: 12px; }
-  .hero, .content { padding: 0 20px; }
-  .hero { margin-top: 40px; }
   .obligation-grid, .compare-grid { grid-template-columns: 1fr; }
-  .section-card-body, .section-card-header { padding: 18px 20px; }
-  .cta-banner { flex-direction: column; }
 }
 </style>
 </head>
@@ -342,4 +189,5 @@ footer {
   <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
 </footer>
 </body>
+<script src="../accessibility.js"></script>
 </html>
