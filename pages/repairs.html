@@ -7,19 +7,457 @@
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../accessibility.css">
 <style>
-/* Page-specific: obligation grid + compare grid responsive */
+/* ─── Page-specific variables & resets ─── */
+:root {
+  --teal: #1a7a6e;
+  --teal-light: #2aaE9C;
+  --gold: #e8b84b;
+  --card-bg: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.09);
+  --muted: #7a8fa6;
+  --danger: #e05c5c;
+  --warn-bg: rgba(224,92,92,0.08);
+  --warn-border: rgba(224,92,92,0.35);
+  --gold-bg: rgba(232,184,75,0.07);
+  --gold-border: rgba(232,184,75,0.25);
+}
+
+/* ─── Navigator: problem picker ─── */
+.navigator-card {
+  background: linear-gradient(135deg, rgba(26,122,110,0.14), rgba(26,122,110,0.04));
+  border: 1px solid rgba(26,122,110,0.35);
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  margin-bottom: 0;
+}
+.navigator-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.navigator-card > p {
+  font-size: 0.83rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.55;
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+}
+.problem-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 14px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  color: #d4dde8;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.problem-btn:hover,
+.problem-btn:focus {
+  background: rgba(26,122,110,0.18);
+  border-color: rgba(26,122,110,0.5);
+  outline: none;
+  transform: translateY(-1px);
+}
+.problem-btn.active {
+  background: rgba(26,122,110,0.25);
+  border-color: var(--teal-light);
+  box-shadow: 0 0 0 1px rgba(42,174,156,0.3);
+}
+.problem-btn .pb-icon { font-size: 1.4rem; }
+.problem-btn .pb-label { font-size: 0.8rem; font-weight: 500; color: #e8edf3; line-height: 1.35; }
+
+/* Result panel */
+.result-panel {
+  display: none;
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  animation: fadeUp 0.3s ease;
+}
+.result-panel.visible { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.result-header .rh-icon { font-size: 1.8rem; flex-shrink: 0; }
+.result-header .rh-text h4 {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.urgency-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+.urgency-emergency { background: rgba(224,92,92,0.18); border: 1px solid rgba(224,92,92,0.4); color: #f08080; }
+.urgency-urgent    { background: rgba(232,184,75,0.15); border: 1px solid rgba(232,184,75,0.35); color: var(--gold); }
+.urgency-standard  { background: rgba(42,174,156,0.12); border: 1px solid rgba(42,174,156,0.3);  color: var(--teal-light); }
+
+.result-body { font-size: 0.85rem; line-height: 1.65; color: #c8d6e4; }
+.result-body p { margin-bottom: 10px; }
+.result-body strong { color: #e8edf3; }
+.result-body a { color: var(--teal-light); }
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.result-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  color: #fff;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-secondary {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: #d4dde8;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.09); transform: translateY(-1px); }
+
+/* ─── Steps pathway ─── */
+.steps-pathway { display: flex; flex-direction: column; gap: 0; }
+
+.step-row {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+/* Vertical connector line */
+.step-row:not(:last-child) .step-connector::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 48px;
+  width: 2px;
+  height: calc(100% - 4px);
+  background: linear-gradient(to bottom, rgba(42,174,156,0.4), rgba(42,174,156,0.08));
+}
+.step-connector {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  margin-right: 18px;
+}
+.step-num-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 18px rgba(26,122,110,0.4);
+}
+.step-content {
+  flex: 1;
+  padding-bottom: 28px;
+}
+.step-content h4 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #e8edf3;
+  margin-bottom: 6px;
+  padding-top: 9px;
+}
+.step-content p {
+  font-size: 0.83rem;
+  color: #a0b4c8;
+  line-height: 1.65;
+  margin: 0;
+}
+.step-content a { color: var(--teal-light); }
+
+/* Expandable learn more */
+.learn-more-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  color: var(--teal-light);
+  font-size: 0.78rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  padding: 6px 0 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
+}
+.learn-more-toggle:hover { opacity: 0.8; }
+.learn-more-toggle .toggle-arrow { transition: transform 0.2s; display: inline-block; }
+.learn-more-toggle.open .toggle-arrow { transform: rotate(180deg); }
+
+.learn-more-body {
+  display: none;
+  margin-top: 10px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.81rem;
+  color: #8fa8bf;
+  line-height: 1.7;
+  animation: fadeUp 0.25s ease;
+}
+.learn-more-body.open { display: block; }
+.learn-more-body strong { color: #b8cce0; }
+
+/* ─── Urgency / emergency section ─── */
+.emergency-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.emergency-item {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.emergency-item .ei-icon { font-size: 1.2rem; flex-shrink: 0; }
+.emergency-item .ei-text strong { display: block; color: #f08080; font-size: 0.83rem; font-weight: 600; margin-bottom: 2px; }
+.emergency-item .ei-text span  { color: #9fb0be; font-size: 0.78rem; line-height: 1.5; }
+
+/* Emergency steps */
+.emerg-steps { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.emerg-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.83rem;
+  color: #a8bfce;
+  line-height: 1.6;
+}
+.emerg-step .es-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(224,92,92,0.2);
+  border: 1px solid rgba(224,92,92,0.4);
+  color: #f08080;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.emerg-step strong { color: #d4dde8; }
+.emerg-step a { color: var(--teal-light); }
+
+/* ─── Wear and tear compare grid ─── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+.compare-col {
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.compare-col.landlord {
+  background: rgba(42,174,156,0.06);
+  border: 1px solid rgba(42,174,156,0.2);
+}
+.compare-col.tenant {
+  background: rgba(224,92,92,0.05);
+  border: 1px solid rgba(224,92,92,0.18);
+}
+.compare-col h4 {
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.compare-col.landlord h4 { color: var(--teal-light); }
+.compare-col.tenant h4 { color: #f08080; }
+.compare-col ul { padding-left: 16px; margin: 0; }
+.compare-col ul li {
+  font-size: 0.8rem;
+  color: #9fb4c8;
+  line-height: 1.6;
+  margin-bottom: 5px;
+}
+
+/* ─── Obligation grid ─── */
 .obligation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .obligation-item {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-  border-radius: 12px; padding: 14px 16px;
-  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 .ob-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
 .ob-text strong { display: block; color: #e8edf3; font-size: 0.83rem; font-weight: 500; margin-bottom: 3px; }
 .ob-text span   { color: var(--muted); font-size: 0.77rem; line-height: 1.5; }
 
+/* ─── Alert box ─── */
+.alert-box {
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 0.83rem;
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+.alert-danger {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+  color: #f08080;
+}
+.alert-danger strong { color: #f49898; }
+.alert-gold {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-border);
+  color: rgba(232,184,75,0.85);
+}
+.alert-gold strong { color: var(--gold); }
+
+/* ─── Legal ref ─── */
+.legal-ref {
+  font-size: 0.76rem;
+  color: var(--muted);
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  line-height: 1.6;
+}
+.legal-ref a { color: var(--teal-light); }
+.legal-ref strong { color: #9fb4c8; }
+
+/* ─── CTA banner ─── */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(26,122,110,0.2), rgba(26,122,110,0.06));
+  border: 1px solid rgba(26,122,110,0.3);
+  border-radius: 16px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.cta-banner p { margin: 0; font-size: 0.88rem; color: #c0d4e4; line-height: 1.5; }
+.cta-banner p strong { color: #e8edf3; }
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ─── Tool links row ─── */
+.tool-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.tool-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: #c0d4e4;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.tool-link:hover {
+  background: rgba(26,122,110,0.15);
+  border-color: rgba(26,122,110,0.4);
+  color: var(--teal-light);
+  transform: translateY(-1px);
+}
+
+/* ─── Section card (re-declare for clarity) ─── */
+.section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
+.section-card-header { padding: 20px 24px 0; display: flex; align-items: center; gap: 14px; }
+.section-icon { font-size: 1.4rem; }
+.section-card-header h3 { font-size: 0.98rem; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.section-card-header p  { font-size: 0.78rem; color: var(--muted); margin: 0; }
+.section-card-body { padding: 16px 24px 24px; }
+.section-card-body > p { font-size: 0.84rem; color: #9fb4c8; line-height: 1.7; margin-bottom: 16px; }
+
+/* ─── Responsive ─── */
 @media (max-width: 768px) {
   .obligation-grid, .compare-grid { grid-template-columns: 1fr; }
+  .problem-grid { grid-template-columns: 1fr 1fr; }
+  .emergency-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .problem-grid { grid-template-columns: 1fr 1fr; }
+  .cta-banner { flex-direction: column; text-align: center; }
+  .tool-links { justify-content: center; }
 }
 </style>
 </head>
@@ -46,22 +484,256 @@
 <div class="hero">
   <div class="hero-badge">🔧 LTA 1985, s.11</div>
   <h2>Repairs &amp; <em>maintenance.</em></h2>
-  <p>Your landlord has a legal duty to keep your home in good repair. Here is what they must fix, and what to do when they don't.</p>
+  <p>Your landlord has a legal duty to keep your home in good repair. Find out what they must fix — and what to do when they don't.</p>
 </div>
 
 <div class="content">
 
-  <!-- OBLIGATIONS -->
+  <!-- ═══ 1. REPAIR RIGHTS NAVIGATOR ═══ -->
+  <div class="section-card" style="border-color: rgba(26,122,110,0.35);">
+    <div class="section-card-header">
+      <div class="section-icon">🧭</div>
+      <div>
+        <h3>What repair problem are you facing?</h3>
+        <p>Select your issue to see your rights, urgency level, and what to do next</p>
+      </div>
+    </div>
+    <div class="section-card-body">
+
+      <div class="navigator-card">
+        <div class="problem-grid" id="problemGrid">
+          <button class="problem-btn" onclick="showProblem('heating')" aria-pressed="false">
+            <span class="pb-icon">🔥</span>
+            <span class="pb-label">No heating or hot water</span>
+          </button>
+          <button class="problem-btn" onclick="showProblem('damp')" aria-pressed="false">
+            <span class="pb-icon">💧</span>
+            <span class="pb-label">Damp or mould</span>
+          </button>
+          <button class="problem-btn" onclick="showProblem('plumbing')" aria-pressed="false">
+            <span class="pb-icon">🚰</span>
+            <span class="pb-label">Plumbing or water leak</span>
+          </button>
+          <button class="problem-btn" onclick="showProblem('windows')" aria-pressed="false">
+            <span class="pb-icon">🔒</span>
+            <span class="pb-label">Broken windows or doors</span>
+          </button>
+          <button class="problem-btn" onclick="showProblem('electrical')" aria-pressed="false">
+            <span class="pb-icon">⚡</span>
+            <span class="pb-label">Electrical issue</span>
+          </button>
+          <button class="problem-btn" onclick="showProblem('structural')" aria-pressed="false">
+            <span class="pb-icon">🏠</span>
+            <span class="pb-label">Structural damage</span>
+          </button>
+          <button class="problem-btn" onclick="showProblem('pests')" aria-pressed="false">
+            <span class="pb-icon">🐀</span>
+            <span class="pb-label">Pests or infestation</span>
+          </button>
+          <button class="problem-btn" onclick="showProblem('gas')" aria-pressed="false">
+            <span class="pb-icon">⚠️</span>
+            <span class="pb-label">Gas safety issue</span>
+          </button>
+        </div>
+
+        <!-- Result panel — populated by JS -->
+        <div class="result-panel" id="resultPanel" role="region" aria-live="polite">
+          <!-- Content injected by showProblem() -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ 2. HOW TO REPORT — STEP PATHWAY ═══ -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <div class="section-icon">📝</div>
+      <div>
+        <h3>How to report a repair</h3>
+        <p>Follow these steps in order — they protect you if the dispute escalates</p>
+      </div>
+    </div>
+    <div class="section-card-body">
+      <div class="steps-pathway" id="stepsPathway">
+
+        <div class="step-row">
+          <div class="step-connector"><div class="step-num-circle">1</div></div>
+          <div class="step-content">
+            <h4>Report in writing</h4>
+            <p>Email is best — it creates an automatic timestamp and a clear record. Describe the problem: what it is, where it is, and when you first noticed it.</p>
+            <button class="learn-more-toggle" onclick="toggleLearnMore(this)" aria-expanded="false">
+              Learn more <span class="toggle-arrow">▾</span>
+            </button>
+            <div class="learn-more-body">
+              <strong>Why writing matters:</strong> If your landlord later claims they were never told, a timestamped email is your evidence. Keep the email polite and factual — avoid emotive language. If you have already reported verbally, follow up immediately by email saying "As discussed on [date], I am reporting the following issue…"
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-connector"><div class="step-num-circle">2</div></div>
+          <div class="step-content">
+            <h4>Document the problem</h4>
+            <p>Take dated photos or a short video of the issue. Store copies somewhere safe — cloud storage, email to yourself, or both. This is your evidence.</p>
+            <button class="learn-more-toggle" onclick="toggleLearnMore(this)" aria-expanded="false">
+              Learn more <span class="toggle-arrow">▾</span>
+            </button>
+            <div class="learn-more-body">
+              <strong>Tip:</strong> Most phones embed the date and time in photo metadata. Take photos clearly showing the extent of the problem. For damp or mould, photograph affected areas widely and closely. If the issue worsens over time, photograph it regularly to demonstrate your landlord's inaction.
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-connector"><div class="step-num-circle">3</div></div>
+          <div class="step-content">
+            <h4>Allow reasonable time</h4>
+            <p>For standard repairs, <strong style="color:#e8edf3">14 days</strong> is generally reasonable. For urgent issues (no heating in winter, flooding), the landlord should respond the same day or within hours. Log the date you first reported the issue using the <a href="timeline-tool.html">Timeline Tool</a>.</p>
+            <button class="learn-more-toggle" onclick="toggleLearnMore(this)" aria-expanded="false">
+              Learn more <span class="toggle-arrow">▾</span>
+            </button>
+            <div class="learn-more-body">
+              <strong>What counts as reasonable?</strong> Courts consider the nature and severity of the repair when deciding what is "reasonable". A dripping tap might warrant 28 days; a broken boiler in January warrants same-day action. There is no fixed rule in law — but 14 days for non-urgent repairs is widely accepted as a guideline.
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-connector"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <h4>Chase in writing</h4>
+            <p>If you have heard nothing after the deadline, send a follow-up email referencing your original report and giving a further deadline. Keep every copy.</p>
+            <button class="learn-more-toggle" onclick="toggleLearnMore(this)" aria-expanded="false">
+              Learn more <span class="toggle-arrow">▾</span>
+            </button>
+            <div class="learn-more-body">
+              Example wording: <em>"I am writing to follow up on my email of [date] regarding [problem]. You have not responded or arranged a repair. I am requesting that this is resolved within [7 days]. Please confirm receipt of this email."</em>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-connector"><div class="step-num-circle">5</div></div>
+          <div class="step-content">
+            <h4>Send a formal repair letter</h4>
+            <p>If still no action, send a formal letter citing <strong style="color:#e8edf3">Section 11 of the Landlord and Tenant Act 1985</strong> and setting a clear final deadline. Use the <a href="letters.html">Letter Generator</a> to produce one in under a minute.</p>
+            <div class="tool-links">
+              <a class="tool-link" href="letters.html">✉️ Open Letter Generator</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-connector"><div class="step-num-circle">6</div></div>
+          <div class="step-content">
+            <h4>Contact your local council</h4>
+            <p>Report the issue to your council's <strong style="color:#e8edf3">Environmental Health team</strong>. They can inspect your property and issue a formal improvement notice or take enforcement action against your landlord.</p>
+            <button class="learn-more-toggle" onclick="toggleLearnMore(this)" aria-expanded="false">
+              Learn more <span class="toggle-arrow">▾</span>
+            </button>
+            <div class="learn-more-body">
+              Environmental Health officers use the <strong>Housing Health and Safety Rating System (HHSRS)</strong> to assess hazards. A category 1 hazard (most serious) requires the council to take action. This service is free and the council cannot tell your landlord who reported unless necessary. Find your local council at <a href="https://www.gov.uk/find-local-council" target="_blank" rel="noopener">gov.uk/find-local-council</a>.
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-connector"><div class="step-num-circle">7</div></div>
+          <div class="step-content" style="padding-bottom: 0;">
+            <h4>Consider legal action</h4>
+            <p>As a last resort, you may be able to apply to the county court for an order requiring your landlord to carry out repairs, and claim compensation. Get advice from <strong style="color:#e8edf3">Shelter (0808 800 4444)</strong> or <strong style="color:#e8edf3">Citizens Advice</strong> before taking this step.</p>
+            <div class="tool-links">
+              <a class="tool-link" href="resources.html">🤝 Support &amp; Resources</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 3. EMERGENCY REPAIRS ═══ -->
+  <div class="section-card" style="border-color: rgba(224,92,92,0.25);">
+    <div class="section-card-header">
+      <div class="section-icon">🚨</div>
+      <div>
+        <h3>Emergency repairs</h3>
+        <p>When your landlord must act immediately — same day or within hours</p>
+      </div>
+    </div>
+    <div class="section-card-body">
+
+      <div class="alert-box alert-danger">
+        <strong>⚠️ Do not deduct repair costs from your rent</strong> without first getting legal advice. Doing so without following the correct process could put you at risk of rent arrears proceedings, even if your landlord is clearly at fault.
+      </div>
+
+      <p style="font-size:0.84rem;color:#9fb4c8;line-height:1.7;margin-bottom:16px;">The following situations are emergencies. Your landlord must respond urgently — failure to do so may expose them to enforcement action and compensation claims.</p>
+
+      <div class="emergency-grid">
+        <div class="emergency-item">
+          <span class="ei-icon">🔥</span>
+          <div class="ei-text">
+            <strong>Broken boiler in winter</strong>
+            <span>No heating or hot water in cold weather is a serious hazard, especially for children, elderly, or disabled occupants.</span>
+          </div>
+        </div>
+        <div class="emergency-item">
+          <span class="ei-icon">🌊</span>
+          <div class="ei-text">
+            <strong>Flooding or burst pipe</strong>
+            <span>Water ingress can cause structural damage and create electrical hazards. Requires immediate action.</span>
+          </div>
+        </div>
+        <div class="emergency-item">
+          <span class="ei-icon">⚡</span>
+          <div class="ei-text">
+            <strong>Electrical hazard</strong>
+            <span>Exposed wiring, sparking sockets, or total loss of electricity pose an immediate risk to life.</span>
+          </div>
+        </div>
+        <div class="emergency-item">
+          <span class="ei-icon">⚠️</span>
+          <div class="ei-text">
+            <strong>Gas leak or carbon monoxide</strong>
+            <span>Leave the property immediately. Do not use any switches. Call the National Gas Emergency line.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="emerg-steps">
+        <div class="emerg-step">
+          <div class="es-num">1</div>
+          <div>Contact your landlord or agent <strong>immediately by phone</strong>, then follow up in writing by email the same day to create a record.</div>
+        </div>
+        <div class="emerg-step">
+          <div class="es-num">2</div>
+          <div>For a <strong>gas leak</strong>, leave the property, do not operate any switches, and call the National Gas Emergency Service on <strong>0800 111 999</strong> (free, 24/7). For a <strong>carbon monoxide alarm</strong>, evacuate and call 999.</div>
+        </div>
+        <div class="emerg-step">
+          <div class="es-num">3</div>
+          <div>If the landlord is genuinely <strong>unreachable</strong> and the repair is a risk to health or safety, you <em>may</em> be able to arrange emergency repairs yourself — but speak to <strong>Shelter (0808 800 4444)</strong> or Citizens Advice first. Keep all receipts.</div>
+        </div>
+        <div class="emerg-step">
+          <div class="es-num">4</div>
+          <div>If your landlord refuses to reimburse reasonable emergency costs, you may be able to recover them, but this requires legal advice specific to your situation. See the <a href="resources.html">Resources page</a> for free support.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ 4. LANDLORD OBLIGATIONS ═══ -->
   <div class="section-card">
     <div class="section-card-header">
       <div class="section-icon">📋</div>
       <div>
-        <h3>What Your Landlord Must Maintain</h3>
-        <p>Statutory obligations under the Landlord and Tenant Act 1985, s.11</p>
+        <h3>What your landlord must maintain</h3>
+        <p>Statutory obligations under the Landlord and Tenant Act 1985, s.11 — these cannot be signed away</p>
       </div>
     </div>
     <div class="section-card-body">
-      <p>Section 11 of the Landlord and Tenant Act 1985 requires landlords to keep the following in repair and proper working order throughout the tenancy. This cannot be contracted out of — any clause in your tenancy agreement that tries to pass these responsibilities to you is unenforceable.</p>
+      <p>Section 11 of the Landlord and Tenant Act 1985 requires landlords to keep the following in repair and proper working order throughout the tenancy. <strong style="color:#e8edf3">Any clause in your tenancy agreement that tries to pass these responsibilities to you is unenforceable.</strong></p>
       <div class="obligation-grid">
         <div class="obligation-item">
           <span class="ob-icon">🔥</span>
@@ -85,7 +757,7 @@
         </div>
         <div class="obligation-item">
           <span class="ob-icon">🔥</span>
-          <div class="ob-text"><strong>Gas installations</strong><span>Gas pipes, appliances provided by the landlord, and flues must be kept safe. Annual gas safety checks are required by law.</span></div>
+          <div class="ob-text"><strong>Gas installations</strong><span>Gas pipes, appliances provided by the landlord, and flues must be safe. Annual gas safety checks are required by law.</span></div>
         </div>
         <div class="obligation-item">
           <span class="ob-icon">🚽</span>
@@ -93,65 +765,29 @@
         </div>
         <div class="obligation-item">
           <span class="ob-icon">💧</span>
-          <div class="ob-text"><strong>Damp &amp; mould</strong><span>Where caused by a structural defect or the landlord's failure to repair, this is the landlord's responsibility under the Homes (Fitness for Human Habitation) Act 2018.</span></div>
+          <div class="ob-text"><strong>Damp &amp; mould</strong><span>Where caused by a structural defect or the landlord's failure to repair — the landlord's responsibility under the Homes (Fitness for Human Habitation) Act 2018.</span></div>
         </div>
       </div>
       <div class="legal-ref">
-        <strong>Legal basis:</strong> <a href="https://www.legislation.gov.uk/ukpga/1985/70/section/11" target="_blank">Landlord and Tenant Act 1985, s.11</a> and the <a href="https://www.legislation.gov.uk/ukpga/2018/34/contents" target="_blank">Homes (Fitness for Human Habitation) Act 2018</a>.
+        <strong>Legal basis:</strong> <a href="https://www.legislation.gov.uk/ukpga/1985/70/section/11" target="_blank" rel="noopener">Landlord and Tenant Act 1985, s.11</a> and the <a href="https://www.legislation.gov.uk/ukpga/2018/34/contents" target="_blank" rel="noopener">Homes (Fitness for Human Habitation) Act 2018</a>.
       </div>
     </div>
   </div>
 
-  <!-- HOW TO REPORT -->
-  <div class="section-card">
-    <div class="section-card-header">
-      <div class="section-icon">📝</div>
-      <h3>How to Report a Repair</h3>
-    </div>
-    <div class="section-card-body">
-      <p>Following these steps protects you if the matter escalates into a formal dispute.</p>
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><p><strong>Report in writing.</strong> Email is best — it creates an automatic timestamp. Describe the problem clearly: what it is, where it is, and when you first noticed it.</p></div>
-        <div class="step-item"><div class="step-num">2</div><p><strong>Photograph the problem.</strong> Take dated photos or a short video. Store them somewhere safe — you may need them later as evidence.</p></div>
-        <div class="step-item"><div class="step-num">3</div><p><strong>Give reasonable time.</strong> For non-urgent repairs, 14 days is generally considered reasonable. For emergencies (no heating in winter, gas leak, flooding), the landlord should respond within hours or the same day.</p></div>
-        <div class="step-item"><div class="step-num">4</div><p><strong>Chase in writing if ignored.</strong> Send a follow-up email referring back to your original report. Keep a copy of everything.</p></div>
-        <div class="step-item"><div class="step-num">5</div><p><strong>Send a formal letter.</strong> If still no action, use the <a href="letters.html" style="color:var(--teal-light)">Letter Generator</a> to produce a letter citing Section 11 and setting a clear deadline.</p></div>
-        <div class="step-item"><div class="step-num">6</div><p><strong>Contact your local council.</strong> If your landlord still does not act, report the matter to your council's Environmental Health team. They can inspect the property and, if necessary, issue a formal improvement notice to your landlord.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EMERGENCIES -->
-  <div class="section-card">
-    <div class="section-card-header">
-      <div class="section-icon">🚨</div>
-      <h3>Emergency Repairs</h3>
-    </div>
-    <div class="section-card-body">
-      <div class="alert-box alert-danger">
-        <strong>Important:</strong> Do not deduct repair costs from your rent without first getting legal advice. Doing so without following the correct process could put you at risk of rent arrears proceedings.
-      </div>
-      <p>Emergencies — such as a broken boiler in winter, a burst pipe, a gas leak, or total loss of electricity — require your landlord to act quickly. What to do:</p>
-      <div class="steps-list">
-        <div class="step-item"><div class="step-num">1</div><p>Contact your landlord or agent immediately, and follow up in writing by email the same day.</p></div>
-        <div class="step-item"><div class="step-num">2</div><p>If there is a risk to safety (gas leak, electrical hazard, flooding), contact National Gas Emergency (0800 111 999) or your utility provider directly.</p></div>
-        <div class="step-item"><div class="step-num">3</div><p>If the landlord is unreachable and the repair is genuinely urgent, you may in some cases arrange and pay for emergency repairs yourself — but you should seek advice from <strong>Shelter (0808 800 4444)</strong> or Citizens Advice first before doing this.</p></div>
-        <div class="step-item"><div class="step-num">4</div><p>Keep all receipts and written records. If your landlord refuses to reimburse you, you may be able to recover costs, but this will need legal advice specific to your situation.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WEAR AND TEAR -->
+  <!-- ═══ 5. WEAR AND TEAR ═══ -->
   <div class="section-card">
     <div class="section-card-header">
       <div class="section-icon">🏡</div>
-      <h3>Normal Wear and Tear vs. Damage</h3>
+      <div>
+        <h3>Normal wear and tear vs. damage</h3>
+        <p>The gradual deterioration from everyday use is never your financial responsibility</p>
+      </div>
     </div>
     <div class="section-card-body">
-      <p>Your landlord is responsible for repairs and maintenance. You are responsible for damage you have caused. Normal wear and tear — the gradual deterioration that happens through ordinary everyday use — is <strong>never</strong> your financial responsibility.</p>
+      <p>Your landlord is responsible for maintenance and repair. You are responsible for damage <em>you</em> have caused. Normal wear and tear — the expected decline through ordinary use — is not your liability, even at the end of the tenancy.</p>
       <div class="compare-grid">
         <div class="compare-col landlord">
-          <h4>Landlord's responsibility</h4>
+          <h4>✅ Landlord's responsibility</h4>
           <ul>
             <li>Carpets worn through normal use over time</li>
             <li>Paint that has faded or scuffed with everyday use</li>
@@ -161,11 +797,11 @@
           </ul>
         </div>
         <div class="compare-col tenant">
-          <h4>Tenant's responsibility</h4>
+          <h4>⚠️ Tenant's responsibility</h4>
           <ul>
             <li>Stains, burns, or tears you caused</li>
             <li>Holes or damage from picture hooks (beyond minor)</li>
-            <li>Items you broke through misuse or carelessness</li>
+            <li>Items broken through misuse or carelessness</li>
             <li>Neglecting to report a problem, causing it to worsen</li>
             <li>Pet damage</li>
           </ul>
@@ -174,20 +810,192 @@
     </div>
   </div>
 
-  <!-- CTA -->
+  <!-- ═══ CTA ═══ -->
   <div class="cta-banner">
     <p>
-      <strong>Need to write to your landlord?</strong>
+      <strong>Ready to write to your landlord?</strong><br>
       Generate a formal repair request letter citing the relevant legislation in under a minute.
     </p>
-    <a class="cta-btn" href="letters.html">Open Letter Generator →</a>
+    <a class="cta-btn" href="letters.html">✉️ Open Letter Generator →</a>
   </div>
 
-</div>
+</div><!-- /content -->
 
 <footer>
   <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
 </footer>
-</body>
+
+<script>
+/* ─── Problem data ─── */
+const PROBLEMS = {
+  heating: {
+    icon: '🔥',
+    title: 'No heating or hot water',
+    urgency: 'emergency',
+    urgencyLabel: '🚨 Emergency repair',
+    landlordResponsible: true,
+    body: `<p><strong>Yes — your landlord is responsible.</strong> Under <strong>Section 11 of the Landlord and Tenant Act 1985</strong>, your landlord must keep the boiler and heating system in working order throughout the tenancy. This obligation cannot be waived in your tenancy agreement.</p>
+<p>A broken boiler in cold weather — particularly affecting children, elderly, or disabled occupants — is treated as an emergency. Your landlord must respond within hours, not days.</p>
+<p>If your landlord does not respond urgently, report it to your local council's Environmental Health team, who can issue a formal improvement notice.</p>`,
+    actions: [
+      { label: '✉️ Generate Repair Letter', href: 'letters.html', primary: true },
+      { label: '📅 Log this in Timeline', href: 'timeline-tool.html', primary: false },
+      { label: '🤝 Get urgent help', href: 'resources.html', primary: false }
+    ]
+  },
+  damp: {
+    icon: '💧',
+    title: 'Damp or mould',
+    urgency: 'urgent',
+    urgencyLabel: '⚠️ Urgent repair',
+    landlordResponsible: true,
+    body: `<p><strong>Usually yes — your landlord is responsible.</strong> Where damp or mould is caused by a structural defect, a failure to maintain the building, or inadequate ventilation designed into the property, this falls under your landlord's obligations under the <strong>Homes (Fitness for Human Habitation) Act 2018</strong> and <strong>Section 11 of the LTA 1985</strong>.</p>
+<p>Your landlord cannot simply blame "lifestyle" (e.g. drying clothes indoors) if the property has insufficient heating or ventilation. Following <strong>Awaab's Law</strong> (the Social Housing (Regulation) Act 2023), social housing landlords now face strict deadlines to investigate and remedy damp and mould.</p>
+<p>Photograph all affected areas clearly, including any damage to your belongings. Report in writing immediately.</p>`,
+    actions: [
+      { label: '✉️ Generate Repair Letter', href: 'letters.html', primary: true },
+      { label: '📅 Log this in Timeline', href: 'timeline-tool.html', primary: false }
+    ]
+  },
+  plumbing: {
+    icon: '🚰',
+    title: 'Plumbing or water leak',
+    urgency: 'urgent',
+    urgencyLabel: '⚠️ Urgent repair',
+    landlordResponsible: true,
+    body: `<p><strong>Yes — your landlord is responsible.</strong> Under <strong>Section 11 of the LTA 1985</strong>, your landlord must maintain the plumbing, pipes, taps, drains, and the supply of hot and cold water throughout the tenancy.</p>
+<p>A burst pipe or active leak is urgent and your landlord must act quickly. A slow drip may be treated as a non-emergency but should still be reported and fixed within a reasonable time (14 days).</p>
+<p>If water is coming through ceilings or walls and creates a risk of electrical damage or structural harm, treat this as an emergency and demand same-day action.</p>`,
+    actions: [
+      { label: '✉️ Generate Repair Letter', href: 'letters.html', primary: true },
+      { label: '📅 Log this in Timeline', href: 'timeline-tool.html', primary: false }
+    ]
+  },
+  windows: {
+    icon: '🔒',
+    title: 'Broken windows or doors',
+    urgency: 'urgent',
+    urgencyLabel: '⚠️ Urgent repair',
+    landlordResponsible: true,
+    body: `<p><strong>Yes — your landlord is responsible.</strong> Under <strong>Section 11 of the LTA 1985</strong>, windows and doors must be kept in proper working order — they must close, lock, and be weatherproof.</p>
+<p>A broken lock or window that cannot be secured is both a safety risk and a breach of your landlord's obligation. Given the security implications, this should be treated as urgent — demand repair within a short timeframe, typically 24–48 hours for a broken external lock.</p>`,
+    actions: [
+      { label: '✉️ Generate Repair Letter', href: 'letters.html', primary: true },
+      { label: '📅 Log this in Timeline', href: 'timeline-tool.html', primary: false }
+    ]
+  },
+  electrical: {
+    icon: '⚡',
+    title: 'Electrical issue',
+    urgency: 'emergency',
+    urgencyLabel: '🚨 May be emergency',
+    landlordResponsible: true,
+    body: `<p><strong>Yes — your landlord is responsible.</strong> Under <strong>Section 11 of the LTA 1985</strong>, your landlord must keep wiring, sockets, fuse boards, and fixed electrical fittings safe and functional. Landlords are also legally required to have electrical installations inspected every 5 years (EICR).</p>
+<p>Exposed wiring, sparking sockets, or total loss of electricity are emergencies and must be treated as such. <strong>Do not use faulty electrical fittings</strong> — they can cause fires or fatal electric shocks. Contact your landlord immediately by phone.</p>
+<p>If you are concerned about immediate safety, you can contact your local council's Environmental Health team, who have powers to act quickly.</p>`,
+    actions: [
+      { label: '✉️ Generate Repair Letter', href: 'letters.html', primary: true },
+      { label: '🤝 Get urgent help', href: 'resources.html', primary: false }
+    ]
+  },
+  structural: {
+    icon: '🏠',
+    title: 'Structural damage',
+    urgency: 'standard',
+    urgencyLabel: '📋 Standard repair',
+    landlordResponsible: true,
+    body: `<p><strong>Yes — your landlord is responsible.</strong> Under <strong>Section 11 of the LTA 1985</strong>, your landlord must keep the roof, walls, foundations, floors, ceilings, and exterior of the property in repair throughout the tenancy.</p>
+<p>Structural issues — such as a leaking roof, subsidence, or cracked external walls — are the landlord's responsibility. These are typically non-emergency unless there is immediate risk of collapse or water ingress, but your landlord must still repair them within a reasonable time after being notified.</p>`,
+    actions: [
+      { label: '✉️ Generate Repair Letter', href: 'letters.html', primary: true },
+      { label: '📅 Log this in Timeline', href: 'timeline-tool.html', primary: false },
+      { label: '🤝 Get advice', href: 'resources.html', primary: false }
+    ]
+  },
+  pests: {
+    icon: '🐀',
+    title: 'Pests or infestation',
+    urgency: 'urgent',
+    urgencyLabel: '⚠️ Urgent repair',
+    landlordResponsible: null,
+    body: `<p><strong>It depends on the cause.</strong> If a pest infestation is linked to a structural defect — such as holes in walls, broken drains, or an unfit property — your landlord may be responsible under the <strong>Homes (Fitness for Human Habitation) Act 2018</strong>. If the property was infested when you moved in, that is clearly the landlord's problem.</p>
+<p>However, if the infestation arose from how you use the property (e.g. food storage, hygiene), you may share some responsibility. In practice, most significant infestations — particularly of rats, mice, or cockroaches — involve a structural entry point that the landlord is responsible for sealing.</p>
+<p>Report in writing, document the evidence, and request the landlord to investigate and arrange pest control. If the cause is disputed, contact Citizens Advice or your local council.</p>`,
+    actions: [
+      { label: '✉️ Generate Repair Letter', href: 'letters.html', primary: true },
+      { label: '🤝 Get advice', href: 'resources.html', primary: false }
+    ]
+  },
+  gas: {
+    icon: '⚠️',
+    title: 'Gas safety issue',
+    urgency: 'emergency',
+    urgencyLabel: '🚨 Emergency — act now',
+    landlordResponsible: true,
+    body: `<p><strong>Yes — your landlord is responsible, and this may be a life-threatening emergency.</strong> Under the <strong>Gas Safety (Installation and Use) Regulations 1998</strong>, your landlord must keep all gas installations and appliances safe and arrange an annual Gas Safety Check (CP12) by a Gas Safe registered engineer.</p>
+<p><strong>If you smell gas or suspect a leak:</strong> leave the property immediately, do not operate any electrical switches, open windows if safe to do, and call the <strong>National Gas Emergency Service on 0800 111 999</strong> (free, 24 hours). Do not return until it has been declared safe.</p>
+<p>If your landlord has not provided you with a copy of the Gas Safety Certificate within 28 days of it being issued, or before you moved in, they are breaking the law. Report this to the Health and Safety Executive (HSE).</p>`,
+    actions: [
+      { label: '📞 0800 111 999 (Gas Emergency)', href: 'tel:0800111999', primary: true },
+      { label: '🤝 Report to HSE', href: 'resources.html', primary: false }
+    ]
+  }
+};
+
+function showProblem(key) {
+  const data = PROBLEMS[key];
+  if (!data) return;
+
+  // Update button states
+  document.querySelectorAll('.problem-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-pressed', 'false');
+  });
+  const clickedBtn = [...document.querySelectorAll('.problem-btn')]
+    .find(b => b.getAttribute('onclick') === `showProblem('${key}')`);
+  if (clickedBtn) {
+    clickedBtn.classList.add('active');
+    clickedBtn.setAttribute('aria-pressed', 'true');
+  }
+
+  const urgencyClass = {
+    emergency: 'urgency-emergency',
+    urgent:    'urgency-urgent',
+    standard:  'urgency-standard'
+  }[data.urgency] || 'urgency-standard';
+
+  const actionsHTML = data.actions.map(a =>
+    `<a class="result-action-btn ${a.primary ? 'btn-primary' : 'btn-secondary'}" href="${a.href}">${a.label}</a>`
+  ).join('');
+
+  const panel = document.getElementById('resultPanel');
+  panel.innerHTML = `
+    <div class="result-header">
+      <span class="rh-icon">${data.icon}</span>
+      <div class="rh-text">
+        <h4>${data.title}</h4>
+        <span class="urgency-badge ${urgencyClass}">${data.urgencyLabel}</span>
+      </div>
+    </div>
+    <div class="result-body">${data.body}</div>
+    <div class="result-actions">${actionsHTML}</div>
+  `;
+  panel.classList.add('visible');
+
+  // Scroll panel into view smoothly on mobile
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+/* ─── Learn more toggles ─── */
+function toggleLearnMore(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.setAttribute('aria-expanded', String(!isOpen));
+}
+</script>
+
 <script src="../accessibility.js"></script>
+</body>
 </html>
