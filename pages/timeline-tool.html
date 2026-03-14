@@ -3,109 +3,596 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Timeline Tool – Tenant Advocate</title>
+<title>Evidence Timeline – Tenant Advocate</title>
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../accessibility.css">
 <style>
-/* Two-column main layout for timeline page */
+/* ═══════════════════════════════════════════════
+   TIMELINE TOOL — FULL PAGE STYLES
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --teal: #1a7a6e;
+  --teal-light: #2aae9c;
+  --gold: #e8b84b;
+  --card-bg: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.09);
+  --muted: #7a8fa6;
+  --danger-col: #e05c5c;
+  --warn-bg: rgba(224,92,92,0.08);
+  --warn-border: rgba(224,92,92,0.3);
+  --gold-bg: rgba(232,184,75,0.07);
+  --gold-border: rgba(232,184,75,0.25);
+  --teal-bg: rgba(26,122,110,0.1);
+  --teal-border: rgba(26,122,110,0.3);
+}
+
+/* ── Privacy banner ── */
+.privacy-banner {
+  position: relative; z-index: 1;
+  max-width: 1100px; margin: 0 auto 0; padding: 0 40px;
+}
+.privacy-banner-inner {
+  background: var(--teal-bg);
+  border: 1px solid var(--teal-border);
+  border-radius: 12px;
+  padding: 11px 18px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.78rem; color: rgba(42,174,156,0.85);
+  line-height: 1.5;
+}
+.privacy-banner-inner strong { color: var(--teal-light); }
+
+/* ── Main two-col layout ── */
 .main {
   position: relative; z-index: 1;
-  max-width: 1100px; margin: 50px auto 80px; padding: 0 40px;
-  display: grid; grid-template-columns: 380px 1fr; gap: 28px; align-items: start;
+  max-width: 1100px; margin: 28px auto 80px; padding: 0 40px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-/* Add-event panel (sticky) */
-.panel:first-child { position: sticky; top: 30px; }
+/* ── Case info bar ── */
+.case-bar {
+  grid-column: 1 / -1;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 24px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.case-bar-field {
+  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 180px;
+}
+.case-bar-field label {
+  font-size: 0.72rem; color: var(--muted); white-space: nowrap;
+  text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
+}
+.case-bar-field input {
+  flex: 1; background: transparent; border: none;
+  border-bottom: 1px solid var(--border);
+  color: #e8edf3; font-size: 0.84rem;
+  font-family: 'DM Sans', sans-serif;
+  padding: 4px 0; outline: none;
+  transition: border-color 0.2s;
+}
+.case-bar-field input:focus { border-bottom-color: var(--teal-light); }
+.case-bar-field input::placeholder { color: var(--muted); font-size: 0.8rem; }
+.case-bar-divider { width: 1px; height: 32px; background: var(--border); flex-shrink: 0; }
 
-/* Saved notice */
-.saved-notice {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 0.75rem; color: var(--teal-light); padding: 8px 12px;
-  background: rgba(26,122,110,0.1); border: 1px solid rgba(26,122,110,0.2);
+/* ── LEFT PANEL: add event ── */
+.left-panel { position: sticky; top: 24px; }
+
+.panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.panel-head {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.panel-head-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.panel-head h3 { font-size: 0.92rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
+.panel-head p  { font-size: 0.75rem; color: var(--muted); margin: 0; }
+.panel-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Field wrapper */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label {
+  font-size: 0.72rem; font-weight: 600; color: #8fa8bf;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.field input, .field select, .field textarea {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: #e0eaf4;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.84rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: rgba(42,174,156,0.5);
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+.field select option { background: #1a2535; }
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.field.error input, .field.error select, .field.error textarea {
+  border-color: rgba(224,92,92,0.6);
+}
+.field-hint { font-size: 0.73rem; color: var(--muted); line-height: 1.5; }
+
+/* Follow-up questions (shown contextually) */
+.followup {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(42,174,156,0.05);
+  border: 1px solid rgba(42,174,156,0.15);
+  border-radius: 12px;
+  animation: fadeUp 0.2s ease;
+}
+.followup.visible { display: flex; }
+.followup-label {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--teal-light);
+  margin-bottom: 2px;
+}
+
+/* Event type pills */
+.event-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+.et-pill {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  color: #b8ccd8;
+  transition: all 0.18s;
+  text-align: left;
+}
+.et-pill:hover {
+  background: rgba(42,174,156,0.1);
+  border-color: rgba(42,174,156,0.35);
+  color: #e8edf3;
+}
+.et-pill.selected {
+  background: rgba(42,174,156,0.15);
+  border-color: var(--teal-light);
+  color: #fff;
+}
+.et-pill .et-icon { font-size: 1rem; flex-shrink: 0; }
+
+/* Method chips */
+.method-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.method-chip {
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.76rem;
+  color: #9fb4c8;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.18s;
+}
+.method-chip:hover { background: rgba(42,174,156,0.1); border-color: rgba(42,174,156,0.35); color: var(--teal-light); }
+.method-chip.selected { background: rgba(42,174,156,0.18); border-color: var(--teal-light); color: var(--teal-light); }
+
+/* Yes/No buttons */
+.yn-group { display: flex; gap: 8px; }
+.yn-btn {
+  flex: 1; padding: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
   border-radius: 8px;
+  font-size: 0.78rem; font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  color: #9fb4c8; cursor: pointer;
+  transition: all 0.18s;
+}
+.yn-btn:hover { background: rgba(255,255,255,0.07); }
+.yn-btn.selected-yes { background: rgba(42,174,156,0.15); border-color: var(--teal-light); color: var(--teal-light); }
+.yn-btn.selected-no  { background: rgba(224,92,92,0.1); border-color: rgba(224,92,92,0.4); color: #f08080; }
+
+/* Add button */
+.add-btn {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border: none; border-radius: 12px;
+  color: #fff; font-size: 0.9rem; font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.add-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.add-btn:active { transform: translateY(0); }
+
+/* Privacy notice */
+.privacy-note {
+  font-size: 0.73rem; color: var(--muted); line-height: 1.5;
+  text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px;
 }
 
-/* Timeline panel header row */
-.timeline-panel { position: sticky; top: 30px; }
-.timeline-header-row {
-  padding: 18px 24px 0; display: flex; align-items: center; justify-content: space-between;
+/* ── RIGHT PANEL: dashboard + timeline ── */
+.right-panel { display: flex; flex-direction: column; gap: 20px; }
+
+/* Dashboard */
+.dashboard {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px 22px 20px;
 }
-.timeline-header-row h3 { font-size: 0.9rem; font-weight: 500; color: #fff; }
+.dash-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+}
+.dash-head h3 { font-size: 0.88rem; font-weight: 600; color: #fff; }
+.dash-subtitle { font-size: 0.74rem; color: var(--muted); }
+
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+}
+.stat-card .stat-val {
+  font-size: 1.6rem; font-weight: 700; color: #fff;
+  line-height: 1; margin-bottom: 5px;
+}
+.stat-card .stat-label {
+  font-size: 0.7rem; color: var(--muted); line-height: 1.4;
+}
+.stat-card.stat-warn .stat-val { color: var(--gold); }
+.stat-card.stat-alert .stat-val { color: #f08080; }
+
+/* Legal alerts */
+.legal-alerts { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.legal-alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  display: flex; gap: 10px; align-items: flex-start;
+  animation: fadeUp 0.3s ease;
+}
+.legal-alert-warn {
+  background: rgba(232,184,75,0.07);
+  border: 1px solid rgba(232,184,75,0.25);
+  color: rgba(232,184,75,0.85);
+}
+.legal-alert-danger {
+  background: rgba(224,92,92,0.07);
+  border: 1px solid rgba(224,92,92,0.25);
+  color: #f08080;
+}
+.legal-alert-info {
+  background: rgba(42,174,156,0.07);
+  border: 1px solid rgba(42,174,156,0.2);
+  color: rgba(42,174,156,0.9);
+}
+.la-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.la-body strong { display: block; font-size: 0.78rem; font-weight: 700; margin-bottom: 3px; }
+.la-body span { font-size: 0.77rem; opacity: 0.9; }
+
+/* ── Timeline panel ── */
+.tl-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.tl-panel-head {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+}
+.tl-panel-head h3 { font-size: 0.9rem; font-weight: 600; color: #fff; }
 .event-count {
-  font-size: 0.72rem; color: var(--muted); background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border); border-radius: 10px; padding: 3px 10px;
+  font-size: 0.7rem; color: var(--muted);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 3px 10px;
+}
+.tl-filter-row {
+  padding: 10px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 7px; flex-wrap: wrap;
+}
+.tl-filter {
+  padding: 4px 12px;
+  font-size: 0.73rem; font-weight: 500;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.18s;
+}
+.tl-filter:hover { background: rgba(255,255,255,0.05); color: #d4dde8; }
+.tl-filter.active {
+  background: rgba(42,174,156,0.15);
+  border-color: rgba(42,174,156,0.4);
+  color: var(--teal-light);
 }
 
-/* Scrollable list */
-.timeline-scroll { padding: 16px 20px; max-height: 520px; overflow-y: auto; }
-.timeline-scroll::-webkit-scrollbar { width: 4px; }
-.timeline-scroll::-webkit-scrollbar-track { background: transparent; }
-.timeline-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+/* Timeline list */
+.tl-list {
+  padding: 16px 20px;
+  max-height: 480px;
+  overflow-y: auto;
+}
+.tl-list::-webkit-scrollbar { width: 4px; }
+.tl-list::-webkit-scrollbar-track { background: transparent; }
+.tl-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 /* Empty state */
-.empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
-.empty-state .es-icon { font-size: 2rem; margin-bottom: 12px; opacity: 0.5; }
-.empty-state p { font-size: 0.84rem; line-height: 1.6; }
-
-/* Timeline entries */
-.tl-entry {
-  display: flex; gap: 14px; margin-bottom: 20px;
-  animation: fadeUp 0.25s ease; position: relative;
+.empty-state {
+  text-align: center; padding: 44px 20px;
+  color: var(--muted);
 }
-@keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-.tl-entry:not(:last-child)::after {
-  content: ''; position: absolute;
-  left: 15px; top: 34px; bottom: -20px; width: 1px;
-  background: var(--border);
+.empty-state .es-icon { font-size: 2.2rem; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 0.83rem; line-height: 1.65; }
+
+/* Timeline entry card */
+.tl-entry {
+  display: flex; gap: 0;
+  margin-bottom: 4px;
+  position: relative;
+}
+.tl-line-col {
+  display: flex; flex-direction: column; align-items: center;
+  width: 36px; flex-shrink: 0; margin-right: 14px;
 }
 .tl-dot {
-  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; position: relative; z-index: 1; border: 1px solid;
+  font-size: 14px; flex-shrink: 0; z-index: 1;
+  border: 1px solid;
 }
-.dot-email  { background: rgba(100,149,237,0.15); border-color: rgba(100,149,237,0.35); }
-.dot-phone  { background: rgba(26,122,110,0.2);   border-color: rgba(26,122,110,0.4); }
-.dot-letter { background: rgba(232,184,75,0.15);  border-color: rgba(232,184,75,0.3); }
-.dot-photo  { background: rgba(180,120,220,0.15); border-color: rgba(180,120,220,0.3); }
-.dot-visit  { background: rgba(255,160,80,0.15);  border-color: rgba(255,160,80,0.3); }
-.dot-repair { background: rgba(231,76,60,0.15);   border-color: rgba(231,76,60,0.3); }
-.dot-other  { background: rgba(255,255,255,0.06); border-color: var(--border); }
+.tl-connector {
+  flex: 1; width: 2px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.07), transparent);
+  margin: 3px 0 0;
+  min-height: 12px;
+}
+.tl-entry:last-child .tl-connector { display: none; }
 
-.tl-body { flex: 1; }
-.tl-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
-.tl-date { font-size: 0.78rem; color: #fff; font-weight: 500; }
-.tl-type-badge {
-  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+.dot-repair-report { background: rgba(231,76,60,0.15);   border-color: rgba(231,76,60,0.4); }
+.dot-landlord-entry{ background: rgba(232,184,75,0.12);  border-color: rgba(232,184,75,0.35); }
+.dot-rent          { background: rgba(100,200,120,0.12); border-color: rgba(100,200,120,0.35); }
+.dot-comm          { background: rgba(100,149,237,0.15); border-color: rgba(100,149,237,0.4); }
+.dot-eviction      { background: rgba(224,92,92,0.2);    border-color: rgba(224,92,92,0.5); }
+.dot-condition     { background: rgba(180,120,60,0.15);  border-color: rgba(180,120,60,0.4); }
+.dot-council       { background: rgba(26,122,110,0.2);   border-color: rgba(26,122,110,0.5); }
+.dot-letter        { background: rgba(180,120,220,0.15); border-color: rgba(180,120,220,0.4); }
+.dot-inspection    { background: rgba(80,160,220,0.15);  border-color: rgba(80,160,220,0.4); }
+.dot-other         { background: rgba(255,255,255,0.05); border-color: var(--border); }
+
+.tl-card {
+  flex: 1;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.tl-card:hover { border-color: rgba(255,255,255,0.14); }
+.tl-card-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px; margin-bottom: 8px;
+}
+.tl-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tl-date { font-size: 0.8rem; font-weight: 600; color: #e8edf3; }
+.tl-badge {
+  font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
   padding: 2px 8px; border-radius: 5px;
 }
-.badge-email  { background: rgba(100,149,237,0.15); color: #8ab4f8; }
-.badge-phone  { background: rgba(26,122,110,0.15);  color: var(--teal-light); }
-.badge-letter { background: rgba(232,184,75,0.15);  color: var(--gold); }
-.badge-photo  { background: rgba(180,120,220,0.15); color: #c9a0e8; }
-.badge-visit  { background: rgba(255,160,80,0.15);  color: #ffb86c; }
-.badge-repair { background: rgba(231,76,60,0.15);   color: #f1857a; }
-.badge-other  { background: rgba(255,255,255,0.06); color: var(--muted); }
+.badge-repair-report { background: rgba(231,76,60,0.15);   color: #f08080; }
+.badge-landlord-entry{ background: rgba(232,184,75,0.12);  color: var(--gold); }
+.badge-rent          { background: rgba(100,200,120,0.12); color: #78d48e; }
+.badge-comm          { background: rgba(100,149,237,0.15); color: #8ab4f8; }
+.badge-eviction      { background: rgba(224,92,92,0.18);   color: #f08080; }
+.badge-condition     { background: rgba(180,120,60,0.15);  color: #d4956a; }
+.badge-council       { background: rgba(26,122,110,0.15);  color: var(--teal-light); }
+.badge-letter        { background: rgba(180,120,220,0.15); color: #c9a0e8; }
+.badge-inspection    { background: rgba(80,160,220,0.15);  color: #82c0f0; }
+.badge-other         { background: rgba(255,255,255,0.06); color: var(--muted); }
 
-.tl-event { color: #d0dae6; font-size: 0.84rem; line-height: 1.6; margin-bottom: 6px; }
-.tl-extras { display: flex; flex-direction: column; gap: 3px; }
-.tl-extra-row { font-size: 0.75rem; color: var(--muted); }
-.tl-extra-row span { color: rgba(168,220,215,0.7); font-weight: 500; margin-right: 4px; }
-
-.tl-delete {
-  background: none; border: none; color: var(--muted); cursor: pointer;
-  font-size: 0.75rem; padding: 2px 6px; border-radius: 4px;
-  transition: color 0.2s; align-self: flex-start; margin-top: 2px; flex-shrink: 0;
+.tl-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.tl-act-btn {
+  background: none; border: none;
+  color: var(--muted); cursor: pointer;
+  padding: 3px 7px; border-radius: 6px;
+  font-size: 0.75rem;
+  transition: all 0.18s;
 }
-.tl-delete:hover { color: #f1857a; }
+.tl-act-btn:hover { background: rgba(255,255,255,0.07); color: #d4dde8; }
+.tl-act-btn.del:hover { background: rgba(224,92,92,0.1); color: #f08080; }
+
+.tl-desc { font-size: 0.83rem; color: #bdd0e0; line-height: 1.65; margin-bottom: 8px; }
+.tl-extras { display: flex; flex-direction: column; gap: 4px; }
+.tl-extra {
+  font-size: 0.75rem; color: var(--muted);
+  display: flex; gap: 6px;
+}
+.tl-extra strong { color: #7dbbaf; font-weight: 600; }
+
+/* Inline edit mode */
+.tl-edit-form {
+  display: none; flex-direction: column; gap: 10px; margin-top: 10px;
+  padding-top: 10px; border-top: 1px solid var(--border);
+}
+.tl-edit-form.open { display: flex; }
+.tl-edit-form textarea, .tl-edit-form input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px; color: #e0eaf4;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  padding: 8px 12px; outline: none;
+  transition: border-color 0.2s; width: 100%; box-sizing: border-box;
+}
+.tl-edit-form textarea:focus, .tl-edit-form input:focus { border-color: rgba(42,174,156,0.5); }
+.tl-edit-btns { display: flex; gap: 8px; }
+.edit-save-btn {
+  padding: 7px 18px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border: none; border-radius: 8px;
+  color: #fff; font-size: 0.78rem; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; cursor: pointer;
+}
+.edit-cancel-btn {
+  padding: 7px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px; color: var(--muted);
+  font-size: 0.78rem; font-family: 'DM Sans', sans-serif; cursor: pointer;
+}
 
 /* Action row */
-.action-row {
-  padding: 16px 20px 20px; border-top: 1px solid var(--border); margin-top: 4px;
+.tl-action-row {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.action-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: #c0d4e4;
+  font-size: 0.78rem; font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.action-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+.action-btn:disabled { opacity: 0.35; cursor: default; }
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border-color: transparent; color: #fff;
+}
+.action-btn.primary:hover { opacity: 0.88; }
+.action-btn.danger { color: #f08080; }
+.action-btn.danger:hover { background: rgba(224,92,92,0.1); border-color: rgba(224,92,92,0.3); }
+
+/* ── Report modal ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7); z-index: 1000;
+  align-items: center; justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: #141e2d;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  max-width: 680px; width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+  animation: modalIn 0.25s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-head {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-head h3 { font-size: 0.95rem; font-weight: 600; color: #fff; }
+.modal-close {
+  background: none; border: none; color: var(--muted);
+  font-size: 1.2rem; cursor: pointer; padding: 2px 6px;
+  border-radius: 6px; transition: color 0.2s;
+}
+.modal-close:hover { color: #e8edf3; }
+.modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+.report-text {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem; line-height: 1.8;
+  color: #c0d4e4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; gap: 8px; flex-wrap: wrap;
 }
 
-@media (max-width: 860px) {
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 28px; right: 28px;
+  background: rgba(26,122,110,0.95);
+  border: 1px solid rgba(42,174,156,0.5);
+  border-radius: 12px; padding: 12px 18px;
+  font-size: 0.82rem; color: #fff;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  z-index: 2000;
+  display: flex; align-items: center; gap: 8px;
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
   .main { grid-template-columns: 1fr; padding: 0 20px; }
-  .panel:first-child, .timeline-panel { position: static; }
+  .case-bar { grid-column: 1; }
+  .left-panel { position: static; }
+  .dash-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+  .privacy-banner { padding: 0 16px; }
+  .main { padding: 0 16px; margin-top: 20px; }
+  .dash-stats { grid-template-columns: 1fr 1fr; }
+  .event-type-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -131,235 +618,943 @@
 
 <div class="hero">
   <div class="hero-badge">📅 Evidence Builder</div>
-  <h2>Dispute <em>timeline.</em></h2>
-  <p>Record events as they happen — dates, communications, and their impact. A clear timeline is one of the most powerful tools in any housing dispute.</p>
+  <h2>Tenant evidence <em>timeline.</em></h2>
+  <p>Record events as they happen to build a clear, documented case. A chronological evidence timeline is one of the most powerful tools in any housing dispute.</p>
+</div>
+
+<!-- Privacy banner -->
+<div class="privacy-banner">
+  <div class="privacy-banner-inner">
+    <span>🔒</span>
+    <span><strong>Your information stays on your device.</strong> This tool uses your browser's local storage only. Nothing is sent to any server. You can download your data at any time.</span>
+  </div>
 </div>
 
 <div class="main">
 
-  <!-- ── ADD EVENT PANEL ── -->
-  <div class="panel" style="position:sticky;top:30px;">
-    <div class="panel-header">
-      <div class="panel-num">1</div>
-      <h3>Add an Event</h3>
+  <!-- ── CASE INFO BAR ── -->
+  <div class="case-bar">
+    <div class="case-bar-field">
+      <label>Your name</label>
+      <input type="text" id="caseName" placeholder="Optional — for reports" oninput="saveCaseInfo()">
     </div>
-    <div class="panel-body">
-
-      <div>
-        <label>Date of event</label>
-        <input type="date" id="date">
-      </div>
-
-      <div>
-        <label>Evidence type</label>
-        <select id="type">
-          <option value="">Select type…</option>
-          <option value="Email">Email</option>
-          <option value="Phone Call">Phone Call</option>
-          <option value="Letter">Letter</option>
-          <option value="Photo">Photo</option>
-          <option value="Visit">Visit</option>
-          <option value="Repair Request">Repair Request</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-
-      <div>
-        <label>What happened</label>
-        <textarea id="event" placeholder="Describe the event clearly and factually. E.g. 'Sent email to landlord reporting boiler failure. Boiler has not produced hot water since 3 January.'"></textarea>
-      </div>
-
-      <div>
-        <label>Impact on you <span style="text-transform:none;letter-spacing:0;font-size:0.7rem;">(optional)</span></label>
-        <input type="text" id="impact" placeholder="E.g. No heating or hot water for 5 days">
-      </div>
-
-      <div>
-        <label>Evidence reference <span style="text-transform:none;letter-spacing:0;font-size:0.7rem;">(optional)</span></label>
-        <input type="text" id="reference" placeholder="E.g. boiler_photo_3jan.jpg, email_5jan.pdf">
-      </div>
-
-      <button class="add-btn" onclick="addEvent()">+ Add to Timeline</button>
-
-      <div class="saved-notice">
-        🔒 Saved locally on your device only — nothing is sent anywhere
-      </div>
-
-      <div class="info-box">
-        <strong>Tip:</strong> Record events as soon as they happen. Courts and councils value specific dates and evidence references over general descriptions.
-      </div>
-
+    <div class="case-bar-divider"></div>
+    <div class="case-bar-field">
+      <label>Property address</label>
+      <input type="text" id="caseAddress" placeholder="Optional — for reports" oninput="saveCaseInfo()">
+    </div>
+    <div class="case-bar-divider"></div>
+    <div class="case-bar-field">
+      <label>Landlord / agent</label>
+      <input type="text" id="caseLandlord" placeholder="Optional" oninput="saveCaseInfo()">
     </div>
   </div>
 
-  <!-- ── TIMELINE PANEL ── -->
-  <div class="panel timeline-panel">
-    <div class="timeline-header-row">
-      <h3>Your Timeline</h3>
-      <span class="event-count" id="eventCount">0 events</span>
-    </div>
-
-    <div class="timeline-scroll" id="timelineList">
-      <div class="empty-state">
-        <div class="es-icon">📋</div>
-        <p>No events recorded yet.<br>Add your first event using the form on the left.</p>
+  <!-- ════════════════════════════
+       LEFT — ADD EVENT PANEL
+       ════════════════════════════ -->
+  <div class="left-panel">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-head-icon">➕</div>
+        <div>
+          <h3>Add an event</h3>
+          <p>Select what happened and answer a few short questions</p>
+        </div>
       </div>
-    </div>
+      <div class="panel-body">
 
-    <div class="action-row">
-      <button class="action-btn" id="exportBtn" onclick="exportTimeline()" disabled>⬇️ Export as .txt</button>
-      <button class="action-btn danger" id="clearBtn" onclick="clearTimeline()" disabled>🗑 Clear all</button>
+        <!-- Date -->
+        <div class="field" id="field-date">
+          <label>Date of event</label>
+          <input type="date" id="evDate">
+        </div>
+
+        <!-- Event type -->
+        <div class="field">
+          <label>What happened?</label>
+          <div class="event-type-grid" id="eventTypeGrid">
+            <button class="et-pill" data-type="repair-report" onclick="selectType(this)">
+              <span class="et-icon">🔧</span> Reported a repair
+            </button>
+            <button class="et-pill" data-type="landlord-entry" onclick="selectType(this)">
+              <span class="et-icon">🚪</span> Landlord entered property
+            </button>
+            <button class="et-pill" data-type="inspection" onclick="selectType(this)">
+              <span class="et-icon">🔍</span> Inspection visit
+            </button>
+            <button class="et-pill" data-type="rent" onclick="selectType(this)">
+              <span class="et-icon">💷</span> Rent payment
+            </button>
+            <button class="et-pill" data-type="comm" onclick="selectType(this)">
+              <span class="et-icon">💬</span> Communication
+            </button>
+            <button class="et-pill" data-type="eviction" onclick="selectType(this)">
+              <span class="et-icon">⚠️</span> Eviction threat
+            </button>
+            <button class="et-pill" data-type="condition" onclick="selectType(this)">
+              <span class="et-icon">🏚️</span> Condition worsened
+            </button>
+            <button class="et-pill" data-type="council" onclick="selectType(this)">
+              <span class="et-icon">🏛️</span> Contacted council
+            </button>
+            <button class="et-pill" data-type="letter" onclick="selectType(this)">
+              <span class="et-icon">✉️</span> Sent formal letter
+            </button>
+            <button class="et-pill" data-type="other" onclick="selectType(this)">
+              <span class="et-icon">📌</span> Other event
+            </button>
+          </div>
+        </div>
+
+        <!-- Follow-up: Repair Report -->
+        <div class="followup" id="fu-repair-report">
+          <div class="followup-label">Tell us more about the repair</div>
+          <div class="field">
+            <label>What problem did you report?</label>
+            <input type="text" id="fu-repair-problem" placeholder="e.g. Boiler broken — no heating or hot water">
+          </div>
+          <div class="field">
+            <label>How did you report it?</label>
+            <div class="method-chips" id="fu-repair-method">
+              <button class="method-chip" onclick="toggleChip(this,'fu-repair-method')">Email</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-repair-method')">Phone call</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-repair-method')">Text message</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-repair-method')">Letter</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-repair-method')">In person</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Did the landlord respond?</label>
+            <div class="yn-group">
+              <button class="yn-btn" onclick="selectYN(this,'fu-repair-response','yes')">✓ Yes</button>
+              <button class="yn-btn" onclick="selectYN(this,'fu-repair-response','no')">✗ No</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Evidence reference <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.7rem;">(optional)</span></label>
+            <input type="text" id="fu-repair-evidence" placeholder="e.g. email_14jan.pdf, photo_boiler.jpg">
+          </div>
+        </div>
+
+        <!-- Follow-up: Landlord Entry -->
+        <div class="followup" id="fu-landlord-entry">
+          <div class="followup-label">Tell us more about the entry</div>
+          <div class="field">
+            <label>Were you given advance notice?</label>
+            <div class="yn-group">
+              <button class="yn-btn" onclick="selectYN(this,'fu-entry-notice','yes')">✓ Yes</button>
+              <button class="yn-btn" onclick="selectYN(this,'fu-entry-notice','no')">✗ No</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>How much notice?</label>
+            <input type="text" id="fu-entry-notice-time" placeholder="e.g. Less than 24 hours / none / 48 hours">
+          </div>
+          <div class="field">
+            <label>Was this an emergency?</label>
+            <div class="yn-group">
+              <button class="yn-btn" onclick="selectYN(this,'fu-entry-emergency','yes')">✓ Yes</button>
+              <button class="yn-btn" onclick="selectYN(this,'fu-entry-emergency','no')">✗ No</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Follow-up: Eviction -->
+        <div class="followup" id="fu-eviction">
+          <div class="followup-label">Tell us more about the threat</div>
+          <div class="field">
+            <label>What happened?</label>
+            <div class="method-chips" id="fu-eviction-type">
+              <button class="method-chip" onclick="toggleChip(this,'fu-eviction-type')">Verbal threat</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-eviction-type')">Locks changed</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-eviction-type')">Utilities cut</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-eviction-type')">Harassment</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-eviction-type')">Notice received</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Follow-up: Condition worsened -->
+        <div class="followup" id="fu-condition">
+          <div class="followup-label">What changed?</div>
+          <div class="field">
+            <label>What was the issue?</label>
+            <input type="text" id="fu-condition-issue" placeholder="e.g. Mould spread to bedroom ceiling">
+          </div>
+        </div>
+
+        <!-- Follow-up: Communication -->
+        <div class="followup" id="fu-comm">
+          <div class="followup-label">About this communication</div>
+          <div class="field">
+            <label>How?</label>
+            <div class="method-chips" id="fu-comm-method">
+              <button class="method-chip" onclick="toggleChip(this,'fu-comm-method')">Email</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-comm-method')">Phone</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-comm-method')">Text</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-comm-method')">Letter</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Who contacted whom?</label>
+            <div class="method-chips" id="fu-comm-direction">
+              <button class="method-chip" onclick="toggleChip(this,'fu-comm-direction')">I contacted landlord</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-comm-direction')">Landlord contacted me</button>
+              <button class="method-chip" onclick="toggleChip(this,'fu-comm-direction')">Agent involved</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- General description (always shown) -->
+        <div class="field" id="field-desc">
+          <label>Describe what happened</label>
+          <textarea id="evDesc" placeholder="Be factual and specific. Include dates, names, and what was said or done."></textarea>
+          <span class="field-hint">Use plain language — this will appear in your case report.</span>
+        </div>
+
+        <!-- Impact -->
+        <div class="field">
+          <label>Impact on you <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.7rem;">(optional)</span></label>
+          <input type="text" id="evImpact" placeholder="e.g. No heating for 6 days, affecting elderly parent">
+        </div>
+
+        <button class="add-btn" onclick="addEvent()">
+          <span>+</span> Add to Timeline
+        </button>
+
+        <p class="privacy-note">🔒 Stored locally on your device only</p>
+
+      </div>
     </div>
   </div>
 
+  <!-- ════════════════════════════
+       RIGHT — DASHBOARD + TIMELINE
+       ════════════════════════════ -->
+  <div class="right-panel">
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+      <div class="dash-head">
+        <div>
+          <h3>📊 Your Case Overview</h3>
+          <div class="dash-subtitle">Updates automatically as you add events</div>
+        </div>
+      </div>
+      <div class="dash-stats">
+        <div class="stat-card">
+          <div class="stat-val" id="stat-total">0</div>
+          <div class="stat-label">Total events recorded</div>
+        </div>
+        <div class="stat-card stat-warn">
+          <div class="stat-val" id="stat-repairs">0</div>
+          <div class="stat-label">Repair reports made</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-days">—</div>
+          <div class="stat-label">Days since first event</div>
+        </div>
+        <div class="stat-card stat-alert">
+          <div class="stat-val" id="stat-responses">0</div>
+          <div class="stat-label">Unanswered reports</div>
+        </div>
+      </div>
+
+      <!-- Legal alerts -->
+      <div class="legal-alerts" id="legalAlerts"></div>
+    </div>
+
+    <!-- Timeline panel -->
+    <div class="tl-panel">
+      <div class="tl-panel-head">
+        <h3>📋 Evidence Timeline</h3>
+        <span class="event-count" id="eventCount">0 events</span>
+      </div>
+      <div class="tl-filter-row" id="filterRow">
+        <button class="tl-filter active" onclick="setFilter('all', this)">All</button>
+        <button class="tl-filter" onclick="setFilter('repair-report', this)">🔧 Repairs</button>
+        <button class="tl-filter" onclick="setFilter('comm', this)">💬 Communications</button>
+        <button class="tl-filter" onclick="setFilter('landlord-entry', this)">🚪 Entry</button>
+        <button class="tl-filter" onclick="setFilter('eviction', this)">⚠️ Eviction</button>
+        <button class="tl-filter" onclick="setFilter('council', this)">🏛️ Council</button>
+      </div>
+
+      <div class="tl-list" id="timelineList">
+        <div class="empty-state">
+          <div class="es-icon">📋</div>
+          <p>No events recorded yet.<br>Add your first event using the form on the left.</p>
+        </div>
+      </div>
+
+      <div class="tl-action-row">
+        <button class="action-btn primary" id="reportBtn" onclick="openReport()" disabled>📄 Generate Case Report</button>
+        <button class="action-btn" id="exportBtn" onclick="exportJSON()" disabled>⬇️ Download Backup</button>
+        <label class="action-btn" style="cursor:pointer;">
+          📂 Restore Backup <input type="file" accept=".json" onchange="importJSON(event)" style="display:none">
+        </label>
+        <button class="action-btn danger" id="clearBtn" onclick="clearTimeline()" disabled>🗑 Clear all</button>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<!-- ── REPORT MODAL ── -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>📄 Case Report</h3>
+      <button class="modal-close" onclick="closeReport()">✕</button>
+    </div>
+    <div class="modal-body">
+      <pre class="report-text" id="reportText"></pre>
+    </div>
+    <div class="modal-footer">
+      <button class="action-btn primary" onclick="copyReport()">📋 Copy to clipboard</button>
+      <button class="action-btn" onclick="downloadReport()">⬇️ Download .txt</button>
+      <button class="action-btn" onclick="closeReport()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
 
 <footer>
   <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
 </footer>
 
 <script>
-const TYPE_META = {
-  'Email':          { icon: '✉️', dot: 'dot-email',   badge: 'badge-email'  },
-  'Phone Call':     { icon: '📞', dot: 'dot-phone',   badge: 'badge-phone'  },
-  'Letter':         { icon: '📄', dot: 'dot-letter',  badge: 'badge-letter' },
-  'Photo':          { icon: '📷', dot: 'dot-photo',   badge: 'badge-photo'  },
-  'Visit':          { icon: '🚪', dot: 'dot-visit',   badge: 'badge-visit'  },
-  'Repair Request': { icon: '🔧', dot: 'dot-repair',  badge: 'badge-repair' },
-  'Other':          { icon: '📌', dot: 'dot-other',   badge: 'badge-other'  },
+/* ════════════════════════════════════════════════
+   DATA & STORAGE
+   ════════════════════════════════════════════════ */
+
+const EVENT_META = {
+  'repair-report':  { icon: '🔧', dotClass: 'dot-repair-report',  badgeClass: 'badge-repair-report',  label: 'Repair Report' },
+  'landlord-entry': { icon: '🚪', dotClass: 'dot-landlord-entry', badgeClass: 'badge-landlord-entry', label: 'Landlord Entry' },
+  'inspection':     { icon: '🔍', dotClass: 'dot-inspection',     badgeClass: 'badge-inspection',     label: 'Inspection' },
+  'rent':           { icon: '💷', dotClass: 'dot-rent',           badgeClass: 'badge-rent',           label: 'Rent Payment' },
+  'comm':           { icon: '💬', dotClass: 'dot-comm',           badgeClass: 'badge-comm',           label: 'Communication' },
+  'eviction':       { icon: '⚠️', dotClass: 'dot-eviction',       badgeClass: 'badge-eviction',       label: 'Eviction Threat' },
+  'condition':      { icon: '🏚️', dotClass: 'dot-condition',      badgeClass: 'badge-condition',      label: 'Condition Change' },
+  'council':        { icon: '🏛️', dotClass: 'dot-council',        badgeClass: 'badge-council',        label: 'Council Contact' },
+  'letter':         { icon: '✉️', dotClass: 'dot-letter',         badgeClass: 'badge-letter',         label: 'Formal Letter' },
+  'other':          { icon: '📌', dotClass: 'dot-other',          badgeClass: 'badge-other',          label: 'Other Event' },
 };
 
-window.addEventListener('DOMContentLoaded', renderTimeline);
+let currentFilter = 'all';
+let selectedType = null;
 
 function getTimeline() {
-  return JSON.parse(localStorage.getItem('timeline') || '[]');
+  try { return JSON.parse(localStorage.getItem('tl_events') || '[]'); }
+  catch { return []; }
+}
+function saveTimeline(tl) {
+  localStorage.setItem('tl_events', JSON.stringify(tl));
+}
+function getCaseInfo() {
+  try { return JSON.parse(localStorage.getItem('tl_case') || '{}'); }
+  catch { return {}; }
+}
+function saveCaseInfo() {
+  const info = {
+    name:     document.getElementById('caseName').value,
+    address:  document.getElementById('caseAddress').value,
+    landlord: document.getElementById('caseLandlord').value
+  };
+  localStorage.setItem('tl_case', JSON.stringify(info));
 }
 
-function saveTimeline(tl) {
-  localStorage.setItem('timeline', JSON.stringify(tl));
+/* ════════════════════════════════════════════════
+   UI: EVENT TYPE SELECTION
+   ════════════════════════════════════════════════ */
+
+function selectType(btn) {
+  document.querySelectorAll('.et-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType = btn.dataset.type;
+
+  // Hide all follow-ups
+  document.querySelectorAll('.followup').forEach(f => f.classList.remove('visible'));
+
+  // Show relevant follow-up
+  const fu = document.getElementById('fu-' + selectedType);
+  if (fu) fu.classList.add('visible');
 }
+
+function toggleChip(btn, groupId) {
+  btn.classList.toggle('selected');
+}
+
+function getSelectedChips(groupId) {
+  return [...document.querySelectorAll(`#${groupId} .method-chip.selected`)]
+    .map(c => c.textContent.trim()).join(', ');
+}
+
+const ynState = {};
+function selectYN(btn, key, val) {
+  ynState[key] = val;
+  const group = btn.closest('.yn-group');
+  group.querySelectorAll('.yn-btn').forEach(b => {
+    b.classList.remove('selected-yes', 'selected-no');
+  });
+  btn.classList.add(val === 'yes' ? 'selected-yes' : 'selected-no');
+}
+
+/* ════════════════════════════════════════════════
+   ADD EVENT
+   ════════════════════════════════════════════════ */
 
 function addEvent() {
-  const date      = document.getElementById('date').value;
-  const type      = document.getElementById('type').value;
-  const event     = document.getElementById('event').value.trim();
-  const impact    = document.getElementById('impact').value.trim();
-  const reference = document.getElementById('reference').value.trim();
+  const date = document.getElementById('evDate').value;
+  const desc = document.getElementById('evDesc').value.trim();
 
-  if (!date || !event) {
-    const d = document.getElementById('date');
-    const e = document.getElementById('event');
-    if (!date) d.style.borderColor = 'rgba(231,76,60,0.6)';
-    if (!event) e.style.borderColor = 'rgba(231,76,60,0.6)';
-    setTimeout(() => { d.style.borderColor = ''; e.style.borderColor = ''; }, 2000);
-    return;
+  // Validation
+  let valid = true;
+  if (!date) {
+    document.getElementById('field-date').classList.add('error');
+    setTimeout(() => document.getElementById('field-date').classList.remove('error'), 2200);
+    valid = false;
+  }
+  if (!desc) {
+    document.getElementById('field-desc').classList.add('error');
+    setTimeout(() => document.getElementById('field-desc').classList.remove('error'), 2200);
+    valid = false;
+  }
+  if (!selectedType) {
+    document.querySelectorAll('.et-pill').forEach(p => {
+      p.style.borderColor = 'rgba(224,92,92,0.4)';
+      setTimeout(() => p.style.borderColor = '', 2200);
+    });
+    valid = false;
+  }
+  if (!valid) { showToast('⚠️ Please fill in the date, event type, and description.'); return; }
+
+  // Build extras object
+  const extras = {};
+  if (selectedType === 'repair-report') {
+    extras.problem  = document.getElementById('fu-repair-problem').value.trim();
+    extras.method   = getSelectedChips('fu-repair-method');
+    extras.response = ynState['fu-repair-response'];
+    extras.evidence = document.getElementById('fu-repair-evidence').value.trim();
+  } else if (selectedType === 'landlord-entry') {
+    extras.notice        = ynState['fu-entry-notice'];
+    extras.noticeTime    = document.getElementById('fu-entry-notice-time').value.trim();
+    extras.emergency     = ynState['fu-entry-emergency'];
+  } else if (selectedType === 'eviction') {
+    extras.evictionType = getSelectedChips('fu-eviction-type');
+  } else if (selectedType === 'condition') {
+    extras.issue = document.getElementById('fu-condition-issue').value.trim();
+  } else if (selectedType === 'comm') {
+    extras.method    = getSelectedChips('fu-comm-method');
+    extras.direction = getSelectedChips('fu-comm-direction');
   }
 
+  const entry = {
+    id:      Date.now(),
+    date,
+    type:    selectedType,
+    desc,
+    impact:  document.getElementById('evImpact').value.trim(),
+    extras
+  };
+
   const tl = getTimeline();
-  tl.push({ date, type: type || 'Other', event, impact, reference });
+  tl.push(entry);
   tl.sort((a, b) => new Date(a.date) - new Date(b.date));
   saveTimeline(tl);
-  renderTimeline();
-
-  document.getElementById('event').value     = '';
-  document.getElementById('impact').value    = '';
-  document.getElementById('reference').value = '';
-  document.getElementById('type').value      = '';
+  render();
+  resetForm();
+  showToast('✓ Event added to your timeline');
 }
 
-function deleteEvent(index) {
-  const tl = getTimeline();
-  tl.splice(index, 1);
+function resetForm() {
+  document.getElementById('evDate').value  = '';
+  document.getElementById('evDesc').value  = '';
+  document.getElementById('evImpact').value = '';
+  document.querySelectorAll('.et-pill').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.followup').forEach(f => f.classList.remove('visible'));
+  document.querySelectorAll('.method-chip').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('selected-yes','selected-no'));
+  ['fu-repair-problem','fu-repair-evidence','fu-entry-notice-time','fu-condition-issue'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  Object.keys(ynState).forEach(k => delete ynState[k]);
+  selectedType = null;
+}
+
+/* ════════════════════════════════════════════════
+   DELETE & EDIT
+   ════════════════════════════════════════════════ */
+
+function deleteEvent(id) {
+  const tl = getTimeline().filter(e => e.id !== id);
   saveTimeline(tl);
-  renderTimeline();
+  render();
+  showToast('Event removed');
 }
 
-function renderTimeline() {
-  const tl        = getTimeline();
+function toggleEdit(id) {
+  const form = document.getElementById('edit-' + id);
+  if (!form) return;
+  form.classList.toggle('open');
+}
+
+function saveEdit(id) {
+  const tl = getTimeline();
+  const idx = tl.findIndex(e => e.id === id);
+  if (idx === -1) return;
+  const newDesc   = document.getElementById('edit-desc-' + id).value.trim();
+  const newImpact = document.getElementById('edit-impact-' + id).value.trim();
+  if (!newDesc) return;
+  tl[idx].desc   = newDesc;
+  tl[idx].impact = newImpact;
+  saveTimeline(tl);
+  render();
+  showToast('✓ Event updated');
+}
+
+/* ════════════════════════════════════════════════
+   FILTER
+   ════════════════════════════════════════════════ */
+
+function setFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.tl-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTimeline(getTimeline());
+}
+
+/* ════════════════════════════════════════════════
+   RENDER
+   ════════════════════════════════════════════════ */
+
+function render() {
+  const tl = getTimeline();
+  renderDashboard(tl);
+  renderTimeline(tl);
+  const hasEvents = tl.length > 0;
+  document.getElementById('reportBtn').disabled = !hasEvents;
+  document.getElementById('exportBtn').disabled = !hasEvents;
+  document.getElementById('clearBtn').disabled  = !hasEvents;
+  document.getElementById('eventCount').textContent = tl.length === 1 ? '1 event' : `${tl.length} events`;
+}
+
+function renderTimeline(tl) {
+  const filtered = currentFilter === 'all' ? tl : tl.filter(e => e.type === currentFilter);
   const container = document.getElementById('timelineList');
-  const countEl   = document.getElementById('eventCount');
 
-  countEl.textContent = tl.length === 1 ? '1 event' : `${tl.length} events`;
-
-  document.getElementById('exportBtn').disabled = tl.length === 0;
-  document.getElementById('clearBtn').disabled  = tl.length === 0;
-
-  if (tl.length === 0) {
+  if (filtered.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="es-icon">📋</div>
-        <p>No events recorded yet.<br>Add your first event using the form on the left.</p>
+        <div class="es-icon">${currentFilter === 'all' ? '📋' : EVENT_META[currentFilter]?.icon || '📋'}</div>
+        <p>${currentFilter === 'all'
+          ? 'No events recorded yet.<br>Add your first event using the form on the left.'
+          : 'No events of this type recorded yet.'}</p>
       </div>`;
     return;
   }
 
   container.innerHTML = '';
+  filtered.forEach((entry, i) => {
+    const meta    = EVENT_META[entry.type] || EVENT_META['other'];
+    const dateStr = fmtDate(entry.date);
+    const isLast  = i === filtered.length - 1;
 
-  tl.forEach((entry, i) => {
-    const meta    = TYPE_META[entry.type] || TYPE_META['Other'];
-    const dateStr = entry.date ? new Date(entry.date + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '—';
+    const extrasHTML = buildExtrasHTML(entry);
 
     const div = document.createElement('div');
     div.className = 'tl-entry';
+    div.id = 'entry-' + entry.id;
     div.innerHTML = `
-      <div class="tl-dot ${meta.dot}">${meta.icon}</div>
-      <div class="tl-body">
-        <div class="tl-meta">
-          <span class="tl-date">${dateStr}</span>
-          <span class="tl-type-badge ${meta.badge}">${entry.type}</span>
+      <div class="tl-line-col">
+        <div class="tl-dot ${meta.dotClass}">${meta.icon}</div>
+        ${isLast ? '' : '<div class="tl-connector"></div>'}
+      </div>
+      <div class="tl-card">
+        <div class="tl-card-head">
+          <div class="tl-card-meta">
+            <span class="tl-date">${dateStr}</span>
+            <span class="tl-badge ${meta.badgeClass}">${meta.label}</span>
+          </div>
+          <div class="tl-card-actions">
+            <button class="tl-act-btn" onclick="toggleEdit(${entry.id})" title="Edit">✏️</button>
+            <button class="tl-act-btn del" onclick="deleteEvent(${entry.id})" title="Delete">✕</button>
+          </div>
         </div>
-        <div class="tl-event">${escHtml(entry.event)}</div>
-        <div class="tl-extras">
-          ${entry.impact    ? `<div class="tl-extra-row"><span>Impact:</span>${escHtml(entry.impact)}</div>` : ''}
-          ${entry.reference ? `<div class="tl-extra-row"><span>Evidence:</span>${escHtml(entry.reference)}</div>` : ''}
+        <div class="tl-desc">${escHtml(entry.desc)}</div>
+        ${extrasHTML}
+        <div class="tl-edit-form" id="edit-${entry.id}">
+          <textarea id="edit-desc-${entry.id}" rows="3">${escHtml(entry.desc)}</textarea>
+          <input type="text" id="edit-impact-${entry.id}" value="${escHtml(entry.impact || '')}" placeholder="Impact on you (optional)">
+          <div class="tl-edit-btns">
+            <button class="edit-save-btn" onclick="saveEdit(${entry.id})">Save changes</button>
+            <button class="edit-cancel-btn" onclick="toggleEdit(${entry.id})">Cancel</button>
+          </div>
         </div>
       </div>
-      <button class="tl-delete" onclick="deleteEvent(${i})" title="Remove event">✕</button>
     `;
     container.appendChild(div);
   });
 }
 
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function buildExtrasHTML(entry) {
+  const rows = [];
+  const e = entry.extras || {};
+  if (entry.type === 'repair-report') {
+    if (e.problem)  rows.push(['Problem reported', e.problem]);
+    if (e.method)   rows.push(['Reported by', e.method]);
+    if (e.response !== undefined) rows.push(['Landlord responded', e.response === 'yes' ? 'Yes' : 'No — no response received']);
+    if (e.evidence) rows.push(['Evidence reference', e.evidence]);
+  } else if (entry.type === 'landlord-entry') {
+    if (e.notice !== undefined)  rows.push(['Advance notice given', e.notice === 'yes' ? 'Yes' : 'No']);
+    if (e.noticeTime) rows.push(['Notice period', e.noticeTime]);
+    if (e.emergency !== undefined) rows.push(['Emergency entry', e.emergency === 'yes' ? 'Yes' : 'No']);
+  } else if (entry.type === 'eviction') {
+    if (e.evictionType) rows.push(['Type of threat', e.evictionType]);
+  } else if (entry.type === 'condition') {
+    if (e.issue) rows.push(['Change', e.issue]);
+  } else if (entry.type === 'comm') {
+    if (e.method)    rows.push(['Method', e.method]);
+    if (e.direction) rows.push(['Direction', e.direction]);
+  }
+  if (entry.impact) rows.push(['Impact', entry.impact]);
+
+  if (!rows.length) return '';
+  return `<div class="tl-extras">${rows.map(([k,v]) =>
+    `<div class="tl-extra"><strong>${k}:</strong> <span>${escHtml(v)}</span></div>`
+  ).join('')}</div>`;
 }
 
-function exportTimeline() {
-  const tl = getTimeline();
-  if (tl.length === 0) return;
+/* ════════════════════════════════════════════════
+   DASHBOARD & LEGAL ALERTS
+   ════════════════════════════════════════════════ */
 
-  let text = 'TENANT ADVOCATE — EVIDENCE TIMELINE\n';
-  text += '='.repeat(40) + '\n';
-  text += 'Generated: ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + '\n';
-  text += `Total events: ${tl.length}\n`;
-  text += '='.repeat(40) + '\n\n';
+function renderDashboard(tl) {
+  document.getElementById('stat-total').textContent   = tl.length;
+  document.getElementById('stat-repairs').textContent = tl.filter(e => e.type === 'repair-report').length;
 
-  tl.forEach((e, i) => {
-    const dateStr = e.date ? new Date(e.date + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : e.date;
-    text += `${i + 1}. ${dateStr} — ${e.type}\n`;
-    text += `   Event:    ${e.event}\n`;
-    if (e.impact)    text += `   Impact:   ${e.impact}\n`;
-    if (e.reference) text += `   Evidence: ${e.reference}\n`;
-    text += '\n';
+  const unanswered = tl.filter(e => e.type === 'repair-report' && e.extras?.response === 'no').length;
+  document.getElementById('stat-responses').textContent = unanswered;
+
+  if (tl.length > 0) {
+    const first = new Date(tl[0].date + 'T12:00:00');
+    const days  = Math.floor((Date.now() - first.getTime()) / 86400000);
+    document.getElementById('stat-days').textContent = days;
+  } else {
+    document.getElementById('stat-days').textContent = '—';
+  }
+
+  renderLegalAlerts(tl);
+}
+
+function renderLegalAlerts(tl) {
+  const container = document.getElementById('legalAlerts');
+  const alerts = [];
+
+  // ── Check 1: Repair reported but no response after 14+ days
+  const repairsNoResponse = tl.filter(e =>
+    e.type === 'repair-report' && e.extras?.response === 'no'
+  );
+  if (repairsNoResponse.length > 0) {
+    const oldest = repairsNoResponse[0];
+    const daysSince = Math.floor((Date.now() - new Date(oldest.date + 'T12:00:00').getTime()) / 86400000);
+    if (daysSince >= 14) {
+      alerts.push({
+        type: 'warn',
+        icon: '⚠️',
+        title: 'Possible breach of repair obligations',
+        text: `A repair was reported ${daysSince} days ago with no landlord response recorded. This may indicate a breach of the landlord's obligations under <strong>Section 11 of the Landlord and Tenant Act 1985</strong>, which requires landlords to carry out repairs within a reasonable time after notification. <em>This is legal information, not legal advice.</em>`
+      });
+    }
+  }
+
+  // ── Check 2: Landlord entry without notice
+  const unauthorisedEntries = tl.filter(e =>
+    e.type === 'landlord-entry' && e.extras?.notice === 'no' && e.extras?.emergency !== 'yes'
+  );
+  if (unauthorisedEntries.length > 0) {
+    alerts.push({
+      type: 'warn',
+      icon: '🚪',
+      title: 'Possible unlawful entry recorded',
+      text: `Your timeline records landlord entry without advance notice (and not marked as an emergency). Landlords must normally give at least <strong>24 hours' written notice</strong> before entering a rented property. Repeated unauthorised entry may constitute <strong>harassment</strong> under the <strong>Protection from Eviction Act 1977</strong>. <em>This is legal information, not legal advice.</em>`
+    });
+  }
+
+  // ── Check 3: Eviction threats or illegal actions
+  const evictionEntries = tl.filter(e => e.type === 'eviction');
+  if (evictionEntries.length > 0) {
+    const hasIllegal = evictionEntries.some(e =>
+      e.extras?.evictionType && (e.extras.evictionType.includes('Locks changed') || e.extras.evictionType.includes('Utilities cut'))
+    );
+    if (hasIllegal) {
+      alerts.push({
+        type: 'danger',
+        icon: '🚨',
+        title: 'Possible illegal eviction — seek urgent help',
+        text: `Your timeline records actions that may constitute illegal eviction — such as lock changes or utility disconnections. This is a serious criminal offence under the <strong>Protection from Eviction Act 1977</strong>. Contact <strong>Shelter immediately on 0808 800 4444</strong> (free helpline) or your local council's Tenancy Relations Officer. Do not leave the property voluntarily. <em>This is legal information, not legal advice.</em>`
+      });
+    } else {
+      alerts.push({
+        type: 'warn',
+        icon: '⚠️',
+        title: 'Eviction threat recorded',
+        text: `You have recorded an eviction threat. A landlord cannot force you to leave without a valid court order in most circumstances. Verbal threats or harassment may breach the <strong>Protection from Eviction Act 1977</strong>. Contact <strong>Shelter (0808 800 4444)</strong> or Citizens Advice for guidance. <em>This is legal information, not legal advice.</em>`
+      });
+    }
+  }
+
+  // ── Check 4: Multiple repairs, no council contact
+  const repairCount = tl.filter(e => e.type === 'repair-report').length;
+  const councilContacts = tl.filter(e => e.type === 'council').length;
+  if (repairCount >= 3 && councilContacts === 0) {
+    alerts.push({
+      type: 'info',
+      icon: '🏛️',
+      title: 'Consider contacting your local council',
+      text: `You have recorded ${repairCount} repair reports. If your landlord has not responded adequately, your local council's <strong>Environmental Health team</strong> can inspect the property and issue a formal improvement notice. This is free and may be your most effective next step.`
+    });
+  }
+
+  // ── Check 5: Active dispute over 30 days
+  if (tl.length >= 3) {
+    const first = new Date(tl[0].date + 'T12:00:00');
+    const days  = Math.floor((Date.now() - first.getTime()) / 86400000);
+    if (days >= 30 && repairsNoResponse.length > 0) {
+      alerts.push({
+        type: 'info',
+        icon: '📋',
+        title: 'Your timeline is ready for a council or solicitor',
+        text: `Your dispute has been ongoing for over ${days} days. The evidence you have collected here can be presented to your local council, a housing solicitor, or the <strong>First-tier Tribunal (Property Chamber)</strong>. Use the "Generate Case Report" button below to produce a summary document.`
+      });
+    }
+  }
+
+  if (alerts.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = alerts.map(a => `
+    <div class="legal-alert legal-alert-${a.type}">
+      <span class="la-icon">${a.icon}</span>
+      <div class="la-body">
+        <strong>${a.title}</strong>
+        <span>${a.text}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ════════════════════════════════════════════════
+   REPORT
+   ════════════════════════════════════════════════ */
+
+function generateReportText() {
+  const tl   = getTimeline();
+  const info = getCaseInfo();
+  const now  = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  let report = '';
+  report += 'TENANT EVIDENCE CASE REPORT\n';
+  report += '═'.repeat(50) + '\n';
+  report += `Generated: ${now}\n`;
+  if (info.name)     report += `Tenant name: ${info.name}\n`;
+  if (info.address)  report += `Property:    ${info.address}\n`;
+  if (info.landlord) report += `Landlord/agent: ${info.landlord}\n`;
+  report += `Total events: ${tl.length}\n`;
+  report += '═'.repeat(50) + '\n\n';
+
+  report += 'CASE SUMMARY\n';
+  report += '─'.repeat(40) + '\n';
+  report += generateNarrative(tl, info);
+  report += '\n\n';
+
+  report += 'CHRONOLOGICAL EVENT LOG\n';
+  report += '─'.repeat(40) + '\n\n';
+
+  tl.forEach((entry, i) => {
+    const meta = EVENT_META[entry.type] || EVENT_META['other'];
+    const d    = fmtDate(entry.date);
+    report += `${i + 1}. ${d} — ${meta.label}\n`;
+    report += `   ${entry.desc}\n`;
+    const e = entry.extras || {};
+    if (entry.type === 'repair-report') {
+      if (e.problem)  report += `   Problem: ${e.problem}\n`;
+      if (e.method)   report += `   Reported by: ${e.method}\n`;
+      if (e.response !== undefined) report += `   Landlord response: ${e.response === 'yes' ? 'Yes' : 'None received'}\n`;
+      if (e.evidence) report += `   Evidence: ${e.evidence}\n`;
+    } else if (entry.type === 'landlord-entry') {
+      if (e.notice !== undefined)  report += `   Advance notice: ${e.notice === 'yes' ? 'Yes' : 'No'}\n`;
+      if (e.noticeTime) report += `   Notice period: ${e.noticeTime}\n`;
+    } else if (entry.type === 'eviction') {
+      if (e.evictionType) report += `   Type: ${e.evictionType}\n`;
+    } else if (entry.type === 'comm') {
+      if (e.method)    report += `   Method: ${e.method}\n`;
+      if (e.direction) report += `   ${e.direction}\n`;
+    }
+    if (entry.impact) report += `   Impact: ${entry.impact}\n`;
+    report += '\n';
   });
 
-  text += '—\nThis timeline was created using Tenant Advocate (tenantadvocate).\nFor legal advice contact Shelter (0808 800 4444) or Citizens Advice.\n';
+  report += '─'.repeat(50) + '\n';
+  report += 'This report was produced using Tenant Advocate.\n';
+  report += 'It documents events recorded by the tenant.\n';
+  report += 'This is a record of events — not legal advice.\n';
+  report += 'For legal advice contact Shelter (0808 800 4444) or Citizens Advice.\n';
 
+  return report;
+}
+
+function generateNarrative(tl, info) {
+  if (tl.length === 0) return 'No events recorded.';
+
+  const subject = info.name ? `The tenant, ${info.name},` : 'The tenant';
+  const property = info.address ? ` at ${info.address}` : '';
+  const lines = [];
+  const first = fmtDate(tl[0].date);
+  const last  = fmtDate(tl[tl.length - 1].date);
+
+  lines.push(`${subject} has recorded ${tl.length} event${tl.length !== 1 ? 's' : ''}${property} between ${first} and ${last}.`);
+
+  const repairs = tl.filter(e => e.type === 'repair-report');
+  if (repairs.length > 0) {
+    const noResponse = repairs.filter(e => e.extras?.response === 'no');
+    lines.push(`${repairs.length} repair report${repairs.length !== 1 ? 's have' : ' has'} been made to the landlord.` +
+      (noResponse.length > 0 ? ` In ${noResponse.length} case${noResponse.length !== 1 ? 's' : ''}, no landlord response was recorded.` : ''));
+  }
+
+  const entries = tl.filter(e => e.type === 'landlord-entry' && e.extras?.notice === 'no' && e.extras?.emergency !== 'yes');
+  if (entries.length > 0) {
+    lines.push(`The landlord entered the property on ${entries.length} occasion${entries.length !== 1 ? 's' : ''} without proper advance notice recorded.`);
+  }
+
+  const evictions = tl.filter(e => e.type === 'eviction');
+  if (evictions.length > 0) {
+    lines.push(`${evictions.length} eviction threat${evictions.length !== 1 ? 's have' : ' has'} been recorded.`);
+  }
+
+  const councils = tl.filter(e => e.type === 'council');
+  if (councils.length > 0) {
+    lines.push(`The tenant has contacted the local council on ${councils.length} occasion${councils.length !== 1 ? 's' : ''}.`);
+  }
+
+  return lines.join(' ');
+}
+
+function openReport() {
+  document.getElementById('reportText').textContent = generateReportText();
+  document.getElementById('reportModal').classList.add('open');
+}
+function closeReport() {
+  document.getElementById('reportModal').classList.remove('open');
+}
+function copyReport() {
+  const text = document.getElementById('reportText').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('✓ Copied to clipboard'));
+}
+function downloadReport() {
+  const text = document.getElementById('reportText').textContent;
   const a = document.createElement('a');
   a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
-  a.download = 'tenant_timeline_' + new Date().toISOString().slice(0, 10) + '.txt';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  a.download = 'tenant_case_report_' + new Date().toISOString().slice(0,10) + '.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+/* ════════════════════════════════════════════════
+   IMPORT / EXPORT
+   ════════════════════════════════════════════════ */
+
+function exportJSON() {
+  const data = { events: getTimeline(), caseInfo: getCaseInfo() };
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
+  a.download = 'tenant_timeline_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showToast('✓ Backup downloaded');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.events && Array.isArray(data.events)) {
+        saveTimeline(data.events);
+        if (data.caseInfo) localStorage.setItem('tl_case', JSON.stringify(data.caseInfo));
+        loadCaseInfo();
+        render();
+        showToast('✓ Backup restored — ' + data.events.length + ' events loaded');
+      } else {
+        showToast('⚠️ Invalid backup file');
+      }
+    } catch { showToast('⚠️ Could not read file'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 function clearTimeline() {
-  if (confirm('This will permanently delete all timeline events. Are you sure?')) {
-    localStorage.removeItem('timeline');
-    renderTimeline();
+  if (confirm('This will permanently delete all timeline events. This cannot be undone. Continue?')) {
+    localStorage.removeItem('tl_events');
+    render();
+    showToast('Timeline cleared');
   }
 }
+
+/* ════════════════════════════════════════════════
+   UTILITIES
+   ════════════════════════════════════════════════ */
+
+function fmtDate(dateStr) {
+  if (!dateStr) return '—';
+  try {
+    return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  } catch { return dateStr; }
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function loadCaseInfo() {
+  const info = getCaseInfo();
+  if (info.name)     document.getElementById('caseName').value     = info.name;
+  if (info.address)  document.getElementById('caseAddress').value  = info.address;
+  if (info.landlord) document.getElementById('caseLandlord').value = info.landlord;
+}
+
+/* ════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadCaseInfo();
+  render();
+  // Set today's date as default
+  document.getElementById('evDate').value = new Date().toISOString().slice(0,10);
+  // Close modal on overlay click
+  document.getElementById('reportModal').addEventListener('click', function(e) {
+    if (e.target === this) closeReport();
+  });
+});
 </script>
-</body>
+
 <script src="../accessibility.js"></script>
+</body>
 </html>
