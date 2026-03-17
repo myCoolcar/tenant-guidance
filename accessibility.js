@@ -1,70 +1,63 @@
 /**
- * TENANT ADVOCATE — GLOBAL ACCESSIBILITY SCRIPT
- * ================================================
- * Drop this file on every page (before </body>) and it will:
- *  1. Inject an accessibility toolbar at the top of the page
- *  2. Inject a Google Translate language selector
- *  3. Restore saved user preferences from localStorage
- *  4. Handle all toggle logic and persistence
+ * TENANT ADVOCATE — ACCESSIBILITY SCRIPT (simplified)
+ * =====================================================
+ * Injects a lightweight accessibility toolbar on every page.
+ * No skip link. No simplified layout mode.
+ * Toolbar sits above the page header in normal document flow —
+ * no fixed positioning on mobile, preventing header overlap.
  *
- * No per-page changes needed beyond adding the <script> tag.
+ * Features retained:
+ *  • Text size cycling (3 steps)
+ *  • High contrast toggle
+ *  • Dyslexia-friendly font toggle
+ *  • Google Translate (language selector)
+ *  • Reset button
+ *  • Preferences saved to localStorage
+ *  • Screen reader announcements (aria-live)
+ *  • System prefers-contrast detection
  *
- * Preference keys stored in localStorage:
- *   a11y-font-size     : number (step offset, default 0)
+ * localStorage keys:
+ *   a11y-font-size     : number (0 = default, 1 = large, 2 = larger)
  *   a11y-high-contrast : 'true' | 'false'
  *   a11y-dyslexia-font : 'true' | 'false'
- *   a11y-simplified    : 'true' | 'false'
  */
 
 (function () {
   'use strict';
 
-  /* ─────────────────────────────────────────────
-     CONSTANTS
-  ───────────────────────────────────────────── */
+  /* ── Constants ── */
 
   const STORAGE_KEYS = {
-    fontSize:       'a11y-font-size',
-    highContrast:   'a11y-high-contrast',
-    dyslexiaFont:   'a11y-dyslexia-font',
-    simplified:     'a11y-simplified',
+    fontSize:     'a11y-font-size',
+    highContrast: 'a11y-high-contrast',
+    dyslexiaFont: 'a11y-dyslexia-font',
   };
 
-  // Font size steps: each step adds this % to the root font-size
-  const FONT_SIZE_STEP     = 10;  // percent per step
-  const FONT_SIZE_MIN      = -1;  // minimum steps (one smaller)
-  const FONT_SIZE_MAX      =  3;  // maximum steps (three larger)
-  const FONT_SIZE_BASE     = 100; // base percent (browser default)
+  // Three font-size steps: 0 = default, 1 = large (+15%), 2 = larger (+30%)
+  const FONT_STEPS = [100, 115, 130];
+  const FONT_LABELS = ['A', 'A+', 'A++'];
 
-  // Languages to offer in the Google Translate selector
-  // These are the primary languages spoken by renters in England
-  // beyond English — ordered by estimated renter population size
   const TRANSLATE_LANGUAGES = [
     { code: 'en',    label: 'English' },
-    { code: 'pl',    label: 'Polish — Polski' },
-    { code: 'ro',    label: 'Romanian — Română' },
-    { code: 'ur',    label: 'Urdu — اردو' },
-    { code: 'ar',    label: 'Arabic — العربية' },
-    { code: 'bn',    label: 'Bengali — বাংলা' },
-    { code: 'pa',    label: 'Punjabi — ਪੰਜਾਬੀ' },
-    { code: 'gu',    label: 'Gujarati — ગુજરાતી' },
-    { code: 'hi',    label: 'Hindi — हिन्दी' },
-    { code: 'so',    label: 'Somali — Soomaali' },
-    { code: 'tr',    label: 'Turkish — Türkçe' },
-    { code: 'pt',    label: 'Portuguese — Português' },
-    { code: 'lt',    label: 'Lithuanian — Lietuvių' },
-    { code: 'zh-CN', label: 'Chinese — 中文' },
+    { code: 'pl',    label: 'Polish' },
+    { code: 'ro',    label: 'Romanian' },
+    { code: 'ur',    label: 'Urdu' },
+    { code: 'ar',    label: 'Arabic' },
+    { code: 'bn',    label: 'Bengali' },
+    { code: 'pa',    label: 'Punjabi' },
+    { code: 'gu',    label: 'Gujarati' },
+    { code: 'hi',    label: 'Hindi' },
+    { code: 'so',    label: 'Somali' },
+    { code: 'tr',    label: 'Turkish' },
+    { code: 'pt',    label: 'Portuguese' },
+    { code: 'lt',    label: 'Lithuanian' },
+    { code: 'zh-CN', label: 'Chinese' },
   ];
 
-  /* ─────────────────────────────────────────────
-     STATE
-  ───────────────────────────────────────────── */
+  /* ── State ── */
+  let fontStep = 0; // 0, 1, or 2
 
-  let fontSizeStep = 0;
-
-  /* ─────────────────────────────────────────────
-     TOOLBAR HTML
-  ───────────────────────────────────────────── */
+  /* ── Build toolbar HTML ── */
 
   function buildToolbarHTML() {
     return `
@@ -74,135 +67,77 @@
 
         <div class="a11y-controls">
 
-          <!-- Text size -->
-          <button id="a11y-increase-text"
-                  aria-label="Increase text size"
-                  title="Increase text size">
-            A+
-          </button>
-
-          <button id="a11y-decrease-text"
-                  aria-label="Decrease text size"
-                  title="Decrease text size">
-            A−
+          <!-- Single cycling text-size button -->
+          <button id="a11y-text-size"
+                  aria-label="Change text size"
+                  title="Cycle through text sizes">
+            <span id="a11y-text-size-label">A</span>
+            <span class="a11y-btn-text">Text size</span>
           </button>
 
           <div class="a11y-divider" aria-hidden="true"></div>
 
-          <!-- Toggle modes — label text wrapped in .btn-text so CSS can hide it on mobile -->
           <button id="a11y-contrast"
-                  aria-label="Toggle high contrast mode"
+                  aria-label="Toggle high contrast"
                   aria-pressed="false"
-                  title="High contrast mode">
-            ◑<span class="btn-text"> Contrast</span>
+                  title="High contrast">
+            ◑ <span class="a11y-btn-text">Contrast</span>
           </button>
 
           <button id="a11y-dyslexia"
                   aria-label="Toggle dyslexia-friendly font"
                   aria-pressed="false"
-                  title="Dyslexia-friendly font (OpenDyslexic)">
-            Aa<span class="btn-text"> Font</span>
-          </button>
-
-          <button id="a11y-simplified"
-                  aria-label="Toggle simplified layout"
-                  aria-pressed="false"
-                  title="Simplified layout — larger text and single column">
-            ▤<span class="btn-text"> Simple</span>
+                  title="Dyslexia-friendly font">
+            Aa <span class="a11y-btn-text">Dyslexia font</span>
           </button>
 
           <div class="a11y-divider" aria-hidden="true"></div>
 
           <button id="a11y-reset"
-                  aria-label="Reset all accessibility settings to default">
-            ↺<span class="btn-text"> Reset</span>
+                  aria-label="Reset accessibility settings">
+            ↺ <span class="a11y-btn-text">Reset</span>
           </button>
 
         </div>
 
-        <!-- Language selector -->
+        <!-- Language / translate -->
         <div class="a11y-lang-wrap">
-          <label for="google_translate_element" id="lang-label">
-            🌐 Translate
-          </label>
-          <div id="google_translate_element" aria-labelledby="lang-label"></div>
+          <span class="a11y-label" aria-hidden="true">🌐</span>
+          <div id="google_translate_element" aria-label="Translate page"></div>
         </div>
 
       </div>
-
-      <!-- Skip to content link — visible only on keyboard focus -->
-      <a class="skip-link" href="#main-content">Skip to main content</a>
     `;
   }
 
-  /* ─────────────────────────────────────────────
-     INJECT TOOLBAR
-  ───────────────────────────────────────────── */
+  /* ── Inject toolbar ── */
 
   function injectToolbar() {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = buildToolbarHTML();
-
-    // Insert toolbar as the very first child of <body>
+    // Insert as very first child of <body> — above the page <header>
     document.body.insertBefore(wrapper, document.body.firstChild);
-
-    // Ensure there is a landmark for the skip link to target.
-    // We look for an existing <main> or the first .container/.content div.
-    ensureMainLandmark();
   }
 
-  function ensureMainLandmark() {
-    // If the page already has a <main>, just ensure it has an id
-    let main = document.querySelector('main');
-    if (main) {
-      if (!main.id) main.id = 'main-content';
-      return;
-    }
-
-    // Otherwise mark the first likely content container
-    const candidates = [
-      '.content', '.main', '.container', '.generator',
-      'article', 'section:not(header section)',
-    ];
-
-    for (const selector of candidates) {
-      const el = document.querySelector(selector);
-      if (el) {
-        el.setAttribute('id', 'main-content');
-        el.setAttribute('tabindex', '-1'); // allows focus from skip link
-        return;
-      }
-    }
-  }
-
-  /* ─────────────────────────────────────────────
-     FONT SIZE
-  ───────────────────────────────────────────── */
+  /* ── Text size (cycle through 3 steps) ── */
 
   function applyFontSize(step) {
-    fontSizeStep = Math.max(FONT_SIZE_MIN, Math.min(FONT_SIZE_MAX, step));
-    const pct = FONT_SIZE_BASE + fontSizeStep * FONT_SIZE_STEP;
-    document.documentElement.style.fontSize = pct + '%';
+    fontStep = ((step % FONT_STEPS.length) + FONT_STEPS.length) % FONT_STEPS.length;
+    document.documentElement.style.fontSize = FONT_STEPS[fontStep] + '%';
+    document.documentElement.classList.remove('large-text'); // remove legacy class if present
 
-    // Update button states
-    const inc = document.getElementById('a11y-increase-text');
-    const dec = document.getElementById('a11y-decrease-text');
-    if (inc) inc.disabled = fontSizeStep >= FONT_SIZE_MAX;
-    if (dec) dec.disabled = fontSizeStep <= FONT_SIZE_MIN;
+    // Update button label to show current / next state
+    const labelEl = document.getElementById('a11y-text-size-label');
+    if (labelEl) labelEl.textContent = FONT_LABELS[fontStep];
 
-    // If we are in large-text class mode (legacy), remove it so inline style takes over
-    document.documentElement.classList.remove('large-text');
+    const btn = document.getElementById('a11y-text-size');
+    if (btn) btn.classList.toggle('a11y-active', fontStep > 0);
 
-    // Persist
-    localStorage.setItem(STORAGE_KEYS.fontSize, String(fontSizeStep));
-
-    // Announce to screen readers
-    announceChange('Text size ' + (pct === FONT_SIZE_BASE ? 'reset to default' : (pct > FONT_SIZE_BASE ? 'increased' : 'decreased')));
+    localStorage.setItem(STORAGE_KEYS.fontSize, String(fontStep));
+    announceChange('Text size: ' + ['default', 'large', 'larger'][fontStep]);
   }
 
-  /* ─────────────────────────────────────────────
-     TOGGLE HELPERS
-  ───────────────────────────────────────────── */
+  /* ── Toggle helpers ── */
 
   function toggleClass(cls, storageKey, btnId) {
     const html = document.documentElement;
@@ -215,15 +150,13 @@
       btn.setAttribute('aria-pressed', String(isActive));
     }
 
-    announceChange(cls.replace(/-/g, ' ') + ' ' + (isActive ? 'enabled' : 'disabled'));
-    return isActive;
+    const label = cls === 'high-contrast' ? 'High contrast' : 'Dyslexia font';
+    announceChange(label + ' ' + (isActive ? 'on' : 'off'));
   }
 
   function setClass(cls, storageKey, btnId, value) {
-    const html = document.documentElement;
-    html.classList.toggle(cls, value);
+    document.documentElement.classList.toggle(cls, value);
     localStorage.setItem(storageKey, String(value));
-
     const btn = document.getElementById(btnId);
     if (btn) {
       btn.classList.toggle('a11y-active', value);
@@ -231,11 +164,7 @@
     }
   }
 
-  /* ─────────────────────────────────────────────
-     SCREEN READER ANNOUNCEMENTS
-     Uses an aria-live region so that changes are
-     announced without moving focus.
-  ───────────────────────────────────────────── */
+  /* ── Screen reader live region ── */
 
   let liveRegion;
 
@@ -244,14 +173,9 @@
     liveRegion.setAttribute('role', 'status');
     liveRegion.setAttribute('aria-live', 'polite');
     liveRegion.setAttribute('aria-atomic', 'true');
-    // Visually hidden but readable by screen readers
     Object.assign(liveRegion.style, {
-      position: 'absolute',
-      width: '1px',
-      height: '1px',
-      overflow: 'hidden',
-      clip: 'rect(0 0 0 0)',
-      whiteSpace: 'nowrap',
+      position: 'absolute', width: '1px', height: '1px',
+      overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap',
     });
     document.body.appendChild(liveRegion);
   }
@@ -259,79 +183,51 @@
   function announceChange(message) {
     if (!liveRegion) return;
     liveRegion.textContent = '';
-    // Small delay ensures the DOM update is noticed by screen readers
     setTimeout(() => { liveRegion.textContent = message; }, 50);
   }
 
-  /* ─────────────────────────────────────────────
-     RESET
-  ───────────────────────────────────────────── */
+  /* ── Reset ── */
 
   function resetAll() {
-    // Clear all preferences
     Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
 
-    // Remove all classes
     const html = document.documentElement;
-    html.classList.remove('high-contrast', 'dyslexia-font', 'simplified-layout', 'large-text');
+    html.classList.remove('high-contrast', 'dyslexia-font', 'large-text');
     html.style.fontSize = '';
+    fontStep = 0;
 
-    fontSizeStep = 0;
-
-    // Reset button states
-    ['a11y-contrast', 'a11y-dyslexia', 'a11y-simplified'].forEach(id => {
+    ['a11y-contrast', 'a11y-dyslexia'].forEach(id => {
       const btn = document.getElementById(id);
-      if (btn) {
-        btn.classList.remove('a11y-active');
-        btn.setAttribute('aria-pressed', 'false');
-      }
+      if (btn) { btn.classList.remove('a11y-active'); btn.setAttribute('aria-pressed', 'false'); }
     });
 
-    const inc = document.getElementById('a11y-increase-text');
-    const dec = document.getElementById('a11y-decrease-text');
-    if (inc) inc.disabled = false;
-    if (dec) dec.disabled = false;
+    const sizeBtn = document.getElementById('a11y-text-size');
+    if (sizeBtn) sizeBtn.classList.remove('a11y-active');
+    const labelEl = document.getElementById('a11y-text-size-label');
+    if (labelEl) labelEl.textContent = FONT_LABELS[0];
 
-    announceChange('All accessibility settings reset to default.');
+    announceChange('Accessibility settings reset.');
   }
 
-  /* ─────────────────────────────────────────────
-     RESTORE SAVED PREFERENCES
-  ───────────────────────────────────────────── */
+  /* ── Restore saved preferences ── */
 
   function restorePreferences() {
-    // Font size
     const savedStep = parseInt(localStorage.getItem(STORAGE_KEYS.fontSize), 10);
-    if (!isNaN(savedStep) && savedStep !== 0) {
-      applyFontSize(savedStep);
-    }
+    if (!isNaN(savedStep) && savedStep > 0) applyFontSize(savedStep);
 
-    // High contrast
     if (localStorage.getItem(STORAGE_KEYS.highContrast) === 'true') {
       setClass('high-contrast', STORAGE_KEYS.highContrast, 'a11y-contrast', true);
     }
-
-    // Dyslexia font
     if (localStorage.getItem(STORAGE_KEYS.dyslexiaFont) === 'true') {
       setClass('dyslexia-font', STORAGE_KEYS.dyslexiaFont, 'a11y-dyslexia', true);
     }
-
-    // Simplified layout
-    if (localStorage.getItem(STORAGE_KEYS.simplified) === 'true') {
-      setClass('simplified-layout', STORAGE_KEYS.simplified, 'a11y-simplified', true);
-    }
   }
 
-  /* ─────────────────────────────────────────────
-     BIND BUTTON EVENTS
-  ───────────────────────────────────────────── */
+  /* ── Bind events ── */
 
   function bindEvents() {
-    document.getElementById('a11y-increase-text')
-      ?.addEventListener('click', () => applyFontSize(fontSizeStep + 1));
-
-    document.getElementById('a11y-decrease-text')
-      ?.addEventListener('click', () => applyFontSize(fontSizeStep - 1));
+    document.getElementById('a11y-text-size')
+      ?.addEventListener('click', () => applyFontSize(fontStep + 1));
 
     document.getElementById('a11y-contrast')
       ?.addEventListener('click', () =>
@@ -341,23 +237,13 @@
       ?.addEventListener('click', () =>
         toggleClass('dyslexia-font', STORAGE_KEYS.dyslexiaFont, 'a11y-dyslexia'));
 
-    document.getElementById('a11y-simplified')
-      ?.addEventListener('click', () =>
-        toggleClass('simplified-layout', STORAGE_KEYS.simplified, 'a11y-simplified'));
-
     document.getElementById('a11y-reset')
       ?.addEventListener('click', resetAll);
   }
 
-  /* ─────────────────────────────────────────────
-     GOOGLE TRANSLATE INTEGRATION
-     Uses the free Google Translate widget API.
-     No API key required. Targets the languages
-     most common among renters in England.
-  ───────────────────────────────────────────── */
+  /* ── Google Translate ── */
 
   function initGoogleTranslate() {
-    // Expose the callback Google Translate requires
     window.googleTranslateElementInit = function () {
       new window.google.translate.TranslateElement(
         {
@@ -370,72 +256,27 @@
       );
     };
 
-    // Load the Google Translate script dynamically
     const script = document.createElement('script');
     script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     script.async = true;
     script.onerror = function () {
-      // If Google Translate fails to load (e.g. offline), show a graceful fallback
       const el = document.getElementById('google_translate_element');
-      if (el) {
-        el.innerHTML = `<span style="font-size:0.7rem;color:rgba(176,196,204,0.5);">
-          Translation unavailable</span>`;
-      }
+      if (el) el.innerHTML = `<span style="font-size:0.7rem;color:rgba(176,196,204,0.4);">Translation unavailable</span>`;
     };
     document.head.appendChild(script);
   }
 
-  /* ─────────────────────────────────────────────
-     SYSTEM PREFERENCE DETECTION
-     Respect OS-level high contrast / dark mode
-     preferences on first visit (before any user
-     override is saved).
-  ───────────────────────────────────────────── */
+  /* ── System preference detection ── */
 
   function detectSystemPreferences() {
-    // Only apply system preferences if the user has not previously
-    // made an explicit choice
-    const hasExistingPrefs = Object.values(STORAGE_KEYS)
-      .some(key => localStorage.getItem(key) !== null);
-
-    if (hasExistingPrefs) return;
-
-    // System high contrast
+    const hasPrefs = Object.values(STORAGE_KEYS).some(k => localStorage.getItem(k) !== null);
+    if (hasPrefs) return;
     if (window.matchMedia('(prefers-contrast: more)').matches) {
       setClass('high-contrast', STORAGE_KEYS.highContrast, 'a11y-contrast', true);
     }
   }
 
-  /* ─────────────────────────────────────────────
-     KEYBOARD SHORTCUT SUPPORT
-     Provides keyboard accessibility for power
-     users and screen reader users.
-     Alt+1 : Increase text
-     Alt+2 : Decrease text
-     Alt+3 : Toggle contrast
-     Alt+4 : Toggle dyslexia font
-     Alt+5 : Toggle simplified layout
-     Alt+0 : Reset all
-  ───────────────────────────────────────────── */
-
-  function bindKeyboardShortcuts() {
-    document.addEventListener('keydown', function (e) {
-      if (!e.altKey) return;
-
-      switch (e.key) {
-        case '1': e.preventDefault(); applyFontSize(fontSizeStep + 1); break;
-        case '2': e.preventDefault(); applyFontSize(fontSizeStep - 1); break;
-        case '3': e.preventDefault(); toggleClass('high-contrast',    STORAGE_KEYS.highContrast, 'a11y-contrast');  break;
-        case '4': e.preventDefault(); toggleClass('dyslexia-font',    STORAGE_KEYS.dyslexiaFont, 'a11y-dyslexia');  break;
-        case '5': e.preventDefault(); toggleClass('simplified-layout', STORAGE_KEYS.simplified,  'a11y-simplified'); break;
-        case '0': e.preventDefault(); resetAll(); break;
-      }
-    });
-  }
-
-  /* ─────────────────────────────────────────────
-     INIT
-  ───────────────────────────────────────────── */
+  /* ── Init ── */
 
   function init() {
     injectToolbar();
@@ -443,11 +284,9 @@
     detectSystemPreferences();
     restorePreferences();
     bindEvents();
-    bindKeyboardShortcuts();
     initGoogleTranslate();
   }
 
-  // Run as soon as the DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
