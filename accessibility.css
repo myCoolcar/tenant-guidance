@@ -1,18 +1,26 @@
-/* ═══════════════════════════════════════════════════════════════════
-   TENANT ADVOCATE — ACCESSIBILITY STYLESHEET
-   Include this file on every page. It provides:
-   • Accessibility toolbar styles
-   • .high-contrast, .large-text, .dyslexia-font, .simplified-layout
-   • Language selector styles
-   • Respects prefers-reduced-motion and prefers-contrast
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   TENANT ADVOCATE — ACCESSIBILITY STYLESHEET (simplified)
+   Provides:
+   • Accessibility toolbar (non-fixed on mobile)
+   • .high-contrast and .dyslexia-font modes
+   • General WCAG focus/touch improvements
+   • prefers-reduced-motion and prefers-contrast support
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ── OpenDyslexic font (self-hosted via CDN) ── */
+/* ── OpenDyslexic font ── */
 @import url('https://fonts.cdnfonts.com/css/opendyslexic');
+
 
 /* ─────────────────────────────────────────────
    1. ACCESSIBILITY TOOLBAR
 ───────────────────────────────────────────── */
+
+/*
+  On desktop the bar is fixed at the top so it's always reachable.
+  On mobile it sits in normal document flow (position: static via
+  the media query below), which prevents it from overlapping the
+  page <header> that follows it in the DOM.
+*/
 
 #a11y-bar {
   position: fixed;
@@ -24,24 +32,44 @@
   border-bottom: 1px solid rgba(36, 168, 152, 0.25);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   padding: 0 16px;
-  height: 42px;
+  height: 38px;
   flex-wrap: nowrap;
+  overflow: hidden;
 }
 
-/* Push the rest of the page down so nothing sits behind the bar */
+/* Push page content below the fixed bar on desktop */
 body {
-  padding-top: 42px;
+  padding-top: 38px;
+}
+
+/* ── On mobile: revert to flow positioning ── */
+/* This is the key fix — the bar becomes part of normal page flow
+   so it cannot overlap the sticky/fixed page header beneath it.  */
+@media (max-width: 768px) {
+  #a11y-bar {
+    position: relative; /* in-flow, not fixed */
+    top: auto;
+    height: auto;
+    min-height: 36px;
+    flex-wrap: wrap;
+    padding: 6px 12px;
+    gap: 6px;
+  }
+
+  /* No extra padding needed on mobile since bar is in-flow */
+  body {
+    padding-top: 0;
+  }
 }
 
 /* Label */
 #a11y-bar .a11y-label {
-  font-size: 0.68rem;
+  font-size: 0.67rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(168, 220, 215, 0.6);
+  color: rgba(168, 220, 215, 0.55);
   white-space: nowrap;
   flex-shrink: 0;
   font-family: 'DM Sans', sans-serif;
@@ -52,7 +80,7 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
-  flex-wrap: wrap;
+  flex: 1;
 }
 
 /* Individual toolbar buttons */
@@ -64,14 +92,13 @@ body {
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.72rem;
-  padding: 4px 10px;
+  padding: 3px 10px;
   white-space: nowrap;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
   display: flex;
   align-items: center;
-  gap: 5px;
-  height: 28px;
-  /* keyboard focus ring */
+  gap: 4px;
+  height: 26px;
   outline: none;
 }
 
@@ -86,7 +113,6 @@ body {
   outline-offset: 2px;
 }
 
-/* Active / toggled state */
 #a11y-bar button.a11y-active {
   background: rgba(36, 168, 152, 0.22);
   border-color: #24a898;
@@ -96,142 +122,104 @@ body {
 /* Reset button */
 #a11y-bar button#a11y-reset {
   border-color: rgba(231, 76, 60, 0.3);
-  color: rgba(231, 76, 60, 0.7);
+  color: rgba(231, 76, 60, 0.65);
 }
-
 #a11y-bar button#a11y-reset:hover {
   background: rgba(231, 76, 60, 0.12);
-  border-color: rgba(231, 76, 60, 0.6);
+  border-color: rgba(231, 76, 60, 0.55);
   color: #f1857a;
 }
 
 /* Divider */
 #a11y-bar .a11y-divider {
   width: 1px;
-  height: 18px;
+  height: 16px;
   background: rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
 }
 
-/* Language selector wrapper */
+/* Hide button text labels on very small screens to save space —
+   keep the icon/character so the button is still usable         */
+@media (max-width: 480px) {
+  #a11y-bar .a11y-btn-text {
+    display: none;
+  }
+  #a11y-bar button {
+    padding: 3px 8px;
+    min-width: 32px;
+    justify-content: center;
+  }
+  #a11y-bar .a11y-divider {
+    display: none;
+  }
+}
+
+/* Language selector */
 #a11y-bar .a11y-lang-wrap {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
-#a11y-bar .a11y-lang-wrap label {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(168, 220, 215, 0.6);
-  white-space: nowrap;
-  font-family: 'DM Sans', sans-serif;
-}
-
-/* Google Translate container - hide the default widget branding */
 #a11y-bar #google_translate_element {
   display: flex;
   align-items: center;
 }
 
-/* Override Google Translate default styles to match our theme */
+/* Style the Google Translate widget to match the toolbar */
 #a11y-bar .goog-te-gadget-simple {
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 6px !important;
-  padding: 3px 8px !important;
+  padding: 2px 8px !important;
   font-family: 'DM Sans', sans-serif !important;
-  font-size: 0.72rem !important;
+  font-size: 0.7rem !important;
   color: #b0c4cc !important;
   cursor: pointer;
-  height: 28px;
+  height: 26px;
   display: flex;
   align-items: center;
 }
-
-#a11y-bar .goog-te-gadget-simple .goog-te-gadget-icon {
-  display: none !important;
-}
-
-#a11y-bar .goog-te-gadget-simple span {
-  color: #b0c4cc !important;
-  border: none !important;
-}
-
-#a11y-bar .goog-te-gadget-simple .goog-te-menu-value {
-  color: #b0c4cc !important;
-}
-
-/* Hide the "Powered by Google" text */
-.goog-te-gadget > span {
-  display: none !important;
-}
-
-/* Skip link — shown only on keyboard focus, screen-reader accessible */
-.skip-link {
-  position: fixed;
-  top: 42px;
-  left: 0;
-  background: #24a898;
-  color: #fff;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 10px 18px;
-  z-index: 10001;
-  border-radius: 0 0 8px 0;
-  text-decoration: none;
-  transform: translateY(-100%);
-  transition: transform 0.2s;
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
+#a11y-bar .goog-te-gadget-simple .goog-te-gadget-icon { display: none !important; }
+#a11y-bar .goog-te-gadget-simple span { color: #b0c4cc !important; border: none !important; }
+#a11y-bar .goog-te-gadget-simple .goog-te-menu-value { color: #b0c4cc !important; }
+.goog-te-gadget > span { display: none !important; }
 
 
 /* ─────────────────────────────────────────────
-   2. LARGE TEXT MODE  (.large-text on <html>)
+   2. LARGE TEXT MODE
+   Applied by the cycling text-size button.
+   The JS sets font-size directly on <html>
+   (100% / 115% / 130%) — these rules handle
+   components that need extra tuning at larger sizes.
 ───────────────────────────────────────────── */
 
-html.large-text {
-  font-size: 120%;
+/* At 115% or 130%, give headings slightly more breathing room */
+html[style*="font-size: 115"],
+html[style*="font-size: 130"] {
+  line-height: 1.75;
 }
 
-html.large-text body {
-  font-size: 1.05rem;
-  line-height: 1.8;
+html[style*="font-size: 115"] .hero h2,
+html[style*="font-size: 130"] .hero h2 {
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
 }
 
-html.large-text .hero h2,
-html.large-text .page-title h2 {
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
-}
-
-html.large-text nav a,
-html.large-text .action-btn,
-html.large-text label,
-html.large-text input,
-html.large-text select,
-html.large-text textarea,
-html.large-text button {
-  font-size: 0.95rem;
-}
-
-html.large-text .section-card-body > p,
-html.large-text .ob-text span,
-html.large-text .tl-event,
-html.large-text .resource-body {
-  font-size: 0.96rem;
+html[style*="font-size: 115"] .section-card-body > p,
+html[style*="font-size: 130"] .section-card-body > p,
+html[style*="font-size: 115"] .ob-text span,
+html[style*="font-size: 130"] .ob-text span {
   line-height: 1.85;
 }
+
+/* Legacy class still supported if set from elsewhere */
+html.large-text { font-size: 115%; line-height: 1.75; }
 
 
 /* ─────────────────────────────────────────────
    3. HIGH CONTRAST MODE  (.high-contrast on <html>)
-   WCAG AA contrast ratios throughout
 ───────────────────────────────────────────── */
 
 html.high-contrast {
@@ -249,22 +237,26 @@ html.high-contrast body {
   color: #ffffff;
 }
 
-html.high-contrast body::before {
-  display: none; /* remove decorative gradients */
-}
+html.high-contrast body::before { display: none; }
 
 html.high-contrast .section-card,
 html.high-contrast .form-panel,
 html.high-contrast .preview-panel,
 html.high-contrast .panel,
-html.high-contrast .chat-card {
+html.high-contrast .chat-card,
+html.high-contrast .dashboard,
+html.high-contrast .tl-panel,
+html.high-contrast .tl-card,
+html.high-contrast .navigator-card {
   background: #0a0a0a;
   border: 2px solid #ffffff;
 }
 
 html.high-contrast .section-card-header,
 html.high-contrast .panel-header,
-html.high-contrast .chat-header {
+html.high-contrast .panel-head,
+html.high-contrast .chat-header,
+html.high-contrast .tl-panel-head {
   background: #111111;
   border-bottom: 2px solid #ffffff;
 }
@@ -273,7 +265,6 @@ html.high-contrast nav a {
   color: #ffffff;
   border-color: rgba(255,255,255,0.3);
 }
-
 html.high-contrast nav a:hover,
 html.high-contrast nav a.active {
   background: #ffffff;
@@ -281,10 +272,9 @@ html.high-contrast nav a.active {
   border-color: #ffffff;
 }
 
-html.high-contrast .hero h2,
-html.high-contrast .section-card-header h3,
 html.high-contrast h1, html.high-contrast h2,
-html.high-contrast h3, html.high-contrast h4 {
+html.high-contrast h3, html.high-contrast h4,
+html.high-contrast .hero h2 {
   color: #ffffff;
 }
 
@@ -292,31 +282,29 @@ html.high-contrast .hero p,
 html.high-contrast .section-card-body > p,
 html.high-contrast .ob-text span,
 html.high-contrast .tl-event,
+html.high-contrast .tl-desc,
+html.high-contrast .result-body,
 html.high-contrast .resource-body {
   color: #e0e0e0;
 }
 
-html.high-contrast a {
-  color: #00ffdd;
-  text-decoration: underline;
-}
-
-html.high-contrast a:hover {
-  color: #ffffff;
-}
+html.high-contrast a { color: #00ffdd; text-decoration: underline; }
+html.high-contrast a:hover { color: #ffffff; }
 
 html.high-contrast .generate-btn,
 html.high-contrast .add-btn,
-html.high-contrast .cta-btn {
+html.high-contrast .cta-btn,
+html.high-contrast .btn-primary,
+html.high-contrast .action-btn.primary {
   background: #00d4b8;
   color: #000000;
   border: 2px solid #00d4b8;
   font-weight: 700;
 }
-
 html.high-contrast .generate-btn:hover,
 html.high-contrast .add-btn:hover,
-html.high-contrast .cta-btn:hover {
+html.high-contrast .cta-btn:hover,
+html.high-contrast .btn-primary:hover {
   background: #ffffff;
   color: #000000;
   border-color: #ffffff;
@@ -329,7 +317,6 @@ html.high-contrast textarea {
   border: 2px solid #aaaaaa;
   color: #ffffff;
 }
-
 html.high-contrast input:focus,
 html.high-contrast select:focus,
 html.high-contrast textarea:focus {
@@ -351,41 +338,43 @@ html.high-contrast .alert-box.alert-danger {
   color: #ff9999;
 }
 
-html.high-contrast .alert-box.alert-warning {
-  background: #1a1000;
-  border: 2px solid #ffe066;
-  color: #ffe066;
-}
-
 html.high-contrast .hero-badge {
   background: #001a17;
   border: 2px solid #00d4b8;
   color: #00ffdd;
 }
 
-html.high-contrast .tl-dot {
-  border: 2px solid #ffffff;
-}
-
-html.high-contrast .msg-bubble {
-  border: 1px solid rgba(255,255,255,0.3);
-}
+html.high-contrast .tl-dot { border: 2px solid #ffffff; }
 
 html.high-contrast footer {
   border-top: 2px solid rgba(255,255,255,0.3);
   color: #cccccc;
 }
 
-/* Ensure all interactive elements have visible focus in high contrast */
 html.high-contrast *:focus-visible {
   outline: 3px solid #00ffdd !important;
   outline-offset: 3px !important;
 }
 
+/* Toolbar adapts to high contrast */
+html.high-contrast #a11y-bar {
+  background: #000000;
+  border-bottom: 2px solid #00ffdd;
+}
+html.high-contrast #a11y-bar button {
+  border-color: rgba(255,255,255,0.35);
+  color: #ffffff;
+}
+html.high-contrast #a11y-bar button:hover,
+html.high-contrast #a11y-bar button.a11y-active {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
 
 /* ─────────────────────────────────────────────
    4. DYSLEXIA-FRIENDLY FONT  (.dyslexia-font on <html>)
-   Uses OpenDyslexic with increased spacing
 ───────────────────────────────────────────── */
 
 html.dyslexia-font,
@@ -394,10 +383,9 @@ html.dyslexia-font input,
 html.dyslexia-font select,
 html.dyslexia-font textarea,
 html.dyslexia-font button {
-  font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif !important;
+  font-family: 'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif !important;
 }
 
-/* Keep Playfair Display headings readable — swap to a cleaner sans */
 html.dyslexia-font h1,
 html.dyslexia-font h2,
 html.dyslexia-font h3,
@@ -418,142 +406,22 @@ html.dyslexia-font span {
 
 html.dyslexia-font .section-card-body > p,
 html.dyslexia-font .resource-body,
-html.dyslexia-font .tl-event {
-  max-width: 70ch; /* prevent very long lines */
+html.dyslexia-font .tl-desc,
+html.dyslexia-font .result-body {
+  max-width: 70ch;
+}
+
+html.dyslexia-font #a11y-bar button,
+html.dyslexia-font #a11y-bar .a11y-label {
+  font-family: 'OpenDyslexic', Arial, sans-serif !important;
 }
 
 
 /* ─────────────────────────────────────────────
-   5. SIMPLIFIED LAYOUT  (.simplified-layout on <html>)
-   Single-column, larger text, no decorative elements,
-   designed for users with limited digital literacy
+   5. GENERAL WCAG IMPROVEMENTS (always active)
 ───────────────────────────────────────────── */
 
-html.simplified-layout body::before {
-  display: none;
-}
-
-html.simplified-layout header {
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px 24px;
-  align-items: flex-start;
-}
-
-html.simplified-layout nav {
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-html.simplified-layout nav a {
-  font-size: 0.9rem;
-  padding: 8px 16px;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 8px;
-}
-
-/* Single-column main layouts */
-html.simplified-layout .main,
-html.simplified-layout .obligation-grid,
-html.simplified-layout .rights-grid,
-html.simplified-layout .tenancy-grid,
-html.simplified-layout .compare-grid,
-html.simplified-layout .deduction-row,
-html.simplified-layout .notice-grid,
-html.simplified-layout .penalty-row,
-html.simplified-layout .permitted-grid,
-html.simplified-layout .banned-grid,
-html.simplified-layout .scheme-grid,
-html.simplified-layout .help-grid,
-html.simplified-layout .issue-grid,
-html.simplified-layout .tone-row {
-  grid-template-columns: 1fr !important;
-  flex-direction: column !important;
-}
-
-/* Larger body text */
-html.simplified-layout body {
-  font-size: 1.05rem;
-  line-height: 1.85;
-}
-
-html.simplified-layout .section-card-body > p,
-html.simplified-layout .resource-body,
-html.simplified-layout .tl-event,
-html.simplified-layout .ob-text span {
-  font-size: 0.96rem;
-  line-height: 1.9;
-}
-
-/* Larger, more obvious buttons */
-html.simplified-layout button,
-html.simplified-layout .generate-btn,
-html.simplified-layout .add-btn,
-html.simplified-layout .cta-btn,
-html.simplified-layout .action-btn {
-  font-size: 0.95rem !important;
-  padding: 14px 20px !important;
-  min-height: 48px;
-}
-
-/* More generous form fields */
-html.simplified-layout input,
-html.simplified-layout select,
-html.simplified-layout textarea {
-  font-size: 1rem;
-  padding: 13px 16px;
-}
-
-/* Reduce decorative layering */
-html.simplified-layout .hero-badge,
-html.simplified-layout .panel-num,
-html.simplified-layout .section-icon {
-  display: none;
-}
-
-html.simplified-layout .hero {
-  margin-top: 40px;
-}
-
-html.simplified-layout .hero h2 {
-  font-size: 1.8rem;
-}
-
-html.simplified-layout .content,
-html.simplified-layout .main,
-html.simplified-layout .chat-container,
-html.simplified-layout .features {
-  padding: 0 20px !important;
-  gap: 20px !important;
-}
-
-html.simplified-layout .section-card {
-  border-radius: 12px;
-}
-
-html.simplified-layout .cta-banner {
-  flex-direction: column;
-}
-
-html.simplified-layout .action-row {
-  flex-direction: column;
-}
-
-html.simplified-layout .issue-card {
-  min-height: 56px;
-}
-
-html.simplified-layout .feature-card {
-  padding: 20px;
-}
-
-
-/* ─────────────────────────────────────────────
-   6. GENERAL WCAG IMPROVEMENTS (always applied)
-   These apply regardless of any mode toggle.
-───────────────────────────────────────────── */
-
-/* Ensure all interactive elements have a visible focus ring */
+/* Visible focus rings for keyboard navigation */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -563,13 +431,14 @@ textarea:focus-visible {
   outline-offset: 3px;
 }
 
-/* Minimum tap target size for touch devices */
+/* Minimum touch target size on mobile */
 @media (pointer: coarse) {
   nav a,
   button,
   .action-btn,
-  .issue-card,
-  .tone-btn,
+  .et-pill,
+  .method-chip,
+  .problem-btn,
   .chip {
     min-height: 44px;
     min-width: 44px;
@@ -578,150 +447,23 @@ textarea:focus-visible {
 
 /* Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-/* Respect system-level high contrast preference */
+/* Respect system high-contrast preference */
 @media (prefers-contrast: more) {
   html:not(.high-contrast) {
     --border: rgba(255,255,255,0.3);
   }
-
   html:not(.high-contrast) nav a,
   html:not(.high-contrast) .section-card,
   html:not(.high-contrast) input,
   html:not(.high-contrast) select,
   html:not(.high-contrast) textarea {
     border-width: 2px;
-  }
-}
-
-
-/* ─────────────────────────────────────────────
-   7. TOOLBAR OWN ACCESSIBILITY MODES
-   The toolbar itself adapts when modes are active
-───────────────────────────────────────────── */
-
-html.high-contrast #a11y-bar {
-  background: #000000;
-  border-bottom: 2px solid #00ffdd;
-}
-
-html.high-contrast #a11y-bar button {
-  border-color: rgba(255,255,255,0.35);
-  color: #ffffff;
-}
-
-html.high-contrast #a11y-bar button:hover,
-html.high-contrast #a11y-bar button.a11y-active {
-  background: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
-}
-
-html.large-text #a11y-bar button {
-  font-size: 0.78rem;
-  height: 32px;
-}
-
-html.dyslexia-font #a11y-bar button,
-html.dyslexia-font #a11y-bar .a11y-label,
-html.dyslexia-font #a11y-bar .a11y-lang-wrap label {
-  font-family: 'OpenDyslexic', Arial, sans-serif !important;
-}
-
-
-/* ─────────────────────────────────────────────
-   8. MOBILE TOOLBAR
-   On small screens the bar collapses to icons
-   only. Labels and dividers are hidden.
-   The skip link stays in the DOM for screen
-   readers but is never shown visually on touch.
-───────────────────────────────────────────── */
-
-@media (max-width: 640px) {
-
-  /* Taller bar to give two rows room to breathe */
-  #a11y-bar {
-    height: auto;
-    min-height: 38px;
-    padding: 5px 10px;
-    gap: 5px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  body {
-    /* Recalculate top offset — bar can now be 2 rows (~76px max) */
-    padding-top: 76px;
-  }
-
-  /* Hide the "Accessibility" word label — saves ~90px */
-  #a11y-bar .a11y-label {
-    display: none;
-  }
-
-  /* Hide the "🌐 Translate" text label — globe emoji stays on the widget */
-  #a11y-bar .a11y-lang-wrap label {
-    display: none;
-  }
-
-  /* Hide the vertical dividers — they add dead space on narrow screens */
-  #a11y-bar .a11y-divider {
-    display: none;
-  }
-
-  /* Smaller, tighter buttons */
-  #a11y-bar button {
-    font-size: 0.7rem;
-    padding: 4px 7px;
-    height: 26px;
-    gap: 3px;
-  }
-
-  /* Shorten verbose button labels to fit:
-     "◑ Contrast" → "◑"  |  "▤ Simple" → "▤"  |  "↺ Reset" → "↺"
-     We do this by hiding the text span injected by JS, or by using
-     the button's aria-label as a tooltip. Since the buttons contain
-     plain text nodes we shrink them with max-width + overflow. */
-  #a11y-bar button#a11y-contrast .btn-text,
-  #a11y-bar button#a11y-simplified .btn-text,
-  #a11y-bar button#a11y-reset .btn-text {
-    display: none;
-  }
-
-  /* Keep the translate widget compact */
-  #a11y-bar .a11y-lang-wrap {
-    margin-left: auto;
-  }
-
-  #a11y-bar .goog-te-gadget-simple {
-    font-size: 0.68rem !important;
-    padding: 2px 6px !important;
-    height: 26px;
-  }
-
-  /* Skip link repositions below the now-variable-height bar */
-  .skip-link {
-    top: 76px;
-  }
-}
-
-/* Very small screens (320px phones) — compress further */
-@media (max-width: 380px) {
-  #a11y-bar button {
-    font-size: 0.66rem;
-    padding: 3px 6px;
-    height: 24px;
-  }
-
-  #a11y-bar button#a11y-dyslexia .btn-text {
-    display: none;
   }
 }
