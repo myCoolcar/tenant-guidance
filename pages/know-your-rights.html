@@ -7,69 +7,291 @@
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../accessibility.css">
 <style>
-/* Legislation list */
-.legislation-list { display: flex; flex-direction: column; gap: 12px; }
-.leg-item {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px 18px;
-  display: flex; align-items: flex-start; gap: 14px;
-  transition: border-color 0.2s; text-decoration: none;
-}
-.leg-item:hover { border-color: rgba(26,122,110,0.35); }
-.leg-item-year {
-  font-size: 0.68rem; font-weight: 600; color: var(--teal-light);
-  background: rgba(26,122,110,0.15); border: 1px solid rgba(26,122,110,0.3);
-  border-radius: 6px; padding: 3px 8px; white-space: nowrap;
-  margin-top: 2px; flex-shrink: 0; letter-spacing: 0.03em;
-}
-.leg-item-text { flex: 1; }
-.leg-item-text strong { color: #fff; font-size: 0.88rem; font-weight: 500; display: block; margin-bottom: 4px; }
-.leg-item-text span  { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
-.leg-item-link {
-  color: var(--teal-light); font-size: 0.75rem; text-decoration: none;
-  white-space: nowrap; margin-top: 2px; flex-shrink: 0;
-  display: flex; align-items: center; gap: 4px;
-}
-.leg-item-link:hover { text-decoration: underline; }
 
-/* Rights grid */
-.rights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.right-item {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-  border-radius: 12px; padding: 14px 16px;
-  display: flex; align-items: flex-start; gap: 10px;
-}
-.right-check { color: var(--teal-light); font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
-.right-text strong { display: block; color: #e8edf3; font-size: 0.83rem; font-weight: 500; margin-bottom: 3px; }
-.right-text span   { color: var(--muted); font-size: 0.77rem; line-height: 1.5; }
+/* ══════════════════════════════════════════
+   KNOW YOUR RIGHTS — PAGE STYLES
+   ══════════════════════════════════════════ */
 
-/* Tenancy type cards */
-.tenancy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.tenancy-card {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px; transition: border-color 0.2s;
+/* ── Intro box ── */
+.intro-box {
+  background: rgba(42,174,156,0.07);
+  border: 1px solid rgba(42,174,156,0.2);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 4px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
 }
-.tenancy-card:hover { border-color: rgba(26,122,110,0.3); }
-.tenancy-card h4 { color: var(--gold); font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.02em; }
-.tenancy-card p  { color: var(--muted); font-size: 0.78rem; line-height: 1.6; }
+.intro-box-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+.intro-box p {
+  font-size: 0.86rem;
+  color: #9fcfca;
+  line-height: 1.7;
+  margin: 0;
+}
+.intro-box p strong { color: #c8eae6; font-weight: 500; }
 
-/* Practical tips list */
-.tips-list { display: flex; flex-direction: column; gap: 8px; }
-.tip-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 16px;
+/* ── Rights section cards ── */
+.rights-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 16px;
 }
-.tip-num {
-  width: 22px; height: 22px; flex-shrink: 0;
-  background: rgba(232,184,75,0.15); border: 1px solid rgba(232,184,75,0.3);
-  border-radius: 50%; font-size: 0.68rem; color: var(--gold); font-weight: 600;
-  display: flex; align-items: center; justify-content: center; margin-top: 1px;
-}
-.tip-item p { color: #b0bfcc; font-size: 0.83rem; line-height: 1.6; }
 
+.rights-section-head {
+  padding: 20px 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.rs-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: rgba(42,174,156,0.1);
+  border: 1px solid rgba(42,174,156,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; flex-shrink: 0;
+}
+.rights-section-head h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.rights-section-head .rs-subtitle {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.rights-section-body {
+  padding: 16px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Plain English summary */
+.plain-summary {
+  font-size: 0.88rem;
+  color: #c0d4e4;
+  line-height: 1.7;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.025);
+  border-radius: 10px;
+  border-left: 3px solid rgba(42,174,156,0.5);
+}
+.plain-summary strong { color: #e8edf3; font-weight: 500; }
+
+/* Two-col layout for "means" + "do" */
+.means-do-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.means-col, .do-col {
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.means-col {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.do-col {
+  background: rgba(42,174,156,0.06);
+  border: 1px solid rgba(42,174,156,0.18);
+}
+
+.means-col h4 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #8fa8bf;
+  margin-bottom: 10px;
+}
+.do-col h4 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--teal-light);
+  margin-bottom: 10px;
+}
+
+.means-col ul, .do-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.means-col ul li {
+  font-size: 0.81rem;
+  color: #9fb4c8;
+  line-height: 1.6;
+  padding-left: 16px;
+  position: relative;
+}
+.means-col ul li::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: #5a7a8f;
+}
+.do-col ul li {
+  font-size: 0.81rem;
+  color: #8fd4c8;
+  line-height: 1.6;
+  padding-left: 18px;
+  position: relative;
+}
+.do-col ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--teal-light);
+  font-size: 0.75rem;
+}
+.do-col ul li a {
+  color: var(--teal-light);
+  text-decoration: none;
+}
+.do-col ul li a:hover { text-decoration: underline; }
+
+/* Legal basis (de-emphasised) */
+.legal-basis {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+}
+.legal-basis-label {
+  font-size: 0.67rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #4a6070;
+  white-space: nowrap;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+.legal-basis-text {
+  font-size: 0.73rem;
+  color: #4a6070;
+  line-height: 1.6;
+}
+.legal-basis-text a {
+  color: #5a8090;
+  text-decoration: none;
+}
+.legal-basis-text a:hover {
+  color: var(--teal-light);
+  text-decoration: underline;
+}
+
+/* ── Tenancy types (simplified) ── */
+.tenancy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tenancy-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.tenancy-item h4 {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.tenancy-item p {
+  font-size: 0.8rem;
+  color: #8fa8bf;
+  line-height: 1.65;
+  margin: 0;
+}
+.tenancy-item .tenancy-tag {
+  display: inline-block;
+  font-size: 0.67rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.tag-common { background: rgba(42,174,156,0.12); color: var(--teal-light); border: 1px solid rgba(42,174,156,0.25); }
+.tag-less   { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
+
+/* ── Quick checklist ── */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.check-num {
+  width: 24px; height: 24px; flex-shrink: 0;
+  background: rgba(232,184,75,0.12);
+  border: 1px solid rgba(232,184,75,0.28);
+  border-radius: 50%;
+  font-size: 0.68rem; font-weight: 700; color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.check-item p {
+  font-size: 0.83rem;
+  color: #9fb4c8;
+  line-height: 1.6;
+  margin: 0;
+}
+.check-item p strong { color: #c8dae8; font-weight: 500; }
+
+/* ── CTA banner ── */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(26,122,110,0.18), rgba(26,122,110,0.06));
+  border: 1px solid rgba(26,122,110,0.3);
+  border-radius: 16px;
+  padding: 22px 26px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+}
+.cta-banner p { margin: 0; font-size: 0.86rem; color: #b0c8d8; line-height: 1.55; }
+.cta-banner p strong { color: #e8edf3; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  white-space: nowrap; padding: 10px 20px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  color: #fff; font-size: 0.83rem; font-weight: 500;
+  border-radius: 10px; text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .rights-grid, .tenancy-grid { grid-template-columns: 1fr; }
+  .means-do-grid { grid-template-columns: 1fr; }
+  .rights-section-body { padding: 14px 18px 20px; }
+  .rights-section-head { padding: 16px 18px 0; }
 }
 </style>
 </head>
@@ -78,10 +300,7 @@
 <header>
   <a class="logo" href="../index.html">
     <div class="logo-icon">⚖️</div>
-    <div>
-      <h1>Tenant Advocate</h1>
-      <p>Housing Rights Platform</p>
-    </div>
+    <div><h1>Tenant Advocate</h1><p>Housing Rights Platform</p></div>
   </a>
   <nav>
     <a href="../index.html">Home</a>
@@ -99,203 +318,388 @@
 <div class="hero">
   <div class="hero-badge">📋 England &amp; Wales</div>
   <h2>Know your <em>rights.</em></h2>
-  <p>A plain-English guide to the key legislation protecting tenants — what the law says, and what it means for you.</p>
+  <p>You don't need to understand the law to use this page. We explain what it means for you — and what you can do.</p>
 </div>
 
 <div class="content">
 
-  <!-- KEY LEGISLATION -->
-  <div class="section-card">
-    <div class="section-card-header">
-      <div class="section-icon">📜</div>
-      <h3>Key Housing Legislation</h3>
+  <!-- INTRO -->
+  <div class="intro-box">
+    <span class="intro-box-icon">💬</span>
+    <p>As a renter in England, <strong>the law is on your side in many situations.</strong> This page covers your most important rights in plain English — from repairs and deposits to eviction and privacy. Each section explains what the law says, what it means for you, and the steps you can take if something goes wrong.</p>
+  </div>
+
+
+  <!-- ══ 1. REPAIRS & LIVING CONDITIONS ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">🔧</div>
+      <div>
+        <h3>Repairs and living conditions</h3>
+        <p class="rs-subtitle">Your home must be safe and properly maintained</p>
+      </div>
     </div>
-    <div class="section-card-body">
-      <p>These are the principal Acts of Parliament that protect tenants in England and Wales.</p>
-      <div class="legislation-list">
+    <div class="rights-section-body">
 
-        <div class="leg-item">
-          <span class="leg-item-year">1985</span>
-          <div class="leg-item-text">
-            <strong>Landlord and Tenant Act 1985</strong>
-            <span>Section 11 obliges landlords to keep in repair the structure, exterior, and key installations (heating, water, gas, electricity, sanitation) of any residential property let for less than seven years.</span>
-          </div>
-          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/1985/70/contents" target="_blank">View ↗</a>
+      <div class="plain-summary">
+        <strong>Your landlord is responsible for keeping your home in good repair.</strong> This includes heating, hot water, the roof, walls, plumbing, and electrics. If something breaks, it is their job to fix it — and they must do so within a reasonable time after you tell them.
+      </div>
+
+      <div class="means-do-grid">
+        <div class="means-col">
+          <h4>What this means for you</h4>
+          <ul>
+            <li>Your landlord must fix broken heating or hot water</li>
+            <li>Leaking roofs, damp, and structural problems are their responsibility</li>
+            <li>Faulty wiring or plumbing must be repaired</li>
+            <li>These obligations apply even if your tenancy agreement says otherwise — such clauses are unenforceable</li>
+            <li>Your home must be fit for human habitation from day one</li>
+          </ul>
         </div>
-
-        <div class="leg-item">
-          <span class="leg-item-year">1988</span>
-          <div class="leg-item-text">
-            <strong>Housing Act 1988</strong>
-            <span>Established the modern private rental framework in England, creating assured and assured shorthold tenancies (ASTs) and setting out the legal basis for possession, rent, and tenancy agreements.</span>
-          </div>
-          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank">View ↗</a>
+        <div class="do-col">
+          <h4>What you can do</h4>
+          <ul>
+            <li><a href="repairs.html">Read the full repairs guide</a> for step-by-step guidance</li>
+            <li>Report the repair <strong>in writing</strong> — email is best</li>
+            <li><a href="letters.html">Generate a formal repair request letter</a></li>
+            <li><a href="timeline-tool.html">Log the issue in your evidence timeline</a></li>
+            <li>If ignored, contact your council's Environmental Health team</li>
+          </ul>
         </div>
+      </div>
 
-        <div class="leg-item">
-          <span class="leg-item-year">2004</span>
-          <div class="leg-item-text">
-            <strong>Housing Act 2004</strong>
-            <span>Introduced mandatory tenancy deposit protection in government-approved schemes and the Housing Health and Safety Rating System (HHSRS), giving councils powers to enforce improvements to hazardous properties.</span>
-          </div>
-          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/2004/34/contents" target="_blank">View ↗</a>
-        </div>
-
-        <div class="leg-item">
-          <span class="leg-item-year">2019</span>
-          <div class="leg-item-text">
-            <strong>Tenant Fees Act 2019</strong>
-            <span>Bans landlords and letting agents from charging fees not explicitly permitted by the Act (such as admin, referencing, or renewal fees). Unlawful fees are recoverable and enforceable by Trading Standards.</span>
-          </div>
-          <a class="leg-item-link" href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank">View ↗</a>
-        </div>
-
-        <div class="leg-item">
-          <span class="leg-item-year">2020</span>
-          <div class="leg-item-text">
-            <strong>Electrical Safety Standards in the Private Rented Sector (England) Regulations 2020</strong>
-            <span>Requires landlords to have electrical installations inspected and tested by a qualified person at least every five years, and to provide tenants with a copy of the report.</span>
-          </div>
-          <a class="leg-item-link" href="https://www.legislation.gov.uk/uksi/2020/312/contents" target="_blank">View ↗</a>
-        </div>
-
+      <div class="legal-basis">
+        <span class="legal-basis-label">Legal basis</span>
+        <span class="legal-basis-text">
+          <a href="https://www.legislation.gov.uk/ukpga/1985/70/section/11" target="_blank" rel="noopener">Landlord and Tenant Act 1985, s.11</a> &nbsp;·&nbsp;
+          <a href="https://www.legislation.gov.uk/ukpga/2018/34/contents" target="_blank" rel="noopener">Homes (Fitness for Human Habitation) Act 2018</a>
+        </span>
       </div>
     </div>
   </div>
 
-  <!-- FUNDAMENTAL RIGHTS -->
-  <div class="section-card">
-    <div class="section-card-header">
-      <div class="section-icon">🛡️</div>
-      <h3>Your Fundamental Rights as a Tenant</h3>
+
+  <!-- ══ 2. EVICTION & SECURITY ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">🏠</div>
+      <div>
+        <h3>Eviction and security of tenure</h3>
+        <p class="rs-subtitle">Your landlord cannot simply tell you to leave</p>
+      </div>
     </div>
-    <div class="section-card-body">
-      <p>As a private tenant in England and Wales, the law provides you with these core protections.</p>
-      <div class="rights-grid">
+    <div class="rights-section-body">
 
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Right to a safe, habitable home</strong>
-            <span>Your property must be fit for human habitation — with working heating, plumbing, and electrical systems. The Homes (Fitness for Human Habitation) Act 2018 reinforces this.</span>
-          </div>
+      <div class="plain-summary">
+        <strong>Your landlord cannot force you to leave without following a strict legal process.</strong> They must give you the correct written notice and, in most cases, obtain a court order before you are required to go. Changing your locks, removing your belongings, or cutting off your utilities to force you out is a criminal offence.
+      </div>
+
+      <div class="means-do-grid">
+        <div class="means-col">
+          <h4>What this means for you</h4>
+          <ul>
+            <li>You do not have to leave just because a landlord tells you to</li>
+            <li>A valid notice must be in the correct format and give the right amount of time</li>
+            <li>Even after a valid notice, the landlord must go to court to make you leave</li>
+            <li>Illegal eviction — such as changing locks — is a criminal offence</li>
+            <li>You should not move out until you have checked the notice is valid</li>
+          </ul>
         </div>
-
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Protection from unfair eviction</strong>
-            <span>Your landlord must follow strict legal procedures. Changing locks, removing belongings, or cutting off utilities without a court order is a criminal offence under the Protection from Eviction Act 1977.</span>
-          </div>
+        <div class="do-col">
+          <h4>What you can do</h4>
+          <ul>
+            <li><a href="evictions.html">Read the full evictions guide</a></li>
+            <li>Do not leave the property voluntarily until you have taken advice</li>
+            <li>If locks are changed or utilities cut, call <strong>Shelter on 0808 800 4444</strong> immediately</li>
+            <li><a href="letters.html">Generate a response letter</a> to challenge an invalid notice</li>
+            <li>Contact your council's Tenancy Relations Officer for free help</li>
+          </ul>
         </div>
+      </div>
 
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Deposit protection</strong>
-            <span>Your deposit must be held in a government-approved scheme within 30 days of payment, and you must be given prescribed information about it. Failure attracts a penalty of 1–3× the deposit amount.</span>
-          </div>
-        </div>
-
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Right to quiet enjoyment</strong>
-            <span>You have the right to use the property peacefully without unreasonable interference from your landlord. Entry normally requires at least 24 hours' written notice.</span>
-          </div>
-        </div>
-
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Protection from discrimination</strong>
-            <span>Under the Equality Act 2010, you cannot be refused housing or treated less favourably because of a protected characteristic such as race, sex, disability, or religion.</span>
-          </div>
-        </div>
-
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Protection from harassment</strong>
-            <span>Under Section 1 of the Protection from Eviction Act 1977, it is a criminal offence for a landlord to harass a tenant with the intent of causing them to leave.</span>
-          </div>
-        </div>
-
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Right to challenge unlawful fees</strong>
-            <span>Any fee charged outside the Tenant Fees Act 2019's permitted payments is unlawful and can be reclaimed. You can also report the landlord or agent to Trading Standards.</span>
-          </div>
-        </div>
-
-        <div class="right-item">
-          <span class="right-check">✦</span>
-          <div class="right-text">
-            <strong>Unfair terms are unenforceable</strong>
-            <span>Terms in your tenancy agreement that seek to remove statutory rights or impose unfair burdens on you are unenforceable under the Consumer Rights Act 2015.</span>
-          </div>
-        </div>
-
+      <div class="legal-basis">
+        <span class="legal-basis-label">Legal basis</span>
+        <span class="legal-basis-text">
+          <a href="https://www.legislation.gov.uk/ukpga/1988/50/contents" target="_blank" rel="noopener">Housing Act 1988</a> &nbsp;·&nbsp;
+          <a href="https://www.legislation.gov.uk/ukpga/1977/43/contents" target="_blank" rel="noopener">Protection from Eviction Act 1977</a>
+        </span>
       </div>
     </div>
   </div>
 
-  <!-- TYPES OF TENANCY -->
-  <div class="section-card">
-    <div class="section-card-header">
-      <div class="section-icon">📄</div>
-      <h3>Types of Tenancy</h3>
-    </div>
-    <div class="section-card-body">
-      <p>The type of tenancy you hold affects your rights and the procedures your landlord must follow.</p>
-      <div class="tenancy-grid">
 
-        <div class="tenancy-card">
+  <!-- ══ 3. DEPOSITS ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">💷</div>
+      <div>
+        <h3>Your deposit</h3>
+        <p class="rs-subtitle">Your landlord must protect it — and return it fairly</p>
+      </div>
+    </div>
+    <div class="rights-section-body">
+
+      <div class="plain-summary">
+        <strong>Your deposit must be placed in a government-approved scheme within 30 days of you paying it.</strong> You must also receive written information telling you which scheme it is in and how to get it back. If your landlord does not do this, you could be entitled to up to three times the deposit amount as compensation.
+      </div>
+
+      <div class="means-do-grid">
+        <div class="means-col">
+          <h4>What this means for you</h4>
+          <ul>
+            <li>Your deposit is protected by law — your landlord cannot simply keep it</li>
+            <li>Deductions must be justified — normal wear and tear cannot be charged</li>
+            <li>You have the right to dispute deductions through a free adjudication service</li>
+            <li>If your deposit was not protected, you can claim a penalty in court</li>
+          </ul>
+        </div>
+        <div class="do-col">
+          <h4>What you can do</h4>
+          <ul>
+            <li><a href="deposits.html">Read the full deposit protection guide</a></li>
+            <li>Check your deposit is protected at <a href="https://www.gov.uk/tenancy-deposit-protection" target="_blank" rel="noopener">gov.uk/tenancy-deposit-protection</a></li>
+            <li><a href="letters.html">Generate a letter</a> requesting your deposit back</li>
+            <li>Use the scheme's free dispute service if deductions are unfair</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="legal-basis">
+        <span class="legal-basis-label">Legal basis</span>
+        <span class="legal-basis-text">
+          <a href="https://www.legislation.gov.uk/ukpga/2004/34/section/212" target="_blank" rel="noopener">Housing Act 2004, ss.212–215</a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ 4. PRIVACY & QUIET ENJOYMENT ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">🚪</div>
+      <div>
+        <h3>Privacy and peaceful enjoyment</h3>
+        <p class="rs-subtitle">Your home is yours — your landlord cannot come and go freely</p>
+      </div>
+    </div>
+    <div class="rights-section-body">
+
+      <div class="plain-summary">
+        <strong>You have the right to live in your home without unreasonable interference from your landlord.</strong> In most situations, your landlord must give you at least 24 hours' written notice before entering — and they can only enter at a reasonable time. Repeatedly turning up unannounced may be illegal harassment.
+      </div>
+
+      <div class="means-do-grid">
+        <div class="means-col">
+          <h4>What this means for you</h4>
+          <ul>
+            <li>Your landlord needs your permission or must give proper notice to enter</li>
+            <li>Turning up unannounced repeatedly is not acceptable</li>
+            <li>Entering without notice (except in a genuine emergency) may be unlawful</li>
+            <li>Harassment intended to make you leave your home is a criminal offence</li>
+          </ul>
+        </div>
+        <div class="do-col">
+          <h4>What you can do</h4>
+          <ul>
+            <li>Keep a written log of every visit — dates, times, and what was said</li>
+            <li><a href="timeline-tool.html">Record entries in your evidence timeline</a></li>
+            <li><a href="letters.html">Send a formal letter</a> reminding your landlord of the notice requirement</li>
+            <li>If harassment continues, report it to your local council or the police</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="legal-basis">
+        <span class="legal-basis-label">Legal basis</span>
+        <span class="legal-basis-text">
+          Common law right to quiet enjoyment &nbsp;·&nbsp;
+          <a href="https://www.legislation.gov.uk/ukpga/1977/43/section/1" target="_blank" rel="noopener">Protection from Eviction Act 1977, s.1</a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ 5. FEES ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">🧾</div>
+      <div>
+        <h3>Fees and charges</h3>
+        <p class="rs-subtitle">Most letting fees are now banned by law</p>
+      </div>
+    </div>
+    <div class="rights-section-body">
+
+      <div class="plain-summary">
+        <strong>Since 2019, most fees charged by landlords or letting agents are illegal.</strong> You should only be asked to pay rent, a deposit (capped at 5 weeks' rent), a holding deposit (capped at 1 week's rent), and a small number of specific charges. Anything else — admin fees, referencing fees, check-in fees — is banned.
+      </div>
+
+      <div class="means-do-grid">
+        <div class="means-col">
+          <h4>What this means for you</h4>
+          <ul>
+            <li>You cannot be charged for referencing, credit checks, or admin</li>
+            <li>Renewal fees are banned — you should not pay to extend your tenancy</li>
+            <li>Check-in and check-out fees are also illegal</li>
+            <li>Unlawful fees can be reclaimed — and reported to Trading Standards</li>
+          </ul>
+        </div>
+        <div class="do-col">
+          <h4>What you can do</h4>
+          <ul>
+            <li><a href="fees.html">Check whether a fee is legal</a> on the Fees page</li>
+            <li>Ask your landlord or agent to refund any unlawful charges in writing</li>
+            <li>Report illegal fees to <a href="https://www.tradingstandards.uk" target="_blank" rel="noopener">Trading Standards</a></li>
+            <li><a href="letters.html">Generate a letter</a> requesting a refund</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="legal-basis">
+        <span class="legal-basis-label">Legal basis</span>
+        <span class="legal-basis-text">
+          <a href="https://www.legislation.gov.uk/ukpga/2019/4/contents" target="_blank" rel="noopener">Tenant Fees Act 2019</a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ 6. DISCRIMINATION & FAIRNESS ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">🛡️</div>
+      <div>
+        <h3>Discrimination and unfair treatment</h3>
+        <p class="rs-subtitle">You cannot be treated less favourably because of who you are</p>
+      </div>
+    </div>
+    <div class="rights-section-body">
+
+      <div class="plain-summary">
+        <strong>It is illegal to refuse someone housing, or treat a tenant differently, because of protected characteristics</strong> such as their race, sex, disability, religion, or family status. Terms in your tenancy agreement that try to take away your legal rights are also unenforceable.
+      </div>
+
+      <div class="means-do-grid">
+        <div class="means-col">
+          <h4>What this means for you</h4>
+          <ul>
+            <li>A landlord cannot refuse to rent to you based on your background or identity</li>
+            <li>You cannot be evicted or harassed because of a protected characteristic</li>
+            <li>Clauses in your tenancy that contradict the law do not apply to you</li>
+            <li>You have the right to request reasonable adjustments if you have a disability</li>
+          </ul>
+        </div>
+        <div class="do-col">
+          <h4>What you can do</h4>
+          <ul>
+            <li>Keep a record of any discriminatory comments or decisions</li>
+            <li>Contact the <a href="https://www.equalityhumanrights.com" target="_blank" rel="noopener">Equality and Human Rights Commission</a> for guidance</li>
+            <li>Seek legal advice from <a href="resources.html">Citizens Advice or Shelter</a></li>
+            <li>Make a complaint to your local council or the Housing Ombudsman</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="legal-basis">
+        <span class="legal-basis-label">Legal basis</span>
+        <span class="legal-basis-text">
+          <a href="https://www.legislation.gov.uk/ukpga/2010/15/contents" target="_blank" rel="noopener">Equality Act 2010</a> &nbsp;·&nbsp;
+          <a href="https://www.legislation.gov.uk/ukpga/2015/15/contents" target="_blank" rel="noopener">Consumer Rights Act 2015</a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ TYPES OF TENANCY (simplified) ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">📄</div>
+      <div>
+        <h3>What type of tenancy do you have?</h3>
+        <p class="rs-subtitle">Your rights depend partly on your tenancy type</p>
+      </div>
+    </div>
+    <div class="rights-section-body">
+
+      <div class="plain-summary">
+        Most private renters in England have an <strong>Assured Shorthold Tenancy (AST)</strong>. Your tenancy agreement should tell you which type you have. If you're not sure, the type started before 1989 is different — and you may have stronger protections.
+      </div>
+
+      <div class="tenancy-list">
+        <div class="tenancy-item">
+          <div><span class="tenancy-tag tag-common">Most common</span></div>
           <h4>Assured Shorthold Tenancy (AST)</h4>
-          <p>The most common form of private rental agreement, typically fixed for 6 or 12 months and then becoming periodic. Subject to the Housing Act 1988. Landlords may end it via Section 21 (no-fault) or Section 8 (grounds-based) notice.</p>
+          <p>This is what most private renters have today. Usually fixed for 6 or 12 months, then it continues month-to-month. Your landlord can end it using a Section 21 (no-fault) or Section 8 (grounds-based) notice — but must follow the correct legal process to do so.</p>
         </div>
-
-        <div class="tenancy-card">
+        <div class="tenancy-item">
+          <div><span class="tenancy-tag tag-less">Less common</span></div>
           <h4>Assured Tenancy</h4>
-          <p>Less common in the private sector today. Provides stronger protections — landlords can only end an assured tenancy by proving one of the grounds listed in Schedule 2 of the Housing Act 1988. No Section 21 route is available.</p>
+          <p>Provides stronger protection — your landlord can only end this tenancy by proving specific legal grounds. There is no Section 21 no-fault route. Less common in the private sector today, but some older tenancies still fall into this category.</p>
         </div>
-
-        <div class="tenancy-card">
+        <div class="tenancy-item">
+          <div><span class="tenancy-tag tag-less">Pre-1989 tenancies</span></div>
           <h4>Regulated (Protected) Tenancy</h4>
-          <p>Applies to tenancies created before 15 January 1989. Governed by the Rent Act 1977. Provides the strongest tenant protections, including fair rent registration and security of tenure that can pass to a spouse or family member.</p>
+          <p>If your tenancy started before 15 January 1989, you may have a regulated tenancy under the Rent Act 1977. These carry the strongest protections, including the right to a fair registered rent and strong security of tenure. Get specialist advice if this applies to you.</p>
         </div>
-
       </div>
+
     </div>
   </div>
 
-  <!-- PRACTICAL TIPS -->
-  <div class="section-card">
-    <div class="section-card-header">
-      <div class="section-icon">💡</div>
-      <h3>What You Should Do</h3>
-    </div>
-    <div class="section-card-body">
-      <p>Practical steps that protect your position if a dispute arises.</p>
-      <div class="tips-list">
-        <div class="tip-item"><div class="tip-num">1</div><p>Always get your tenancy agreement in writing and keep a copy in a safe place.</p></div>
-        <div class="tip-item"><div class="tip-num">2</div><p>Take dated photographs of the property at the start of the tenancy to record its condition.</p></div>
-        <div class="tip-item"><div class="tip-num">3</div><p>Report all repairs in writing — by email where possible — so you have a timestamped record.</p></div>
-        <div class="tip-item"><div class="tip-num">4</div><p>Keep copies of all correspondence with your landlord or letting agent, including text messages.</p></div>
-        <div class="tip-item"><div class="tip-num">5</div><p>Check that your deposit has been protected and that you have received the prescribed information within 30 days of payment.</p></div>
-        <div class="tip-item"><div class="tip-num">6</div><p>If you receive any notice from your landlord, do not vacate until you have checked its validity — invalid notices do not require you to leave.</p></div>
+
+  <!-- ══ PRACTICAL CHECKLIST ══ -->
+  <div class="rights-section">
+    <div class="rights-section-head">
+      <div class="rs-icon">✅</div>
+      <div>
+        <h3>Protect yourself from day one</h3>
+        <p class="rs-subtitle">Six things every tenant should do</p>
       </div>
     </div>
+    <div class="rights-section-body">
+
+      <div class="checklist">
+        <div class="check-item">
+          <div class="check-num">1</div>
+          <p><strong>Get your tenancy agreement in writing</strong> and keep a copy somewhere safe. If something goes wrong, this is your starting point.</p>
+        </div>
+        <div class="check-item">
+          <div class="check-num">2</div>
+          <p><strong>Photograph the property on move-in day.</strong> Date your photos. This protects you from unfair deposit deductions when you leave.</p>
+        </div>
+        <div class="check-item">
+          <div class="check-num">3</div>
+          <p><strong>Always report problems in writing</strong> — by email if possible. This creates a timestamped record that you notified your landlord.</p>
+        </div>
+        <div class="check-item">
+          <div class="check-num">4</div>
+          <p><strong>Check your deposit is protected</strong> within 30 days of paying it. You should receive written confirmation of which scheme it is in.</p>
+        </div>
+        <div class="check-item">
+          <div class="check-num">5</div>
+          <p><strong>Keep all correspondence.</strong> Texts, emails, and letters from your landlord are all potentially valuable evidence.</p>
+        </div>
+        <div class="check-item">
+          <div class="check-num">6</div>
+          <p><strong>If you receive any notice to leave, do not move out immediately.</strong> Many notices are invalid. Check it carefully before taking any action.</p>
+        </div>
+      </div>
+
+    </div>
   </div>
+
 
   <!-- CTA -->
   <div class="cta-banner">
     <p>
-      <strong>Need immediate help?</strong>
-      If you are facing an urgent housing dispute, eviction threat, or are unsure of your rights, free specialist support is available.
+      <strong>Need urgent help?</strong><br>
+      Free, specialist support is available right now — you don't need to face this alone.
     </p>
-    <a class="cta-btn" href="resources.html">View Resources →</a>
+    <a class="cta-btn" href="resources.html">Find support →</a>
   </div>
 
 </div>
@@ -304,6 +708,6 @@
   <p>Tenant Advocate &nbsp;·&nbsp; Legal information only — not legal advice &nbsp;·&nbsp; England &amp; Wales</p>
 </footer>
 
-</body>
 <script src="../accessibility.js"></script>
+</body>
 </html>
