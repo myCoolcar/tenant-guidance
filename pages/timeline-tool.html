@@ -482,12 +482,134 @@
   font-size: 0.78rem; font-family: 'DM Sans', sans-serif; cursor: pointer;
 }
 
-/* Action row */
+/* Action row — primary actions */
 .tl-action-row {
-  padding: 14px 20px;
+  padding: 16px 20px 0;
   border-top: 1px solid var(--border);
-  display: flex; gap: 8px; flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
+
+/* Primary action buttons */
+.primary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
+}
+
+.primary-action-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.primary-action-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.primary-action-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+.primary-action-btn.btn-report {
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  color: #fff;
+}
+.primary-action-btn.btn-email {
+  background: rgba(232,184,75,0.12);
+  border: 1px solid rgba(232,184,75,0.28);
+  color: var(--gold);
+}
+.primary-action-btn.btn-email:hover:not(:disabled) {
+  background: rgba(232,184,75,0.18);
+}
+
+.pab-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.pab-text { flex: 1; }
+.pab-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+.pab-hint {
+  font-size: 0.74rem;
+  opacity: 0.75;
+  line-height: 1.4;
+}
+
+/* Advanced options collapsible */
+.advanced-toggle-row {
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.advanced-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.18s;
+}
+.advanced-toggle-btn:hover { color: #c0d4e4; }
+.advanced-toggle-label { font-weight: 600; }
+.advanced-toggle-hint {
+  font-size: 0.7rem;
+  color: #4a6070;
+}
+.advanced-chevron {
+  font-size: 0.7rem;
+  transition: transform 0.22s;
+  display: inline-block;
+}
+.advanced-toggle-btn.open .advanced-chevron { transform: rotate(180deg); }
+
+.advanced-body {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 18px 18px;
+  animation: fadeUp 0.2s ease;
+}
+.advanced-body.open { display: flex; }
+
+.advanced-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  color: #8fa8bf;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  transition: all 0.18s;
+}
+.advanced-action:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); color: #c0d4e4; }
+.advanced-action:disabled { opacity: 0.3; cursor: default; }
+.advanced-action.danger { color: #c08080; }
+.advanced-action.danger:hover { background: rgba(224,92,92,0.08); border-color: rgba(224,92,92,0.2); color: #f08080; }
+.advanced-action-icon { font-size: 0.95rem; flex-shrink: 0; opacity: 0.8; }
+/* action-btn — used in modal footer only */
 .action-btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 9px 16px;
@@ -499,6 +621,7 @@
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
+  text-decoration: none;
 }
 .action-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
 .action-btn:disabled { opacity: 0.35; cursor: default; }
@@ -507,8 +630,6 @@
   border-color: transparent; color: #fff;
 }
 .action-btn.primary:hover { opacity: 0.88; }
-.action-btn.danger { color: #f08080; }
-.action-btn.danger:hover { background: rgba(224,92,92,0.1); border-color: rgba(224,92,92,0.3); }
 
 /* ── Report modal ── */
 .modal-overlay {
@@ -888,12 +1009,57 @@
       </div>
 
       <div class="tl-action-row">
-        <button class="action-btn primary" id="reportBtn" onclick="openReport()" disabled>📄 Generate Case Report</button>
-        <button class="action-btn" id="exportBtn" onclick="exportJSON()" disabled>⬇️ Download Backup</button>
-        <label class="action-btn" style="cursor:pointer;">
-          📂 Restore Backup <input type="file" accept=".json" onchange="importJSON(event)" style="display:none">
-        </label>
-        <button class="action-btn danger" id="clearBtn" onclick="clearTimeline()" disabled>🗑 Clear all</button>
+
+        <!-- PRIMARY ACTIONS — always visible -->
+        <div class="primary-actions">
+
+          <button class="primary-action-btn btn-report" id="reportBtn" onclick="openReport()" disabled>
+            <span class="pab-icon">📄</span>
+            <span class="pab-text">
+              <span class="pab-title">Generate my Case Report</span>
+              <span class="pab-hint">Create a summary you can send to your council or housing advisor.</span>
+            </span>
+          </button>
+
+          <button class="primary-action-btn btn-email" id="emailBtn" onclick="emailReport()" disabled>
+            <span class="pab-icon">📧</span>
+            <span class="pab-text">
+              <span class="pab-title">Email my Case Report</span>
+              <span class="pab-hint">Send your report to yourself for safekeeping or to share with an advisor.</span>
+            </span>
+          </button>
+
+        </div>
+
+        <!-- ADVANCED OPTIONS — collapsed by default -->
+        <div class="advanced-toggle-row">
+          <button class="advanced-toggle-btn" id="advancedToggle" onclick="toggleAdvanced()" aria-expanded="false">
+            <span class="advanced-chevron">▾</span>
+            <span class="advanced-toggle-label">Advanced options</span>
+          </button>
+          <span class="advanced-toggle-hint">For backup or technical use</span>
+        </div>
+
+        <div class="advanced-body" id="advancedBody">
+
+          <button class="advanced-action" id="exportBtn" onclick="exportJSON()" disabled>
+            <span class="advanced-action-icon">⬇️</span>
+            Download data backup
+          </button>
+
+          <label class="advanced-action" style="cursor:pointer;">
+            <span class="advanced-action-icon">📂</span>
+            Restore from backup
+            <input type="file" accept=".json" onchange="importJSON(event)" style="display:none">
+          </label>
+
+          <button class="advanced-action danger" id="clearBtn" onclick="clearTimeline()" disabled>
+            <span class="advanced-action-icon">🗑</span>
+            Delete all my data
+          </button>
+
+        </div>
+
       </div>
     </div>
 
@@ -1137,6 +1303,7 @@ function render() {
   renderTimeline(tl);
   const hasEvents = tl.length > 0;
   document.getElementById('reportBtn').disabled = !hasEvents;
+  document.getElementById('emailBtn').disabled  = !hasEvents;
   document.getElementById('exportBtn').disabled = !hasEvents;
   document.getElementById('clearBtn').disabled  = !hasEvents;
   document.getElementById('eventCount').textContent = tl.length === 1 ? '1 event' : `${tl.length} events`;
@@ -1537,6 +1704,46 @@ function loadCaseInfo() {
   if (info.name)     document.getElementById('caseName').value     = info.name;
   if (info.address)  document.getElementById('caseAddress').value  = info.address;
   if (info.landlord) document.getElementById('caseLandlord').value = info.landlord;
+}
+
+/* ════════════════════════════════════════════════
+   EMAIL REPORT
+   ════════════════════════════════════════════════ */
+
+function emailReport() {
+  const reportText = generateReportText();
+  const tl   = getTimeline();
+  const info = getCaseInfo();
+
+  // Build a compact JSON summary to embed in the email body
+  const backupData = { events: tl, caseInfo: info };
+  const backupJson = JSON.stringify(backupData, null, 2);
+
+  const subject = encodeURIComponent('My Tenant Case Report');
+  const body = encodeURIComponent(
+    reportText +
+    '\n\n' +
+    '══════════════════════════════════════════════════\n' +
+    'DATA BACKUP (copy and save this section)\n' +
+    '══════════════════════════════════════════════════\n' +
+    'To restore your timeline, save the text below as a .json file\n' +
+    'and use "Restore from backup" in the Advanced options.\n\n' +
+    backupJson
+  );
+
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
+
+/* ════════════════════════════════════════════════
+   ADVANCED OPTIONS TOGGLE
+   ════════════════════════════════════════════════ */
+
+function toggleAdvanced() {
+  const body   = document.getElementById('advancedBody');
+  const toggle = document.getElementById('advancedToggle');
+  const isOpen = body.classList.toggle('open');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', String(isOpen));
 }
 
 /* ════════════════════════════════════════════════
