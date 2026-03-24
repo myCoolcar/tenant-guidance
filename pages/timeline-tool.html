@@ -1025,7 +1025,7 @@
             <span class="pab-icon">📧</span>
             <span class="pab-text">
               <span class="pab-title">Email my Case Report</span>
-              <span class="pab-hint">Send your report to yourself for safekeeping or to share with an advisor.</span>
+              <span class="pab-hint">Opens your email app, then shows your report to copy and paste in.</span>
             </span>
           </button>
 
@@ -1711,27 +1711,41 @@ function loadCaseInfo() {
    ════════════════════════════════════════════════ */
 
 function emailReport() {
-  const reportText = generateReportText();
-  const tl   = getTimeline();
-  const info = getCaseInfo();
+  // mailto: URLs break above ~2,000 characters once encoded —
+  // a full report + JSON easily hits 10,000+. Instead we put a
+  // short summary in the email body and open the report modal
+  // simultaneously so the user can copy the full text and paste it in.
 
-  // Build a compact JSON summary to embed in the email body
-  const backupData = { events: tl, caseInfo: info };
-  const backupJson = JSON.stringify(backupData, null, 2);
+  const info = getCaseInfo();
+  const tl   = getTimeline();
+  const now  = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const nameStr     = info.name     ? `Name: ${info.name}\n`               : '';
+  const addressStr  = info.address  ? `Property: ${info.address}\n`        : '';
+  const landlordStr = info.landlord ? `Landlord/agent: ${info.landlord}\n` : '';
+
+  const shortBody =
+    `My Tenant Case Report — ${now}\n` +
+    `${'─'.repeat(40)}\n` +
+    nameStr + addressStr + landlordStr +
+    `Events recorded: ${tl.length}\n` +
+    `${'─'.repeat(40)}\n\n` +
+    `PASTE THE FULL REPORT BELOW THIS LINE:\n\n` +
+    `\n\n` +
+    `─`.repeat(40) + `\n` +
+    `Generated using Tenant Advocate\n` +
+    `This is a record of events, not legal advice.\n` +
+    `For urgent help contact Shelter: 0808 800 4444`;
 
   const subject = encodeURIComponent('My Tenant Case Report');
-  const body = encodeURIComponent(
-    reportText +
-    '\n\n' +
-    '══════════════════════════════════════════════════\n' +
-    'DATA BACKUP (copy and save this section)\n' +
-    '══════════════════════════════════════════════════\n' +
-    'To restore your timeline, save the text below as a .json file\n' +
-    'and use "Restore from backup" in the Advanced options.\n\n' +
-    backupJson
-  );
+  const body    = encodeURIComponent(shortBody);
 
-  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  // Open email client, then show report modal so user can copy and paste
+  window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+  setTimeout(() => {
+    openReport();
+    showToast('📋 Copy your report and paste it into the email');
+  }, 400);
 }
 
 /* ════════════════════════════════════════════════
